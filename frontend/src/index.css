@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Outfit:wght@200;300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #111111;
+  --color-secondary: #F5F1EB;
+  --color-accent: #C9A87C;
+  --color-luxury-text: #222222;
+  --color-luxury-bg: #FFFFFF;
+  
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Outfit', sans-serif;
+  
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-fade-in: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+/* Custom Base resets */
+body {
+  font-family: var(--font-sans);
+  background-color: #FFFFFF;
+  color: #222222;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F5F1EB;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #18181b;
+}
+::-webkit-scrollbar-thumb {
+  background: #C9A87C;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b18f63;
+}
+
+/* Glassmorphism Classes */
+.glass-nav {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.dark .glass-nav {
+  background-color: rgba(15, 15, 17, 0.75);
+}
+
+.glass-modal {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  background-color: rgba(255, 255, 255, 0.85);
+}
+.dark .glass-modal {
+  background-color: rgba(24, 24, 27, 0.85);
+}
+
+/* Custom typography classes */
+.font-luxury-serif {
+  font-family: var(--font-serif);
+}
+
+.font-luxury-sans {
+  font-family: var(--font-sans);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Image lookbook grid aspect ratios */
+.lookbook-item {
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+}
+
+/* Hide default cursor on desktop when custom cursor is active */
+@media (min-width: 1024px) {
+  .custom-cursor-enabled {
+    cursor: none;
+  }
+  .custom-cursor-enabled a,
+  .custom-cursor-enabled button,
+  .custom-cursor-enabled input,
+  .custom-cursor-enabled select,
+  .custom-cursor-enabled textarea,
+  .custom-cursor-enabled [role="button"] {
+    cursor: none;
+  }
+}
