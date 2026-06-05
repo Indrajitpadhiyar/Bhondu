@@ -72,11 +72,7 @@ const Navbar = () => {
   const handleSearchItemClick = (gender, productId) => {
     setIsSearchOpen(false);
     setSearchQuery('');
-    navigate(gender === 'man' ? '/man' : '/women');
-    setTimeout(() => {
-      const el = document.getElementById(`product-${productId}`);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 300);
+    navigate(`/product/${productId}`);
   };
 
   const handleCategoryNav = (categoryName) => {
@@ -142,7 +138,7 @@ const Navbar = () => {
             <div className="absolute left-1/2 transform -translate-x-1/2">
               <Link
                 to="/"
-                className="flex items-center space-x-3 flavors-extrabold text-4xl font-bold tracking-[0.25em] text-primary dark:text-zinc-100 hover:text-accent transition-colors"
+                className="flex items-center space-x-3 flavors-extrabold text-2xl sm:text-3xl md:text-4xl font-bold tracking-[0.1em] sm:tracking-[0.25em] text-primary dark:text-zinc-100 hover:text-accent transition-colors"
               >
                 <span>BHONDU</span>
               </Link>
@@ -163,7 +159,7 @@ const Navbar = () => {
               {/* Dark Mode Toggle */}
               <button
                 onClick={toggleDarkMode}
-                className="p-2 text-primary dark:text-zinc-100 hover:text-accent transition-colors"
+                className="hidden sm:block p-2 text-primary dark:text-zinc-100 hover:text-accent transition-colors"
                 aria-label="Toggle dark mode"
               >
                 {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -172,7 +168,7 @@ const Navbar = () => {
               {/* Wishlist Trigger */}
               <button
                 onClick={() => setIsWishlistOpen(true)}
-                className="p-2 text-primary dark:text-zinc-100 hover:text-accent transition-colors relative"
+                className="hidden sm:block p-2 text-primary dark:text-zinc-100 hover:text-accent transition-colors relative"
                 aria-label="Wishlist"
               >
                 <Heart className="w-5 h-5" />
@@ -196,7 +192,7 @@ const Navbar = () => {
               </button>
 
               {/* Profile Toggle */}
-              <div className="relative">
+              <div className="hidden sm:block relative">
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
                   className="p-2 text-primary dark:text-zinc-100 hover:text-accent transition-colors"
@@ -277,6 +273,45 @@ const Navbar = () => {
                 <button onClick={() => handleCategoryNav('T-Shirts')} className="text-left hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800 cursor-pointer">T-Shirts</button>
                 <button onClick={() => handleCategoryNav('Shirts')} className="text-left hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800 cursor-pointer">Shirts</button>
                 <button onClick={() => handleCategoryNav('Shoes')} className="text-left hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800 cursor-pointer">Shoes</button>
+              </div>
+
+              {/* Mobile Drawer Actions (Wishlist, Dark Mode, Profile) */}
+              <div className="mt-8 pt-6 border-t border-secondary dark:border-zinc-800 flex flex-col space-y-4 text-xs font-semibold tracking-widest uppercase">
+                <button
+                  onClick={() => { setIsMobileMenuOpen(false); setIsWishlistOpen(true); }}
+                  className="flex items-center space-x-3 text-primary dark:text-zinc-100 hover:text-accent py-2 cursor-pointer"
+                >
+                  <Heart className="w-4 h-4" />
+                  <span>Wishlist ({displayWishlist.length})</span>
+                </button>
+                
+                <button
+                  onClick={() => { toggleDarkMode(); }}
+                  className="flex items-center space-x-3 text-primary dark:text-zinc-100 hover:text-accent py-2 cursor-pointer"
+                >
+                  {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                  <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+                </button>
+
+                <div className="border-t border-secondary dark:border-zinc-800 my-2" />
+
+                <div className="space-y-3 pl-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+                  <a href="#profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 hover:text-accent py-1.5">
+                    <User className="w-4 h-4" />
+                    <span>My Profile</span>
+                  </a>
+                  <a href="#orders" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 hover:text-accent py-1.5">
+                    <ShoppingBag className="w-4 h-4" />
+                    <span>My Orders</span>
+                  </a>
+                  <button
+                    onClick={() => { setIsMobileMenuOpen(false); alert('Profile logged out simulated'); }}
+                    className="w-full text-left flex items-center space-x-3 text-red-500 hover:text-red-650 py-1.5 cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                    <span>Log Out</span>
+                  </button>
+                </div>
               </div>
 
               <div className="mt-auto pt-6 text-[10px] text-zinc-400 uppercase tracking-widest text-center">
@@ -395,11 +430,21 @@ const Navbar = () => {
                 {displayCartItems.length > 0 ? (
                   displayCartItems.map((item) => (
                     <div key={item.key} className="flex space-x-4 border-b border-secondary/50 dark:border-zinc-800/50 pb-6 last:border-b-0">
-                      <img src={item.image} alt={item.name} className="w-20 h-24 object-cover rounded-xs" />
+                      <img
+                        onClick={() => { setIsCartOpen(false); navigate(`/product/${item.id}`); }}
+                        src={item.image}
+                        alt={item.name}
+                        className="w-20 h-24 object-cover rounded-xs cursor-pointer hover:opacity-85 transition-opacity"
+                      />
                       <div className="flex-grow flex flex-col justify-between">
                         <div>
                           <div className="flex justify-between">
-                            <h4 className="text-xs font-bold uppercase tracking-wider text-primary dark:text-zinc-100">{item.name}</h4>
+                            <h4
+                              onClick={() => { setIsCartOpen(false); navigate(`/product/${item.id}`); }}
+                              className="text-xs font-bold uppercase tracking-wider text-primary dark:text-zinc-100 cursor-pointer hover:text-accent transition-colors"
+                            >
+                              {item.name}
+                            </h4>
                             <button
                               onClick={() => removeFromCart(item.key)}
                               className="text-zinc-400 hover:text-red-500 transition-colors cursor-pointer"
@@ -502,11 +547,21 @@ const Navbar = () => {
                     if (!product) return null;
                     return (
                       <div key={product.id} className="flex space-x-4 border-b border-secondary/50 dark:border-zinc-800/50 pb-6 last:border-b-0">
-                        <img src={product.images[0]} alt={product.name} className="w-20 h-24 object-cover rounded-xs" />
+                        <img
+                          onClick={() => { setIsWishlistOpen(false); navigate(`/product/${product.id}`); }}
+                          src={product.images[0]}
+                          alt={product.name}
+                          className="w-20 h-24 object-cover rounded-xs cursor-pointer hover:opacity-85 transition-opacity"
+                        />
                         <div className="flex-grow flex flex-col justify-between">
                           <div>
                             <div className="flex justify-between">
-                              <h4 className="text-xs font-bold uppercase tracking-wider text-primary dark:text-zinc-100">{product.name}</h4>
+                              <h4
+                                onClick={() => { setIsWishlistOpen(false); navigate(`/product/${product.id}`); }}
+                                className="text-xs font-bold uppercase tracking-wider text-primary dark:text-zinc-100 cursor-pointer hover:text-accent transition-colors"
+                              >
+                                {product.name}
+                              </h4>
                               <button
                                 onClick={() => toggleWishlist(product.id)}
                                 className="text-zinc-400 hover:text-red-500 transition-colors cursor-pointer"

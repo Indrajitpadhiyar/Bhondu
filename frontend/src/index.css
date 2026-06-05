@@ -126,3 +126,91 @@ html {
     cursor: none;
   }
 }
+
+/* Swiper Custom Pagination & Overlap Fix */
+.swiper {
+  padding-bottom: 3rem !important;
+}
+
+@media (min-width: 769px) {
+  .swiper {
+    padding-left: 55px !important;
+    padding-right: 55px !important;
+  }
+}
+
+.swiper-horizontal > .swiper-pagination-bullets, 
+.swiper-pagination-bullets.swiper-pagination-horizontal {
+  bottom: 0px !important;
+}
+
+.swiper-pagination-bullet {
+  background: #a1a1aa !important;
+  opacity: 0.6;
+  width: 8px !important;
+  height: 8px !important;
+  margin: 0 5px !important;
+  transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  background: var(--color-accent) !important;
+  opacity: 1 !important;
+  width: 10px !important;
+  height: 10px !important;
+}
+
+/* Swiper Custom Navigation Buttons */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #111111 !important;
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  top: 50% !important;
+  margin-top: -20px !important;
+}
+
+@media (min-width: 769px) {
+  .swiper-button-prev {
+    left: 8px !important;
+  }
+  .swiper-button-next {
+    right: 8px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none !important;
+  }
+}
+
+.dark .swiper-button-next,
+.dark .swiper-button-prev {
+  color: #ffffff !important;
+  background-color: rgba(24, 24, 27, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: var(--color-accent) !important;
+  color: #111111 !important;
+  border-color: var(--color-accent) !important;
+  box-shadow: 0 8px 20px rgba(232, 252, 8, 0.4) !important;
+  transform: scale(1.05);
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 14px !important;
+  font-weight: bold !important;
+}

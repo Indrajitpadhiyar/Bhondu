@@ -23,7 +23,7 @@ const Footer = () => {
                   className="w-full h-full object-cover scale-105"
                 />
               </div>
-              <span className="font-luxury-serif text-2xl font-bold tracking-[0.25em] text-primary dark:text-zinc-100">BHONDU</span>
+              <span className="font-luxury-serif text-2xl flavors-extrabold tracking-[0.25em] text-primary dark:text-zinc-100">BHONDU</span>
             </div>
             <p className="text-xs text-zinc-500 leading-relaxed uppercase tracking-wider">
               Timeless fashion for modern individuals. Designed with architectural clean silhouettes and crafted in sustainable luxury fabrications.
@@ -39,9 +39,9 @@ const Footer = () => {
               <a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-accent transition-colors" aria-label="Twitter">
                 <svg viewBox="0 0 24 24" className="w-4 h-4" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
               </a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-accent transition-colors" aria-label="YouTube">
+              {/* <a href="https://youtube.com" target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-accent transition-colors" aria-label="YouTube">
                 <svg viewBox="0 0 24 24" className="w-4 h-4" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
-              </a>
+              </a> */}
             </div>
           </div>
 

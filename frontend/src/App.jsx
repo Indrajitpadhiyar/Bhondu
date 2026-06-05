@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Man from './pages/Man';
 import Women from './pages/Women';
 import About from './pages/About';
+import ProductDetails from './pages/ProductDetails';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
@@ -33,6 +34,7 @@ function App() {
             <Route path="/man" element={<Man />} />
             <Route path="/women" element={<Women />} />
             <Route path="/about" element={<About />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
           </Routes>
         </AnimatePresence>
       </main>

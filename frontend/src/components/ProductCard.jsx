@@ -2,10 +2,12 @@ import React, { useContext, useState } from 'react';
 import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { ShopContext } from '../context/ShopContext';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
   const { isInWishlist, toggleWishlist, addToCart, setQuickViewProduct } = useContext(ShopContext);
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
 
   const favorited = isInWishlist(product.id);
 
@@ -23,7 +25,10 @@ const ProductCard = ({ product }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Product Image Area */}
-      <div className="relative aspect-[3/4] bg-secondary/20 dark:bg-zinc-850 overflow-hidden cursor-pointer">
+      <div 
+        onClick={() => navigate(`/product/${product.id}`)}
+        className="relative aspect-[3/4] bg-secondary/20 dark:bg-zinc-850 overflow-hidden cursor-pointer"
+      >
         {/* Discount Badge */}
         {product.discount > 0 && (
           <span className="absolute top-4 left-4 z-10 bg-accent text-primary dark:text-zinc-950 text-[10px] font-bold px-2.5 py-1 tracking-widest uppercase">
@@ -77,7 +82,10 @@ const ProductCard = ({ product }) => {
 
       {/* Info details */}
       <div className="p-4 flex flex-col flex-grow bg-white dark:bg-zinc-900 transition-colors duration-300">
-        <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-800 dark:text-zinc-200 line-clamp-1 mb-1">
+        <h3 
+          onClick={() => navigate(`/product/${product.id}`)}
+          className="text-xs font-bold uppercase tracking-widest text-zinc-800 dark:text-zinc-200 hover:text-accent transition-colors line-clamp-1 mb-1 cursor-pointer"
+        >
           {product.name}
         </h3>
         <p className="text-[10px] text-zinc-400 tracking-wider uppercase mb-3">
