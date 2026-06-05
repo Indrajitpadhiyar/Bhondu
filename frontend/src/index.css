@@ -1,10 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Outfit:wght@200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Flavors&family=Playfair+Display:ital,wght@1,707&display=swap');
 @import "tailwindcss";
 
 @theme {
   --color-primary: #111111;
-  --color-secondary: #F5F1EB;
-  --color-accent: #C9A87C;
+  --color-secondary: #f4f4f5;
+  --color-accent: #e8fc08;
   --color-luxury-text: #222222;
   --color-luxury-bg: #FFFFFF;
   
@@ -41,17 +42,17 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F5F1EB;
+  background: var(--color-secondary);
 }
 .dark ::-webkit-scrollbar-track {
   background: #18181b;
 }
 ::-webkit-scrollbar-thumb {
-  background: #C9A87C;
+  background: var(--color-accent);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #b18f63;
+  background: #c8da07;
 }
 
 /* Glassmorphism Classes */
@@ -91,6 +92,24 @@ html {
 .lookbook-item {
   break-inside: avoid;
   margin-bottom: 1.5rem;
+}
+
+.flavors-regular {
+  font-family: "Flavors", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.flavors-bold {
+  font-family: "Flavors", cursive;
+  font-weight: 400;
+  font-style: bold;
+}
+
+.flavors-extrabold {
+  font-family: "Flavors", cursive;
+  font-weight: 400;
+  font-style: extra-bold;
 }
 
 /* Hide default cursor on desktop when custom cursor is active */

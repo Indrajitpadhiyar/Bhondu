@@ -5,6 +5,17 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        bhondu: ["Orbitron", "sans-serif"],
+      },
+    },
+  },
   plugins: [
     react(),
     tailwindcss(),

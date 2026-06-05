@@ -15,7 +15,16 @@ const Footer = () => {
           
           {/* Column 1: Brand Info */}
           <div className="space-y-6">
-            <span className="font-luxury-serif text-2xl font-bold tracking-[0.25em] text-primary dark:text-zinc-100">BHONDU</span>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 rounded-full bg-black border border-accent/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                <img
+                  src="/bhondu_logo.png"
+                  alt="BHONDU Logo"
+                  className="w-full h-full object-cover scale-105"
+                />
+              </div>
+              <span className="font-luxury-serif text-2xl font-bold tracking-[0.25em] text-primary dark:text-zinc-100">BHONDU</span>
+            </div>
             <p className="text-xs text-zinc-500 leading-relaxed uppercase tracking-wider">
               Timeless fashion for modern individuals. Designed with architectural clean silhouettes and crafted in sustainable luxury fabrications.
             </p>

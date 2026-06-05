@@ -5,6 +5,7 @@ import ProductCard from '../components/ProductCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Flame, Star, Gift, ShieldCheck, Truck, RefreshCw } from 'lucide-react';
+import "@fontsource/orbitron/700.css";
 
 // Swiper Styles
 import 'swiper/css';

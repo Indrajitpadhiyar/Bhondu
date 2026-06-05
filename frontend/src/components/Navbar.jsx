@@ -142,9 +142,9 @@ const Navbar = () => {
             <div className="absolute left-1/2 transform -translate-x-1/2">
               <Link
                 to="/"
-                className="font-luxury-serif text-3xl font-bold tracking-[0.25em] text-primary dark:text-zinc-100 hover:text-accent transition-colors"
+                className="flex items-center space-x-3 flavors-extrabold text-4xl font-bold tracking-[0.25em] text-primary dark:text-zinc-100 hover:text-accent transition-colors"
               >
-                BHONDU
+                <span>BHONDU</span>
               </Link>
             </div>
 
@@ -256,7 +256,16 @@ const Navbar = () => {
               className="fixed inset-y-0 left-0 max-w-xs w-full bg-white dark:bg-zinc-950 shadow-2xl z-[101] flex flex-col p-6 overflow-y-auto"
             >
               <div className="flex justify-between items-center mb-8">
-                <span className="font-luxury-serif text-2xl font-bold tracking-[0.2em] text-primary dark:text-zinc-100">BHONDU</span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-7 h-7 rounded-full bg-black border border-accent/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <img
+                      src="/bhondu_logo.png"
+                      alt="BHONDU Logo"
+                      className="w-full h-full object-cover scale-105"
+                    />
+                  </div>
+                  <span className="font-luxury-serif text-2xl font-bold tracking-[0.2em] text-primary dark:text-zinc-100">BHONDU</span>
+                </div>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-zinc-500 hover:text-primary dark:text-zinc-100 cursor-pointer">
                   <X className="w-6 h-6" />
                 </button>
