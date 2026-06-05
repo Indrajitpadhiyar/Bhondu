@@ -29,7 +29,7 @@ const Loader = ({ finishLoading }) => {
   return (
     <motion.div
       initial={{ opacity: 1 }}
-      exit={{ 
+      exit={{
         opacity: 0,
         transition: { duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }
       }}
@@ -69,9 +69,9 @@ const Loader = ({ finishLoading }) => {
           {showText && (
             <motion.div
               initial={{ opacity: 0, y: 15, letterSpacing: '0.2em' }}
-              animate={{ 
-                opacity: 1, 
-                y: 0, 
+              animate={{
+                opacity: 1,
+                y: 0,
                 letterSpacing: '0.4em',
                 transition: { duration: 0.8, ease: 'easeOut' }
               }}
@@ -81,7 +81,7 @@ const Loader = ({ finishLoading }) => {
                 BHONDU
               </h1>
               <p className="text-[9px] text-[#e8fc08] tracking-[0.55em] ml-[0.55em] mt-2 select-none uppercase font-semibold">
-                Luxury Fashion
+                Built Different
               </p>
             </motion.div>
           )}
