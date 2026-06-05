@@ -87,7 +87,7 @@ const Navbar = () => {
       {/* Sticky Glass Navbar */}
       <nav className="sticky top-0 left-0 right-0 z-50 glass-nav border-b border-secondary/45 dark:border-zinc-800 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-20 relative">
 
             {/* Left Section: Mobile Menu Trigger & Main Links */}
             <div className="flex items-center">
@@ -135,10 +135,10 @@ const Navbar = () => {
             </div>
 
             {/* Center Section: BRAND LOGO */}
-            <div className="absolute left-1/2 transform -translate-x-1/2">
+            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
               <Link
                 to="/"
-                className="flex items-center space-x-3 flavors-extrabold text-2xl sm:text-3xl md:text-4xl font-bold tracking-[0.1em] sm:tracking-[0.25em] text-primary dark:text-zinc-100 hover:text-accent transition-colors"
+                className="flex items-center space-x-3 flavors-extrabold text-2xl sm:text-3xl md:text-4xl tracking-[0.1em] sm:tracking-[0.25em] text-primary dark:text-zinc-100 hover:text-accent transition-colors"
               >
                 <span>BHONDU</span>
               </Link>
@@ -260,7 +260,7 @@ const Navbar = () => {
                       className="w-full h-full object-cover scale-105"
                     />
                   </div>
-                  <span className="font-luxury-serif text-2xl font-bold tracking-[0.2em] text-primary dark:text-zinc-100">BHONDU</span>
+                  <span className="font-logo text-2xl tracking-[0.2em] text-primary dark:text-zinc-100">BHONDU</span>
                 </div>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-zinc-500 hover:text-primary dark:text-zinc-100 cursor-pointer">
                   <X className="w-6 h-6" />

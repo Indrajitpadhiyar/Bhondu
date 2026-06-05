@@ -12,7 +12,7 @@ const Footer = () => {
     <footer className="bg-secondary/40 dark:bg-zinc-950 border-t border-secondary dark:border-zinc-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8">
-          
+
           {/* Column 1: Brand Info */}
           <div className="space-y-6">
             <div className="flex items-center space-x-3">
@@ -23,7 +23,7 @@ const Footer = () => {
                   className="w-full h-full object-cover scale-105"
                 />
               </div>
-              <span className="font-luxury-serif text-2xl flavors-extrabold tracking-[0.25em] text-primary dark:text-zinc-100">BHONDU</span>
+              <span className="flavors-extrabold text-2xl tracking-[0.25em] text-primary dark:text-zinc-100">BHONDU</span>
             </div>
             <p className="text-xs text-zinc-500 leading-relaxed uppercase tracking-wider">
               Timeless fashion for modern individuals. Designed with architectural clean silhouettes and crafted in sustainable luxury fabrications.
@@ -91,8 +91,8 @@ const Footer = () => {
                 className="w-full bg-transparent border-none text-xs tracking-widest outline-none text-primary dark:text-zinc-100 placeholder-zinc-400"
                 required
               />
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="text-xs font-bold tracking-widest hover:text-accent transition-colors cursor-pointer"
               >
                 SUBMIT

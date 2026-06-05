@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Man from './pages/Man';
@@ -11,14 +11,21 @@ import CustomCursor from './components/CustomCursor';
 import ScrollProgressBar from './components/ScrollProgressBar';
 import BackToTop from './components/BackToTop';
 import QuickViewModal from './components/QuickViewModal';
+import Loader from './components/Loader';
 import { AnimatePresence } from 'framer-motion';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const isHome = location.pathname === '/';
 
   return (
-    <div className="min-h-screen flex flex-col transition-colors duration-300 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
+    <>
+      <AnimatePresence mode="wait">
+        {isLoading && <Loader finishLoading={() => setIsLoading(false)} />}
+      </AnimatePresence>
+
+      <div className="min-h-screen flex flex-col transition-colors duration-300 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
       {/* Premium UI Overlay components */}
       <ScrollProgressBar />
       <CustomCursor />
@@ -46,7 +53,8 @@ function App() {
       <QuickViewModal />
       <BackToTop />
     </div>
-  );
+  </>
+);
 }
 
 export default App;
