@@ -43,4 +43,7 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] }),
     spaFallbackPlugin()
   ],
+  optimizeDeps: {
+    include: ['react-is']
+  }
 })

@@ -14,47 +14,80 @@ import QuickViewModal from './components/QuickViewModal';
 import Loader from './components/Loader';
 import { AnimatePresence } from 'framer-motion';
 
+// Admin Imports
+import { AdminProvider } from './context/AdminContext';
+import AdminLayout from './layouts/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminProducts from './pages/admin/AdminProducts';
+import AdminOrders from './pages/admin/AdminOrders';
+import AdminCustomers from './pages/admin/AdminCustomers';
+import AdminInventory from './pages/admin/AdminInventory';
+import AdminMarketing from './pages/admin/AdminMarketing';
+import AdminAnalytics from './pages/admin/AdminAnalytics';
+import AdminCMS from './pages/admin/AdminCMS';
+import AdminSettings from './pages/admin/AdminSettings';
+import AdminAuth from './pages/admin/AdminAuth';
+
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const isAdmin = location.pathname.startsWith('/admin');
+  const isAuth = location.pathname === '/login';
+  const isHideGlobalUI = isAdmin || isAuth;
 
   return (
-    <>
+    <AdminProvider>
       <AnimatePresence mode="wait">
         {isLoading && <Loader finishLoading={() => setIsLoading(false)} />}
       </AnimatePresence>
 
       <div className="min-h-screen flex flex-col transition-colors duration-300 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
-      {/* Premium UI Overlay components */}
-      <ScrollProgressBar />
-      <CustomCursor />
-      
-      {/* Sticky glassmorphic navbar */}
-      {!isHome && <Navbar />}
+        {/* Premium UI Overlay components */}
+        {!isHideGlobalUI && <ScrollProgressBar />}
+        <CustomCursor />
+        
+        {/* Sticky glassmorphic navbar */}
+        {!isHome && !isHideGlobalUI && <Navbar />}
 
-      {/* Main content body with fade transitions */}
-      <main className="flex-grow">
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Home />} />
-            <Route path="/man" element={<Man />} />
-            <Route path="/women" element={<Women />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/product/:id" element={<ProductDetails />} />
-          </Routes>
-        </AnimatePresence>
-      </main>
+        {/* Main content body */}
+        <main className="flex-grow">
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              {/* Storefront Routes */}
+              <Route path="/" element={<Home />} />
+              <Route path="/man" element={<Man />} />
+              <Route path="/women" element={<Women />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/product/:id" element={<ProductDetails />} />
+              <Route path="/login" element={<AdminAuth />} />
 
-      {/* Conditional footer: Hide on landing page for split-screen focus */}
-      {!isHome && <Footer />}
+              {/* Admin Panel Routes */}
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="orders" element={<AdminOrders />} />
+                <Route path="customers" element={<AdminCustomers />} />
+                <Route path="inventory" element={<AdminInventory />} />
+                <Route path="marketing" element={<AdminMarketing />} />
+                <Route path="analytics" element={<AdminAnalytics />} />
+                <Route path="cms" element={<AdminCMS />} />
+                <Route path="settings" element={<AdminSettings />} />
+              </Route>
+            </Routes>
+          </AnimatePresence>
+        </main>
 
-      {/* Interactive global utilities */}
-      <QuickViewModal />
-      <BackToTop />
-    </div>
-  </>
-);
+        {/* Conditional footer: Hide on landing page and admin panel */}
+        {!isHome && !isHideGlobalUI && <Footer />}
+
+        {/* Interactive global utilities */}
+        {!isHideGlobalUI && <QuickViewModal />}
+        {!isHideGlobalUI && <BackToTop />}
+      </div>
+    </AdminProvider>
+  );
 }
 
 export default App;
+
