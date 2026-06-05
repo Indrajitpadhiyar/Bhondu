@@ -18,7 +18,7 @@ const Footer = () => {
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 rounded-full bg-black border border-accent/20 flex items-center justify-center overflow-hidden flex-shrink-0">
                 <img
-                  src="/bhondu_logo.png"
+                  src="/bhondu_logo1.png"
                   alt="BHONDU Logo"
                   className="w-full h-full object-cover scale-105"
                 />

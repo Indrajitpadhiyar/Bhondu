@@ -284,7 +284,7 @@ const Navbar = () => {
                   <Heart className="w-4 h-4" />
                   <span>Wishlist ({displayWishlist.length})</span>
                 </button>
-                
+
                 <button
                   onClick={() => { toggleDarkMode(); }}
                   className="flex items-center space-x-3 text-primary dark:text-zinc-100 hover:text-accent py-2 cursor-pointer"
