@@ -27,7 +27,14 @@ import {
   Plus
 } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
-import { dashboardAnalytics } from '../../data/adminMockData';
+
+// Empty analytics state fallback
+const dashboardAnalytics = {
+  monthlyRevenue: [],
+  trafficSources: [],
+  conversionFunnel: [],
+  categoryPerformance: []
+};
 
 // Reusable Counter Animation Component
 const AnimatedCounter = ({ value, prefix = "", duration = 1.2 }) => {

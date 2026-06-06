@@ -31,7 +31,13 @@ import {
   Globe2,
   RefreshCw
 } from 'lucide-react';
-import { dashboardAnalytics } from '../../data/adminMockData';
+// Empty analytics state fallback
+const dashboardAnalytics = {
+  monthlyRevenue: [],
+  trafficSources: [],
+  conversionFunnel: [],
+  categoryPerformance: []
+};
 
 export default function AdminAnalytics() {
   const [timeRange, setTimeRange] = useState('6m');
@@ -146,7 +152,8 @@ export default function AdminAnalytics() {
             {/* Displaying horizontal funnel bars */}
             <div className="w-full space-y-3.5 text-xs">
               {dashboardAnalytics.conversionFunnel.map((funnel, index) => {
-                const percentage = Math.round((funnel.count / dashboardAnalytics.conversionFunnel[0].count) * 100);
+                const baseCount = dashboardAnalytics.conversionFunnel[0]?.count || 1;
+                const percentage = Math.round((funnel.count / baseCount) * 100);
                 return (
                   <div key={index} className="space-y-1">
                     <div className="flex justify-between font-semibold">

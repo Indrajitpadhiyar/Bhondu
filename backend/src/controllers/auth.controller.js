@@ -66,6 +66,15 @@ export const logout = asyncHandler(async (req, res) => {
 
 export const refreshToken = asyncHandler(async (req, res) => {
   const oldRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
+  
+  if (!oldRefreshToken) {
+    return res.status(200).json({
+      status: 'success',
+      accessToken: null,
+      message: 'No refresh token provided.'
+    });
+  }
+
   const { accessToken, refreshToken: newRefreshToken } = await AuthService.refreshToken(oldRefreshToken);
 
   // Set updated cookies

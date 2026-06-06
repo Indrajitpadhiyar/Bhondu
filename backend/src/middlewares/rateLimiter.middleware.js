@@ -1,9 +1,10 @@
 import rateLimit from 'express-rate-limit';
 
 const makeLimiter = (maxRequests, windowMinutes, customMessage) => {
+  const isDev = process.env.NODE_ENV === 'development';
   return rateLimit({
     windowMs: windowMinutes * 60 * 1000,
-    max: maxRequests,
+    max: isDev ? 1000 : maxRequests, // Relax limits in development
     handler: (req, res) => {
       res.status(429).json({
         success: false,

@@ -2,15 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useGetProductsQuery, useCreateProductMutation, useUpdateProductMutation, useDeleteProductMutation } from '../services/productApi';
 import { useGetOrdersQuery, useUpdateOrderStatusMutation } from '../services/orderApi';
-import { products as initialProducts } from '../data/products';
-import {
-  initialOrders,
-  initialCustomers,
-  initialCoupons,
-  inventoryAlerts,
-  initialSubscribers,
-  initialCMS
-} from '../data/adminMockData';
 
 const AdminContext = createContext();
 
@@ -31,13 +22,17 @@ export const AdminProvider = ({ children }) => {
   const [mutateDeleteProduct] = useDeleteProductMutation();
   const [mutateUpdateOrderStatus] = useUpdateOrderStatusMutation();
 
-  const [products, setProducts] = useState(initialProducts);
-  const [orders, setOrders] = useState(initialOrders);
-  const [customers, setCustomers] = useState(initialCustomers);
-  const [coupons, setCoupons] = useState(initialCoupons);
-  const [subscribers, setSubscribers] = useState(initialSubscribers);
-  const [alerts, setAlerts] = useState(inventoryAlerts);
-  const [cms, setCms] = useState(initialCMS);
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [coupons, setCoupons] = useState([]);
+  const [subscribers, setSubscribers] = useState([]);
+  const [alerts, setAlerts] = useState([]);
+  const [cms, setCms] = useState({
+    heroBanners: [],
+    lookbook: [],
+    testimonials: []
+  });
 
   useEffect(() => {
     if (dbProducts && dbProducts.length > 0) {

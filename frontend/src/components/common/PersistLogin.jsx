@@ -22,6 +22,14 @@ const PersistLogin = ({ children }) => {
         const refreshResult = await refreshSilent().unwrap();
         const newAccessToken = refreshResult.accessToken;
 
+        if (!newAccessToken) {
+          if (isMounted) {
+            dispatch(setLoading(false));
+            setIsRefreshing(false);
+          }
+          return;
+        }
+
         // Fetch User profile to fully reconstruct session
         const profileResult = await triggerGetProfile().unwrap();
         

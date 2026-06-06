@@ -149,21 +149,16 @@ export default function AdminAuth() {
   };
 
   useEffect(() => {
-    // Dynamically load Google Client library script
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
+    let script;
+    
+    const initializeGoogleSignIn = () => {
+      if (window.google && googleBtnRef.current) {
+        try {
+          window.google.accounts.id.initialize({
+            client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+            callback: handleCredentialResponse,
+          });
 
-    script.onload = () => {
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-          callback: handleCredentialResponse,
-        });
-
-        if (googleBtnRef.current) {
           window.google.accounts.id.renderButton(
             googleBtnRef.current,
             {
@@ -174,16 +169,33 @@ export default function AdminAuth() {
               shape: "rectangular"
             }
           );
+        } catch (e) {
+          console.warn("Google Client Sign-In library error on init:", e);
         }
       }
     };
 
+    if (window.google) {
+      initializeGoogleSignIn();
+    } else {
+      // Avoid duplicate script insertion
+      script = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+      if (!script) {
+        script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.async = true;
+        script.defer = true;
+        document.body.appendChild(script);
+      }
+      script.addEventListener('load', initializeGoogleSignIn);
+    }
+
     return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
+      if (script) {
+        script.removeEventListener('load', initializeGoogleSignIn);
       }
     };
-  }, [isLogin]);
+  }, []);
 
 
   return (

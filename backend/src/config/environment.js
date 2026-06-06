@@ -33,6 +33,10 @@ const envSchema = z.object({
   SMTP_USER: z.string().default('mock_user'),
   SMTP_PASS: z.string().default('mock_pass'),
   SMTP_FROM_EMAIL: z.string().email().default('no-reply@bhondu.com'),
+  
+  // Admin Credentials
+  ADMIN_EMAIL: z.string().email().default('idrtech23@gmail.com'),
+  ADMIN_PASWORD: z.string().default('IDRtech@23'),
 });
 
 const parseEnv = () => {
@@ -40,6 +44,7 @@ const parseEnv = () => {
   const envObj = {
     ...process.env,
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || process.env.CLOUDINARY_API_key,
+    ADMIN_PASWORD: process.env.ADMIN_PASWORD || process.env.ADMIN_PASSWORD,
   };
 
   const parsed = envSchema.safeParse(envObj);

@@ -87,6 +87,10 @@ axiosInstance.interceptors.response.use(
       
       const { accessToken } = refreshRes.data;
 
+      if (!accessToken) {
+        throw new Error('Refresh token is invalid or missing.');
+      }
+
       if (storeRef) {
         const { setCredentials } = await import('../features/auth/authSlice.js');
         storeRef.dispatch(setCredentials({ token: accessToken }));
