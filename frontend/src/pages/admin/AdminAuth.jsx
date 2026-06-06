@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
+import { useLoginMutation, useRegisterMutation, useGoogleLoginMutation } from '../../services/authApi';
 import {
   Mail,
   Lock,
@@ -19,8 +21,14 @@ export default function AdminAuth() {
   const [isLogin, setIsLogin] = useState(true);
   const [isAdminRole, setIsAdminRole] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+
   const [success, setSuccess] = useState(false);
+
+  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+  const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
+
+  const loading = isLoginLoading || isRegisterLoading;
 
   // Form states
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
@@ -31,67 +39,151 @@ export default function AdminAuth() {
     confirmPassword: ''
   });
 
-  const handleLoginSubmit = (e) => {
+  const checkPasswordStrength = (pwd) => {
+    if (!pwd) return { score: 0, checks: { length: false, lowercase: false, uppercase: false, number: false, special: false } };
+    
+    const checks = {
+      length: pwd.length >= 8,
+      lowercase: /[a-z]/.test(pwd),
+      uppercase: /[A-Z]/.test(pwd),
+      number: /[0-9]/.test(pwd),
+      special: /[^A-Za-z0-9]/.test(pwd)
+    };
+
+    const score = Object.values(checks).filter(Boolean).length;
+    return { score, checks };
+  };
+
+  const getStrengthLabel = (score) => {
+    if (score === 0) return { label: 'Empty', color: 'bg-zinc-200 dark:bg-zinc-850', textColor: 'text-zinc-400' };
+    if (score <= 2) return { label: 'Weak', color: 'bg-red-500', textColor: 'text-red-550 dark:text-red-400' };
+    if (score <= 4) return { label: 'Moderate', color: 'bg-amber-500', textColor: 'text-amber-550 dark:text-amber-400' };
+    return { label: 'Strong', color: 'bg-emerald-500', textColor: 'text-emerald-550 dark:text-emerald-400' };
+  };
+
+  const pwdStrength = checkPasswordStrength(registerForm.password);
+
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     if (!loginForm.email || !loginForm.password) {
-      alert("Please fill in all credentials.");
+      toast.error("Please fill in all credentials.");
       return;
     }
 
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const response = await login({ email: loginForm.email, password: loginForm.password }).unwrap();
+      toast.success("Logged in successfully!");
       setSuccess(true);
+      
+      const user = response.data.user;
+      const userIsAdmin = user.role === 'Admin' || user.role === 'Super Admin';
+      
       setTimeout(() => {
         setSuccess(false);
-        if (isAdminRole) {
+        if (userIsAdmin) {
           navigate('/admin');
         } else {
           navigate('/');
         }
       }, 1500);
-    }, 1200);
+    } catch (err) {
+      toast.error(err.data?.message || 'Login failed. Please check your credentials.');
+    }
   };
 
-  const handleRegisterSubmit = (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     const { name, email, password, confirmPassword } = registerForm;
     if (!name || !email || !password || !confirmPassword) {
-      alert("Please fill in all registration fields.");
+      toast.error("Please fill in all registration fields.");
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      toast.error("Passwords do not match.");
       return;
     }
 
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    if (pwdStrength.score < 5) {
+      toast.error("Please ensure your password meets all strength criteria.");
+      return;
+    }
+
+    try {
+      await register({ name, email, password }).unwrap();
+      toast.success("Registration successful! You can now log in.");
       setSuccess(true);
+      
       setTimeout(() => {
         setSuccess(false);
-        setIsLogin(true); // switch to login after registering successfully
+        setIsLogin(true);
       }, 1500);
-    }, 1200);
+    } catch (err) {
+      toast.error(err.data?.message || 'Registration failed.');
+    }
   };
 
-  const handleGoogleLogin = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+  const googleBtnRef = useRef(null);
+  const [googleLogin, { isLoading: isGoogleLoading }] = useGoogleLoginMutation();
+
+  const handleCredentialResponse = async (response) => {
+    try {
+      const result = await googleLogin({ idToken: response.credential }).unwrap();
+      toast.success("Logged in with Google successfully!");
       setSuccess(true);
+      
+      const user = result.data.user;
+      const userIsAdmin = user.role === 'Admin' || user.role === 'Super Admin';
+      
       setTimeout(() => {
         setSuccess(false);
-        if (isAdminRole) {
+        if (userIsAdmin) {
           navigate('/admin');
         } else {
           navigate('/');
         }
       }, 1500);
-    }, 1200);
+    } catch (err) {
+      toast.error(err.data?.message || 'Google authentication failed.');
+    }
   };
+
+  useEffect(() => {
+    // Dynamically load Google Client library script
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+          callback: handleCredentialResponse,
+        });
+
+        if (googleBtnRef.current) {
+          window.google.accounts.id.renderButton(
+            googleBtnRef.current,
+            {
+              theme: document.documentElement.classList.contains('dark') ? "filled_black" : "outline",
+              size: "large",
+              width: googleBtnRef.current.offsetWidth || 380,
+              text: "continue_with",
+              shape: "rectangular"
+            }
+          );
+        }
+      }
+    };
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, [isLogin]);
 
 
   return (
@@ -379,26 +471,130 @@ export default function AdminAuth() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold block">Create Password</label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="••••••••"
-                      value={registerForm.password}
-                      onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
-                      className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showRegisterPassword ? 'text' : 'password'}
+                        required
+                        placeholder="••••••••"
+                        value={registerForm.password}
+                        onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
+                        className="w-full text-xs pl-3 pr-8 py-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                        className="absolute right-2.5 top-3.5 text-zinc-455 hover:text-zinc-700 dark:hover:text-zinc-300"
+                      >
+                        {showRegisterPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
                   </div>
                   <div className="space-y-1">
                     <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold block">Confirm Password</label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="••••••••"
-                      value={registerForm.confirmPassword}
-                      onChange={(e) => setRegisterForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                      className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showRegisterPassword ? 'text' : 'password'}
+                        required
+                        placeholder="••••••••"
+                        value={registerForm.confirmPassword}
+                        onChange={(e) => setRegisterForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                        className="w-full text-xs pl-3 pr-8 py-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                        className="absolute right-2.5 top-3.5 text-zinc-455 hover:text-zinc-700 dark:hover:text-zinc-300"
+                      >
+                        {showRegisterPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Password Strength Indicator */}
+                  <AnimatePresence>
+                    {registerForm.password && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="col-span-2 space-y-2 pt-1 overflow-hidden"
+                      >
+                        <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider">
+                          <span className="text-zinc-450 dark:text-zinc-500">Password Strength</span>
+                          <span className={getStrengthLabel(pwdStrength.score).textColor}>
+                            {getStrengthLabel(pwdStrength.score).label}
+                          </span>
+                        </div>
+                        
+                        <div className="grid grid-cols-5 gap-1.5">
+                          {[1, 2, 3, 4, 5].map((index) => (
+                            <div
+                              key={index}
+                              className={`h-1 rounded-full transition-all duration-300 ${
+                                index <= pwdStrength.score
+                                  ? getStrengthLabel(pwdStrength.score).color
+                                  : 'bg-zinc-250 dark:bg-zinc-850'
+                              }`}
+                            />
+                          ))}
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 pt-1 text-[11px]">
+                          <div className="flex items-center gap-1.5">
+                            {pwdStrength.checks.length ? (
+                              <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                            ) : (
+                              <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0 animate-pulse">1</div>
+                            )}
+                            <span className={pwdStrength.checks.length ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
+                              Min 8 characters
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            {pwdStrength.checks.uppercase ? (
+                              <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                            ) : (
+                              <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0 animate-pulse">2</div>
+                            )}
+                            <span className={pwdStrength.checks.uppercase ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
+                              At least one uppercase
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            {pwdStrength.checks.lowercase ? (
+                              <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                            ) : (
+                              <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0 animate-pulse">3</div>
+                            )}
+                            <span className={pwdStrength.checks.lowercase ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
+                              At least one lowercase
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            {pwdStrength.checks.number ? (
+                              <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                            ) : (
+                              <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0 animate-pulse">4</div>
+                            )}
+                            <span className={pwdStrength.checks.number ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
+                              At least one number
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5 sm:col-span-2">
+                            {pwdStrength.checks.special ? (
+                              <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                            ) : (
+                              <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0 animate-pulse">5</div>
+                            )}
+                            <span className={pwdStrength.checks.special ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
+                              At least one symbol (!@#$%^& etc.)
+                            </span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 {/* Accept terms and privacy */}
@@ -441,33 +637,10 @@ export default function AdminAuth() {
             </div>
           </div>
 
-          {/* Google Login Button */}
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            disabled={loading}
-            className="w-full py-2.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-lg font-semibold flex items-center justify-center gap-2.5 transition-colors shadow-sm bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 disabled:opacity-50 text-xs"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24">
-              <path
-                fill="#EA4335"
-                d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.354 0 3.373 2.736 1.5 6.7L5.266 9.765z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M16.04 15.34c-1.045.69-2.38 1.1-4.04 1.1a7.07 7.07 0 0 1-6.734-4.855L1.5 14.45c1.873 3.964 5.854 6.7 10.5 6.7 3.127 0 5.964-1.027 8.036-2.81l-4-3z"
-              />
-              <path
-                fill="#4285F4"
-                d="M23.49 12.27c0-.818-.082-1.609-.227-2.364H12v4.51h6.464c-.29 1.482-1.145 2.736-2.427 3.564l4 3c2.345-2.155 3.454-5.327 3.454-8.71z"
-              />
-              <path
-                fill="#34A853"
-                d="M5.266 14.236A7.07 7.07 0 0 1 4.91 12c0-.79.136-1.545.356-2.235L1.5 6.7A11.956 11.956 0 0 0 0 12c0 1.927.455 3.755 1.255 5.39l4.01-3.154z"
-              />
-            </svg>
-            Continue with Google
-          </button>
+          {/* Google Login Button Container */}
+          <div className="w-full flex justify-center">
+            <div ref={googleBtnRef} className="w-full min-h-[40px] flex justify-center"></div>
+          </div>
 
         </div>
       </div>

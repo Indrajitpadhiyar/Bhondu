@@ -27,9 +27,17 @@ import AdminAnalytics from './pages/admin/AdminAnalytics';
 import AdminCMS from './pages/admin/AdminCMS';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminAuth from './pages/admin/AdminAuth';
+import Profile from './pages/Profile';
+
+// Protection Guards
+import PersistLogin from './components/common/PersistLogin';
+import AdminRoute from './components/common/AdminRoute';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    return !sessionStorage.getItem('bhondu_loaded');
+  });
   const location = useLocation();
   const isHome = location.pathname === '/';
   const isAdmin = location.pathname.startsWith('/admin');
@@ -39,7 +47,14 @@ function App() {
   return (
     <AdminProvider>
       <AnimatePresence mode="wait">
-        {isLoading && <Loader finishLoading={() => setIsLoading(false)} />}
+        {isLoading && (
+          <Loader
+            finishLoading={() => {
+              sessionStorage.setItem('bhondu_loaded', 'true');
+              setIsLoading(false);
+            }}
+          />
+        )}
       </AnimatePresence>
 
       <div className="min-h-screen flex flex-col transition-colors duration-300 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
@@ -54,25 +69,42 @@ function App() {
         <main className="flex-grow">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
-              {/* Storefront Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/man" element={<Man />} />
-              <Route path="/women" element={<Women />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/product/:id" element={<ProductDetails />} />
-              <Route path="/login" element={<AdminAuth />} />
+              <Route element={<PersistLogin />}>
+                {/* Storefront Routes (Accessible to everyone) */}
+                <Route path="/" element={<Home />} />
+                <Route path="/man" element={<Man />} />
+                <Route path="/women" element={<Women />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/login" element={<AdminAuth />} />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Admin Panel Routes */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="products" element={<AdminProducts />} />
-                <Route path="orders" element={<AdminOrders />} />
-                <Route path="customers" element={<AdminCustomers />} />
-                <Route path="inventory" element={<AdminInventory />} />
-                <Route path="marketing" element={<AdminMarketing />} />
-                <Route path="analytics" element={<AdminAnalytics />} />
-                <Route path="cms" element={<AdminCMS />} />
-                <Route path="settings" element={<AdminSettings />} />
+                {/* Admin Panel Routes */}
+                <Route
+                  path="/admin"
+                  element={
+                    <AdminRoute>
+                      <AdminLayout />
+                    </AdminRoute>
+                  }
+                >
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="products" element={<AdminProducts />} />
+                  <Route path="orders" element={<AdminOrders />} />
+                  <Route path="customers" element={<AdminCustomers />} />
+                  <Route path="inventory" element={<AdminInventory />} />
+                  <Route path="marketing" element={<AdminMarketing />} />
+                  <Route path="analytics" element={<AdminAnalytics />} />
+                  <Route path="cms" element={<AdminCMS />} />
+                  <Route path="settings" element={<AdminSettings />} />
+                </Route>
               </Route>
             </Routes>
           </AnimatePresence>

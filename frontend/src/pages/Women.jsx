@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { products } from '../data/products';
+import { useGetProductsQuery } from '../services/productApi';
 import ProductCard from '../components/ProductCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
@@ -13,6 +13,7 @@ import 'swiper/css/pagination';
 
 const Women = () => {
   const location = useLocation();
+  const { data: products = [], isLoading } = useGetProductsQuery({ gender: 'women' });
 
   // Filter states
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -22,11 +23,11 @@ const Women = () => {
 
   // Mock Women's categories list
   const categoriesList = [
-    { name: 'ALL', count: products.filter(p => p.gender === 'women').length },
-    { name: 'Tournament Wear', count: products.filter(p => p.gender === 'women' && p.category === 'Tournament Wear').length },
-    { name: 'T-Shirts', count: products.filter(p => p.gender === 'women' && p.category === 'T-Shirts').length },
-    { name: 'Shirts', count: products.filter(p => p.gender === 'women' && p.category === 'Shirts').length },
-    { name: 'Shoes', count: products.filter(p => p.gender === 'women' && p.category === 'Shoes').length },
+    { name: 'ALL', count: products.length },
+    { name: 'Tournament Wear', count: products.filter(p => p.category === 'Tournament Wear').length },
+    { name: 'T-Shirts', count: products.filter(p => p.category === 'T-Shirts').length },
+    { name: 'Shirts', count: products.filter(p => p.category === 'Shirts').length },
+    { name: 'Shoes', count: products.filter(p => p.category === 'Shoes').length },
   ];
 
   // Subcategories mapping
@@ -48,11 +49,11 @@ const Women = () => {
         setSelectedCategory(match.name);
       }
     }
-  }, [location.search]);
+  }, [location.search, products]);
 
   // Filter effect
   useEffect(() => {
-    let result = products.filter(p => p.gender === 'women');
+    let result = [...products];
 
     if (selectedCategory !== 'ALL') {
       result = result.filter(p => p.category === selectedCategory);
@@ -72,17 +73,16 @@ const Women = () => {
     }
 
     setFilteredProducts(result);
-  }, [selectedCategory, selectedSubcategory, sortBy]);
+  }, [products, selectedCategory, selectedSubcategory, sortBy]);
 
   const handleCategoryChange = (catName) => {
     setSelectedCategory(catName);
     setSelectedSubcategory('ALL');
   };
 
-  const womenProducts = products.filter(p => p.gender === 'women');
-  const trendingNow = womenProducts.filter(p => p.isTrending);
-  const newArrivals = womenProducts.filter(p => p.isNewArrival);
-  const bestSellers = womenProducts.filter(p => p.isBestSeller);
+  const trendingNow = products.filter(p => p.isTrending);
+  const newArrivals = products.filter(p => p.isNewArrival);
+  const bestSellers = products.filter(p => p.isBestSeller);
 
   // Lookbook items mapping
   const lookbookItems = [

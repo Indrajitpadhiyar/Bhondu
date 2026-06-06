@@ -3,16 +3,25 @@ import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { ShopContext } from '../context/ShopContext';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectIsAuthenticated } from '../features/auth/authSlice.js';
+import toast from 'react-hot-toast';
 
 const ProductCard = ({ product }) => {
   const { isInWishlist, toggleWishlist, addToCart, setQuickViewProduct } = useContext(ShopContext);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const favorited = isInWishlist(product.id);
 
   const handleQuickAdd = (e) => {
     e.stopPropagation();
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to cart.");
+      navigate('/login');
+      return;
+    }
     // Quick add default first size and color
     addToCart(product, product.sizes[0], product.colors[0]);
   };
@@ -40,6 +49,11 @@ const ProductCard = ({ product }) => {
         <button
           onClick={(e) => {
             e.stopPropagation();
+            if (!isAuthenticated) {
+              toast.error("Please login to manage your wishlist.");
+              navigate('/login');
+              return;
+            }
             toggleWishlist(product.id);
           }}
           className={`absolute top-4 right-4 z-10 p-2.5 rounded-full border border-secondary/20 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md text-zinc-500 hover:text-red-500 hover:scale-110 transition-all cursor-pointer`}

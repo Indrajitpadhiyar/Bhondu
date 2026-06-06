@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import { useGetProductsQuery, useCreateProductMutation, useUpdateProductMutation, useDeleteProductMutation } from '../services/productApi';
+import { useGetOrdersQuery, useUpdateOrderStatusMutation } from '../services/orderApi';
 import { products as initialProducts } from '../data/products';
 import {
   initialOrders,
@@ -20,6 +23,14 @@ export const useAdmin = () => {
 };
 
 export const AdminProvider = ({ children }) => {
+  const { data: dbProducts = [] } = useGetProductsQuery();
+  const { data: dbOrders = [] } = useGetOrdersQuery();
+
+  const [createProduct] = useCreateProductMutation();
+  const [mutateUpdateProduct] = useUpdateProductMutation();
+  const [mutateDeleteProduct] = useDeleteProductMutation();
+  const [mutateUpdateOrderStatus] = useUpdateOrderStatusMutation();
+
   const [products, setProducts] = useState(initialProducts);
   const [orders, setOrders] = useState(initialOrders);
   const [customers, setCustomers] = useState(initialCustomers);
@@ -27,6 +38,25 @@ export const AdminProvider = ({ children }) => {
   const [subscribers, setSubscribers] = useState(initialSubscribers);
   const [alerts, setAlerts] = useState(inventoryAlerts);
   const [cms, setCms] = useState(initialCMS);
+
+  useEffect(() => {
+    if (dbProducts && dbProducts.length > 0) {
+      setProducts(dbProducts);
+    }
+  }, [dbProducts]);
+
+  useEffect(() => {
+    if (dbOrders && dbOrders.length > 0) {
+      // Map order items to direct status
+      setOrders(dbOrders.map(o => ({
+        ...o,
+        id: o._id,
+        customerName: o.user?.name || o.shippingAddress?.fullName || 'Anonymous Customer',
+        amount: o.totalPrice,
+        date: new Date(o.createdAt).toISOString().split('T')[0]
+      })));
+    }
+  }, [dbOrders]);
   
   const [settings, setSettings] = useState({
     storeName: "BHONDU Store",
@@ -56,63 +86,53 @@ export const AdminProvider = ({ children }) => {
     }
   });
 
-  // Action methods to simulate admin database updates
-  const addProduct = (newProduct) => {
-    const formattedProduct = {
-      id: `m-${products.length + 100}`,
-      price: Number(newProduct.price),
-      originalPrice: Number(newProduct.salePrice || newProduct.price),
-      discount: newProduct.salePrice ? Math.round(((newProduct.price - newProduct.salePrice) / newProduct.price) * 100) : 0,
-      rating: 5.0,
-      reviewsCount: 0,
-      images: newProduct.images || ["https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop"],
-      gender: newProduct.gender,
-      category: newProduct.category,
-      subcategory: newProduct.subcategory || "New Category",
-      sizes: newProduct.sizes || ["M", "L"],
-      colors: newProduct.colors || ["#111111"],
-      isNewArrival: true,
-      isBestSeller: false,
-      isTrending: false,
-      description: newProduct.description,
-      stock: Number(newProduct.stock || 20),
-      ...newProduct
-    };
-    setProducts((prev) => [formattedProduct, ...prev]);
+  // Action methods linked to real database mutations
+  const addProduct = async (newProduct) => {
+    try {
+      const formatted = {
+        name: newProduct.name,
+        price: Number(newProduct.price),
+        salePrice: newProduct.salePrice ? Number(newProduct.salePrice) : null,
+        images: newProduct.images || ["https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop"],
+        gender: newProduct.gender,
+        category: newProduct.category,
+        subcategory: newProduct.subcategory || "New Category",
+        sizes: newProduct.sizes || ["M", "L"],
+        colors: newProduct.colors || ["#111111"],
+        description: newProduct.description,
+        stock: Number(newProduct.stock || 20)
+      };
+      await createProduct(formatted).unwrap();
+      toast.success('Product created successfully in database!');
+    } catch (err) {
+      toast.error(err.data?.message || 'Failed to create product.');
+    }
   };
 
-  const updateProduct = (id, updatedProduct) => {
-    setProducts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, ...updatedProduct } : p))
-    );
+  const updateProduct = async (id, updatedProduct) => {
+    try {
+      await mutateUpdateProduct({ productId: id, data: updatedProduct }).unwrap();
+      toast.success('Product updated in database!');
+    } catch (err) {
+      toast.error(err.data?.message || 'Failed to update product.');
+    }
   };
 
-  const deleteProduct = (id) => {
-    setProducts((prev) => prev.filter((p) => p.id !== id));
+  const deleteProduct = async (id) => {
+    try {
+      await mutateDeleteProduct(id).unwrap();
+      toast.success('Product deleted from database!');
+    } catch (err) {
+      toast.error(err.data?.message || 'Failed to delete product.');
+    }
   };
 
-  const updateOrderStatus = (orderId, newStatus) => {
-    setOrders((prev) =>
-      prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
-    );
-    
-    // Update user timeline history if user exists
-    const order = orders.find((o) => o.id === orderId);
-    if (order) {
-      setCustomers((prev) =>
-        prev.map((c) => {
-          if (c.name === order.customerName) {
-            return {
-              ...c,
-              history: [
-                { date: new Date().toISOString().split('T')[0], event: `Order ${orderId} updated to ${newStatus}` },
-                ...c.history
-              ]
-            };
-          }
-          return c;
-        })
-      );
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      await mutateUpdateOrderStatus({ orderId, status: newStatus }).unwrap();
+      toast.success('Order status updated successfully!');
+    } catch (err) {
+      toast.error(err.data?.message || 'Failed to update status.');
     }
   };
 

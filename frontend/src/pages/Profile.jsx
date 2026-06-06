@@ -1,0 +1,765 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
+import {
+  User,
+  MapPin,
+  Lock,
+  Camera,
+  Plus,
+  Trash2,
+  CheckCircle,
+  RotateCw,
+  PlusCircle,
+  Eye,
+  EyeOff,
+  Edit2,
+  Check,
+  X,
+  Compass
+} from 'lucide-react';
+import {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useAddAddressMutation,
+  useUpdateAddressMutation,
+  useDeleteAddressMutation,
+  useSetDefaultAddressMutation
+} from '../services/userApi';
+import { useChangePasswordMutation } from '../services/authApi';
+
+export default function Profile() {
+  const { data: profileData, isLoading: isProfileLoading, refetch } = useGetProfileQuery();
+  const user = profileData?.data?.user;
+
+  const [updateProfile, { isLoading: isUpdatingProfile }] = useUpdateProfileMutation();
+  const [addAddress, { isLoading: isAddingAddress }] = useAddAddressMutation();
+  const [updateAddress, { isLoading: isUpdatingAddress }] = useUpdateAddressMutation();
+  const [deleteAddress, { isLoading: isDeletingAddress }] = useDeleteAddressMutation();
+  const [setDefaultAddress, { isLoading: isSettingDefault }] = useSetDefaultAddressMutation();
+  const [changePassword, { isLoading: isChangingPassword }] = useChangePasswordMutation();
+
+  // Active sub-tab state
+  const [activeTab, setActiveTab] = useState('general'); // 'general' | 'addresses' | 'security'
+
+  // General profile form states
+  const [profileForm, setProfileForm] = useState({ name: '', phone: '' });
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState('');
+
+  // Password change states
+  const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [showPass, setShowPass] = useState(false);
+
+  // Address edit/add modal/inline form states
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState(null); // null means adding new
+  const [addressForm, setAddressForm] = useState({
+    street: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    country: '',
+    isDefault: false
+  });
+
+  // Load user data into form on load/query success
+  useEffect(() => {
+    if (user) {
+      setProfileForm({
+        name: user.name || '',
+        phone: user.phone || ''
+      });
+      setAvatarPreview(user.avatar?.url || '');
+    }
+  }, [user]);
+
+  // Dynamic password strength helper
+  const checkPasswordStrength = (pwd) => {
+    if (!pwd) return { score: 0, checks: { length: false, lowercase: false, uppercase: false, number: false, special: false } };
+    
+    const checks = {
+      length: pwd.length >= 8,
+      lowercase: /[a-z]/.test(pwd),
+      uppercase: /[A-Z]/.test(pwd),
+      number: /[0-9]/.test(pwd),
+      special: /[^A-Za-z0-9]/.test(pwd)
+    };
+
+    const score = Object.values(checks).filter(Boolean).length;
+    return { score, checks };
+  };
+
+  const getStrengthLabel = (score) => {
+    if (score === 0) return { label: 'Empty', color: 'bg-zinc-200 dark:bg-zinc-850', textColor: 'text-zinc-400' };
+    if (score <= 2) return { label: 'Weak', color: 'bg-red-500', textColor: 'text-red-550 dark:text-red-400' };
+    if (score <= 4) return { label: 'Moderate', color: 'bg-amber-500', textColor: 'text-amber-550 dark:text-amber-400' };
+    return { label: 'Strong', color: 'bg-emerald-500', textColor: 'text-emerald-550 dark:text-emerald-400' };
+  };
+
+  const pwdStrength = checkPasswordStrength(passwordForm.newPassword);
+
+  // Profile Form submit
+  const handleProfileSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('name', profileForm.name);
+    formData.append('phone', profileForm.phone);
+    if (avatarFile) {
+      formData.append('image', avatarFile);
+    }
+
+    try {
+      await updateProfile(formData).unwrap();
+      toast.success("Profile coordinates updated successfully!");
+      setAvatarFile(null);
+      refetch();
+    } catch (err) {
+      toast.error(err.data?.message || "Failed to update profile coordinates.");
+    }
+  };
+
+  // Avatar file select change
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
+
+  // Add or Edit Address submit
+  const handleAddressSubmit = async (e) => {
+    e.preventDefault();
+    if (!addressForm.street || !addressForm.city || !addressForm.state || !addressForm.postalCode || !addressForm.country) {
+      toast.error("Please populate all address fields.");
+      return;
+    }
+
+    try {
+      if (editingAddressId) {
+        await updateAddress({ addressId: editingAddressId, data: addressForm }).unwrap();
+        toast.success("Address coordinates updated successfully!");
+      } else {
+        await addAddress(addressForm).unwrap();
+        toast.success("New address coordinates logged successfully!");
+      }
+      resetAddressForm();
+      refetch();
+    } catch (err) {
+      toast.error(err.data?.message || "Failed to submit address coordinate details.");
+    }
+  };
+
+  // Setup edit address mode
+  const startEditAddress = (addr) => {
+    setEditingAddressId(addr._id);
+    setAddressForm({
+      street: addr.street || '',
+      city: addr.city || '',
+      state: addr.state || '',
+      postalCode: addr.postalCode || '',
+      country: addr.country || '',
+      isDefault: addr.isDefault || false
+    });
+    setShowAddressForm(true);
+  };
+
+  // Remove address handler
+  const handleDeleteAddress = async (addrId) => {
+    if (window.confirm("Are you sure you want to remove this delivery address?")) {
+      try {
+        await deleteAddress(addrId).unwrap();
+        toast.success("Address coordinates deleted.");
+        refetch();
+      } catch (err) {
+        toast.error(err.data?.message || "Failed to remove address.");
+      }
+    }
+  };
+
+  // Set default address handler
+  const handleSetDefault = async (addrId) => {
+    try {
+      await setDefaultAddress(addrId).unwrap();
+      toast.success("Default shipping destination updated.");
+      refetch();
+    } catch (err) {
+      toast.error(err.data?.message || "Failed to update default state.");
+    }
+  };
+
+  const resetAddressForm = () => {
+    setShowAddressForm(false);
+    setEditingAddressId(null);
+    setAddressForm({
+      street: '',
+      city: '',
+      state: '',
+      postalCode: '',
+      country: '',
+      isDefault: false
+    });
+  };
+
+  // Security password update submit
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    const { currentPassword, newPassword, confirmPassword } = passwordForm;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      toast.error("Please fill in all authentication fields.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error("New passwords do not match.");
+      return;
+    }
+
+    if (pwdStrength.score < 5) {
+      toast.error("Password must fully meet all strength checklist criteria.");
+      return;
+    }
+
+    try {
+      await changePassword({ currentPassword, newPassword }).unwrap();
+      toast.success("Security keys updated. Please log in again.");
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      // Wait for navigation or token invalidation to take effect
+    } catch (err) {
+      toast.error(err.data?.message || "Security password update rejected.");
+    }
+  };
+
+  if (isProfileLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8F7F4] dark:bg-zinc-950">
+        <RotateCw className="w-8 h-8 text-[#C9A87C] animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#F8F7F4] dark:bg-zinc-950 transition-colors duration-300 font-sans pt-28 pb-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
+        
+        {/* Profile Header Title */}
+        <div className="text-center md:text-left space-y-3 mb-10">
+          <span className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase">CONSOLE OPERATIONS</span>
+          <h1 className="font-luxury-serif text-3xl sm:text-5xl font-bold uppercase tracking-widest text-primary dark:text-zinc-100">
+            MY CODESPACE
+          </h1>
+          <div className="w-16 h-[1px] bg-accent md:mx-0 mx-auto" />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          
+          {/* Navigation Sidebar Panel */}
+          <div className="lg:col-span-1 space-y-2">
+            <button
+              onClick={() => setActiveTab('general')}
+              className={`w-full text-left py-3.5 px-4 border rounded-sm text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-3 ${
+                activeTab === 'general'
+                  ? 'border-accent bg-white dark:bg-zinc-900 text-accent shadow-sm'
+                  : 'border-secondary/45 dark:border-zinc-800 bg-white/40 dark:bg-zinc-950/20 text-zinc-500 hover:text-primary dark:hover:text-zinc-200'
+              }`}
+            >
+              <User className="w-4 h-4" />
+              General profile
+            </button>
+            <button
+              onClick={() => setActiveTab('addresses')}
+              className={`w-full text-left py-3.5 px-4 border rounded-sm text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-3 ${
+                activeTab === 'addresses'
+                  ? 'border-accent bg-white dark:bg-zinc-900 text-accent shadow-sm'
+                  : 'border-secondary/45 dark:border-zinc-800 bg-white/40 dark:bg-zinc-950/20 text-zinc-500 hover:text-primary dark:hover:text-zinc-200'
+              }`}
+            >
+              <MapPin className="w-4 h-4" />
+              Saved destinations
+            </button>
+            <button
+              onClick={() => setActiveTab('security')}
+              className={`w-full text-left py-3.5 px-4 border rounded-sm text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-3 ${
+                activeTab === 'security'
+                  ? 'border-accent bg-white dark:bg-zinc-900 text-accent shadow-sm'
+                  : 'border-secondary/45 dark:border-zinc-800 bg-white/40 dark:bg-zinc-950/20 text-zinc-500 hover:text-primary dark:hover:text-zinc-200'
+              }`}
+            >
+              <Lock className="w-4 h-4" />
+              Security Gateway
+            </button>
+          </div>
+
+          {/* Main Panel Content Box */}
+          <div className="lg:col-span-3">
+            <div className="bg-white dark:bg-zinc-900 border border-secondary/45 dark:border-zinc-800 p-6 sm:p-10 rounded-sm shadow-sm min-h-[450px]">
+              
+              <AnimatePresence mode="wait">
+                {/* 1. GENERAL COORDINATES PANEL */}
+                {activeTab === 'general' && (
+                  <motion.div
+                    key="general-tab"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-8"
+                  >
+                    <div className="border-b border-secondary/45 dark:border-zinc-800 pb-4">
+                      <h3 className="text-sm font-bold uppercase tracking-wider text-primary dark:text-zinc-100">Profile Details</h3>
+                      <p className="text-[11px] text-zinc-400 mt-1">Configure your personal coordinate details and console credentials.</p>
+                    </div>
+
+                    <form onSubmit={handleProfileSubmit} className="space-y-6">
+                      
+                      {/* Avatar Upload Selection Grid */}
+                      <div className="flex flex-col sm:flex-row items-center gap-6 pb-4">
+                        <div className="relative group w-24 h-24 rounded-full overflow-hidden border-2 border-accent/40 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center cursor-pointer select-none">
+                          {avatarPreview ? (
+                            <img src={avatarPreview} alt={user?.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <User className="w-8 h-8 text-zinc-300 dark:text-zinc-700" />
+                          )}
+                          <label className="absolute inset-0 bg-black/55 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-[10px] font-bold text-white tracking-widest cursor-pointer uppercase gap-1">
+                            <Camera className="w-4 h-4 text-accent" />
+                            Upload
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleAvatarChange}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+                        <div className="text-center sm:text-left space-y-1">
+                          <p className="text-xs font-bold tracking-wider text-primary dark:text-zinc-100">{user?.name?.toUpperCase()}</p>
+                          <p className="text-[11px] text-zinc-400">{user?.email}</p>
+                          <span className="inline-block px-2.5 py-0.5 border border-accent/30 rounded-full text-[9px] uppercase tracking-wider text-accent font-semibold bg-accent/5">
+                            {user?.role || 'Customer'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs text-left">
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Verification Name</label>
+                          <input
+                            type="text"
+                            required
+                            value={profileForm.name}
+                            onChange={(e) => setProfileForm(prev => ({ ...prev, name: e.target.value }))}
+                            className="w-full pl-3 pr-3 py-3 border border-secondary/45 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 transition-colors"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Contact Phone Coordinates</label>
+                          <input
+                            type="text"
+                            placeholder="+91 XXXXX XXXXX"
+                            value={profileForm.phone}
+                            onChange={(e) => setProfileForm(prev => ({ ...prev, phone: e.target.value }))}
+                            className="w-full pl-3 pr-3 py-3 border border-secondary/45 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 transition-colors"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-4 text-right">
+                        <button
+                          type="submit"
+                          disabled={isUpdatingProfile}
+                          className="px-6 py-3.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-zinc-800 dark:hover:bg-zinc-100 flex items-center justify-center gap-2 transition-colors disabled:opacity-50 ml-auto cursor-pointer"
+                        >
+                          {isUpdatingProfile ? (
+                            <>
+                              <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                              Syncing Coordinates...
+                            </>
+                          ) : (
+                            <>
+                              Save updates
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </form>
+                  </motion.div>
+                )}
+
+                {/* 2. SAVED SHIPPINGS/DESTINATIONS PANEL */}
+                {activeTab === 'addresses' && (
+                  <motion.div
+                    key="addresses-tab"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-8"
+                  >
+                    <div className="flex justify-between items-center border-b border-secondary/45 dark:border-zinc-800 pb-4">
+                      <div>
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-primary dark:text-zinc-100">Saved Destinations</h3>
+                        <p className="text-[11px] text-zinc-400 mt-1">Manage delivery locations and primary logistical destinations.</p>
+                      </div>
+                      {!showAddressForm && (
+                        <button
+                          onClick={() => {
+                            setEditingAddressId(null);
+                            setAddressForm({ street: '', city: '', state: '', postalCode: '', country: '', isDefault: false });
+                            setShowAddressForm(true);
+                          }}
+                          className="px-3.5 py-2 border border-accent rounded-sm text-[10px] font-bold uppercase tracking-widest text-accent hover:bg-accent/5 transition-all flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <PlusCircle className="w-3.5 h-3.5" />
+                          New address
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Address Add/Edit Form Overlay */}
+                    {showAddressForm ? (
+                      <motion.form
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        className="bg-secondary/15 dark:bg-zinc-950/20 border border-secondary/35 dark:border-zinc-850 p-5 rounded-sm space-y-4 text-xs text-left"
+                        onSubmit={handleAddressSubmit}
+                      >
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-accent">
+                          {editingAddressId ? 'Edit Logistics Destination' : 'Add New Shipping Point'}
+                        </h4>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="space-y-1 sm:col-span-2">
+                            <label className="text-[9px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-bold block">Street Address</label>
+                            <input
+                              type="text"
+                              required
+                              value={addressForm.street}
+                              onChange={(e) => setAddressForm(prev => ({ ...prev, street: e.target.value }))}
+                              className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-850 bg-white dark:bg-zinc-900 rounded-sm focus:outline-none focus:border-accent text-zinc-800 dark:text-zinc-200"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[9px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-bold block">City</label>
+                            <input
+                              type="text"
+                              required
+                              value={addressForm.city}
+                              onChange={(e) => setAddressForm(prev => ({ ...prev, city: e.target.value }))}
+                              className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-850 bg-white dark:bg-zinc-900 rounded-sm focus:outline-none focus:border-accent text-zinc-800 dark:text-zinc-200"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[9px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-bold block">State / Region</label>
+                            <input
+                              type="text"
+                              required
+                              value={addressForm.state}
+                              onChange={(e) => setAddressForm(prev => ({ ...prev, state: e.target.value }))}
+                              className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-850 bg-white dark:bg-zinc-900 rounded-sm focus:outline-none focus:border-accent text-zinc-800 dark:text-zinc-200"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[9px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-bold block">Postal / Zip Code</label>
+                            <input
+                              type="text"
+                              required
+                              value={addressForm.postalCode}
+                              onChange={(e) => setAddressForm(prev => ({ ...prev, postalCode: e.target.value }))}
+                              className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-850 bg-white dark:bg-zinc-900 rounded-sm focus:outline-none focus:border-accent text-zinc-800 dark:text-zinc-200"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[9px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-bold block">Country</label>
+                            <input
+                              type="text"
+                              required
+                              value={addressForm.country}
+                              onChange={(e) => setAddressForm(prev => ({ ...prev, country: e.target.value }))}
+                              className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-850 bg-white dark:bg-zinc-900 rounded-sm focus:outline-none focus:border-accent text-zinc-800 dark:text-zinc-200"
+                            />
+                          </div>
+                        </div>
+
+                        <label className="flex items-center gap-2 mt-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={addressForm.isDefault}
+                            onChange={(e) => setAddressForm(prev => ({ ...prev, isDefault: e.target.checked }))}
+                            className="rounded border-zinc-200 dark:border-zinc-800 focus:ring-accent text-zinc-900"
+                          />
+                          <span className="text-[11px] text-zinc-500 font-medium select-none">Set as primary default shipping address</span>
+                        </label>
+
+                        <div className="flex gap-2 justify-end pt-2">
+                          <button
+                            type="button"
+                            onClick={resetAddressForm}
+                            className="px-4 py-2 border border-secondary/45 dark:border-zinc-800 rounded-sm hover:bg-secondary/5 transition-colors cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            disabled={isAddingAddress || isUpdatingAddress}
+                            className="px-4 py-2 bg-zinc-900 dark:bg-white dark:text-zinc-950 text-white rounded-sm hover:opacity-90 font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+                          >
+                            {(isAddingAddress || isUpdatingAddress) && <RotateCw className="w-3.5 h-3.5 animate-spin" />}
+                            Commit address
+                          </button>
+                        </div>
+                      </motion.form>
+                    ) : null}
+
+                    {/* Address card grids */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {user?.addresses && user.addresses.length > 0 ? (
+                        user.addresses.map((addr) => (
+                          <div
+                            key={addr._id}
+                            className={`p-4 border rounded-sm flex flex-col justify-between min-h-[160px] text-left transition-all ${
+                              addr.isDefault
+                                ? 'border-accent bg-accent/[0.02] shadow-sm'
+                                : 'border-secondary/45 dark:border-zinc-800 bg-white/50 dark:bg-zinc-950/10'
+                            }`}
+                          >
+                            <div className="space-y-1 text-xs">
+                              <div className="flex justify-between items-start">
+                                <span className="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Destination</span>
+                                {addr.isDefault && (
+                                  <span className="px-2 py-0.5 border border-accent rounded-full text-[8px] uppercase tracking-wider text-accent font-bold bg-accent/5">
+                                    Primary
+                                  </span>
+                                )}
+                              </div>
+                              <p className="font-semibold text-zinc-800 dark:text-zinc-200 mt-1">{addr.street}</p>
+                              <p className="text-zinc-500 dark:text-zinc-400">{addr.city}, {addr.state} - {addr.postalCode}</p>
+                              <p className="text-[10px] text-zinc-450 dark:text-zinc-500 uppercase tracking-wider font-semibold">{addr.country}</p>
+                            </div>
+
+                            <div className="flex justify-between items-center pt-4 border-t border-secondary/30 dark:border-zinc-850/30 mt-4 text-[10px] font-bold uppercase tracking-widest">
+                              <div>
+                                {!addr.isDefault && (
+                                  <button
+                                    onClick={() => handleSetDefault(addr._id)}
+                                    disabled={isSettingDefault}
+                                    className="text-zinc-400 hover:text-accent transition-colors cursor-pointer"
+                                  >
+                                    Set Default
+                                  </button>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <button
+                                  onClick={() => startEditAddress(addr)}
+                                  className="text-zinc-400 hover:text-primary dark:hover:text-zinc-100 transition-colors flex items-center gap-1 cursor-pointer"
+                                >
+                                  <Edit2 className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteAddress(addr._id)}
+                                  disabled={isDeletingAddress}
+                                  className="text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-1 cursor-pointer"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="col-span-2 py-12 border border-dashed border-secondary/45 dark:border-zinc-800 flex flex-col items-center justify-center text-center space-y-3 rounded-sm opacity-80">
+                          <Compass className="w-10 h-10 text-zinc-300 dark:text-zinc-700 stroke-[1]" />
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">No Shipping Points Saved Yet</p>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* 3. SECURITY GATEWAY / CHANGE PASSWORD */}
+                {activeTab === 'security' && (
+                  <motion.div
+                    key="security-tab"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-8"
+                  >
+                    <div className="border-b border-secondary/45 dark:border-zinc-800 pb-4">
+                      <h3 className="text-sm font-bold uppercase tracking-wider text-primary dark:text-zinc-100">Security Configuration</h3>
+                      <p className="text-[11px] text-zinc-400 mt-1">Rotate security password keys to update dashboard validation protocols.</p>
+                    </div>
+
+                    <form onSubmit={handlePasswordSubmit} className="space-y-5 text-xs text-left max-w-xl">
+                      
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold block">Current Password</label>
+                        <div className="relative">
+                          <input
+                            type={showPass ? 'text' : 'password'}
+                            required
+                            placeholder="••••••••"
+                            value={passwordForm.currentPassword}
+                            onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
+                            className="w-full text-xs pl-3 pr-8 py-3 border border-secondary/45 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 focus:outline-none focus:border-accent text-zinc-800 dark:text-zinc-200"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold block">New Password</label>
+                          <div className="relative">
+                            <input
+                              type={showPass ? 'text' : 'password'}
+                              required
+                              placeholder="••••••••"
+                              value={passwordForm.newPassword}
+                              onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
+                              className="w-full text-xs pl-3 pr-8 py-3 border border-secondary/45 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 focus:outline-none focus:border-accent text-zinc-800 dark:text-zinc-200"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPass(!showPass)}
+                              className="absolute right-2.5 top-3.5 text-zinc-400 hover:text-zinc-650"
+                            >
+                              {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold block">Confirm New Password</label>
+                          <div className="relative">
+                            <input
+                              type={showPass ? 'text' : 'password'}
+                              required
+                              placeholder="••••••••"
+                              value={passwordForm.confirmPassword}
+                              onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                              className="w-full text-xs pl-3 pr-8 py-3 border border-secondary/45 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 focus:outline-none focus:border-accent text-zinc-800 dark:text-zinc-200"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Real-time Password Strength indicator from Login flow */}
+                        <AnimatePresence>
+                          {passwordForm.newPassword && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="col-span-1 sm:col-span-2 space-y-2 pt-1 overflow-hidden"
+                            >
+                              <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider">
+                                <span className="text-zinc-450 dark:text-zinc-500 font-bold">New Security Key Strength</span>
+                                <span className={getStrengthLabel(pwdStrength.score).textColor}>
+                                  {getStrengthLabel(pwdStrength.score).label}
+                                </span>
+                              </div>
+                              
+                              <div className="grid grid-cols-5 gap-1.5">
+                                {[1, 2, 3, 4, 5].map((index) => (
+                                  <div
+                                    key={index}
+                                    className={`h-1 rounded-full transition-all duration-300 ${
+                                      index <= pwdStrength.score
+                                        ? getStrengthLabel(pwdStrength.score).color
+                                        : 'bg-zinc-250 dark:bg-zinc-850'
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 pt-1 text-[11px]">
+                                <div className="flex items-center gap-1.5">
+                                  {pwdStrength.checks.length ? (
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                                  ) : (
+                                    <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0">1</div>
+                                  )}
+                                  <span className={pwdStrength.checks.length ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
+                                    Min 8 characters
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  {pwdStrength.checks.uppercase ? (
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                                  ) : (
+                                    <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0">2</div>
+                                  )}
+                                  <span className={pwdStrength.checks.uppercase ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
+                                    At least one uppercase
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  {pwdStrength.checks.lowercase ? (
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                                  ) : (
+                                    <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0">3</div>
+                                  )}
+                                  <span className={pwdStrength.checks.lowercase ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
+                                    At least one lowercase
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  {pwdStrength.checks.number ? (
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                                  ) : (
+                                    <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0">4</div>
+                                  )}
+                                  <span className={pwdStrength.checks.number ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
+                                    At least one number
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1.5 sm:col-span-2">
+                                  {pwdStrength.checks.special ? (
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                                  ) : (
+                                    <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0">5</div>
+                                  )}
+                                  <span className={pwdStrength.checks.special ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
+                                    At least one symbol (!@#$%^& etc.)
+                                  </span>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      <div className="pt-4 text-right">
+                        <button
+                          type="submit"
+                          disabled={isChangingPassword}
+                          className="px-6 py-3.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-zinc-800 dark:hover:bg-zinc-100 flex items-center justify-center gap-2 transition-colors disabled:opacity-50 ml-auto cursor-pointer"
+                        >
+                          {isChangingPassword ? (
+                            <>
+                              <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                              Committing security keys...
+                            </>
+                          ) : (
+                            <>
+                              Commit new credentials
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </form>
+                  </motion.div>
+                )}
+
+              </AnimatePresence>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}

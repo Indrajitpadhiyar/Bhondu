@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 export const ShopContext = createContext();
 
@@ -78,12 +79,19 @@ export const ShopProvider = ({ children }) => {
         ];
       }
     });
+    toast.success(`${product.name} added to cart!`);
     // Open cart drawer on add to cart for better premium UX feedback
     setIsCartOpen(true);
   };
 
   const removeFromCart = (key) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.key !== key));
+    setCartItems((prevItems) => {
+      const item = prevItems.find((i) => i.key === key);
+      if (item) {
+        toast.success(`${item.name} removed from cart.`);
+      }
+      return prevItems.filter((item) => item.key !== key);
+    });
   };
 
   const updateQuantity = (key, quantity) => {
@@ -104,8 +112,10 @@ export const ShopProvider = ({ children }) => {
   const toggleWishlist = (productId) => {
     setWishlist((prevWishlist) => {
       if (prevWishlist.includes(productId)) {
+        toast.success('Removed from wishlist.');
         return prevWishlist.filter((id) => id !== productId);
       } else {
+        toast.success('Added to wishlist!');
         return [...prevWishlist, productId];
       }
     });

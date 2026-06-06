@@ -4,9 +4,13 @@ import {
   Search, Heart, ShoppingBag, User, Menu, X,
   Trash2, Plus, Minus, Moon, Sun, ArrowRight, ShoppingCart
 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useLogoutMutation } from '../services/authApi';
 import { ShopContext } from '../context/ShopContext';
-import { products } from '../data/products';
+import { useGetProductsQuery } from '../services/productApi';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSelector } from 'react-redux';
+import { selectIsAuthenticated } from '../features/auth/authSlice.js';
 
 const Navbar = () => {
   const {
@@ -34,6 +38,22 @@ const Navbar = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+
+  const { data: products = [] } = useGetProductsQuery();
+  const [logout] = useLogoutMutation();
+
+  const handleLogout = async () => {
+    setIsProfileOpen(false);
+    setIsMobileMenuOpen(false);
+    try {
+      await logout().unwrap();
+      toast.success('Logged out successfully!');
+      navigate('/login');
+    } catch (err) {
+      toast.error('Logout failed.');
+    }
+  };
 
   // Profile dropdown open state
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -213,11 +233,11 @@ const Navbar = () => {
                         transition={{ duration: 0.15 }}
                         className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 border border-secondary dark:border-zinc-800 shadow-2xl py-2 z-50 rounded-sm text-xs tracking-wider"
                       >
-                        <a href="#profile" className="block px-4 py-2 text-zinc-700 dark:text-zinc-200 hover:bg-secondary dark:hover:bg-zinc-800 transition-colors">MY PROFILE</a>
+                        <Link to="/profile" onClick={() => setIsProfileOpen(false)} className="block px-4 py-2 text-zinc-700 dark:text-zinc-200 hover:bg-secondary dark:hover:bg-zinc-800 transition-colors">MY PROFILE</Link>
                         <a href="#orders" className="block px-4 py-2 text-zinc-700 dark:text-zinc-200 hover:bg-secondary dark:hover:bg-zinc-800 transition-colors">MY ORDERS</a>
                         <a href="#settings" className="block px-4 py-2 text-zinc-700 dark:text-zinc-200 hover:bg-secondary dark:hover:bg-zinc-800 transition-colors">SETTINGS</a>
                         <div className="border-t border-secondary dark:border-zinc-800 my-1" />
-                        <button onClick={() => { setIsProfileOpen(false); alert('Profile logged out simulated'); }} className="w-full text-left block px-4 py-2 text-red-500 hover:bg-secondary dark:hover:bg-zinc-800 transition-colors cursor-pointer">
+                        <button onClick={handleLogout} className="w-full text-left block px-4 py-2 text-red-500 hover:bg-secondary dark:hover:bg-zinc-800 transition-colors cursor-pointer">
                           LOG OUT
                         </button>
                       </motion.div>
@@ -296,16 +316,16 @@ const Navbar = () => {
                 <div className="border-t border-secondary dark:border-zinc-800 my-2" />
 
                 <div className="space-y-3 pl-1 text-[11px] text-zinc-500 dark:text-zinc-400">
-                  <a href="#profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 hover:text-accent py-1.5">
+                  <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 hover:text-accent py-1.5 text-zinc-500 dark:text-zinc-400">
                     <User className="w-4 h-4" />
                     <span>My Profile</span>
-                  </a>
+                  </Link>
                   <a href="#orders" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 hover:text-accent py-1.5">
                     <ShoppingBag className="w-4 h-4" />
                     <span>My Orders</span>
                   </a>
                   <button
-                    onClick={() => { setIsMobileMenuOpen(false); alert('Profile logged out simulated'); }}
+                    onClick={handleLogout}
                     className="w-full text-left flex items-center space-x-3 text-red-500 hover:text-red-650 py-1.5 cursor-pointer"
                   >
                     <X className="w-4 h-4" />
@@ -498,7 +518,17 @@ const Navbar = () => {
                     <span className="font-luxury-sans text-lg font-bold text-accent">${displayCartTotal}</span>
                   </div>
                   <button
-                    onClick={() => { alert(`Checkout complete! Simulated purchase of $${displayCartTotal} successful.`); }}
+                    onClick={() => {
+                      if (!isAuthenticated) {
+                        toast.error("Please login to place an order.");
+                        setIsCartOpen(false);
+                        navigate('/login');
+                        return;
+                      }
+                      clearCart();
+                      setIsCartOpen(false);
+                      toast.success(`Order placed successfully! Total: $${displayCartTotal}`);
+                    }}
                     className="w-full py-4 bg-primary text-secondary dark:bg-zinc-100 dark:text-zinc-950 text-xs font-bold uppercase tracking-widest hover:bg-accent dark:hover:bg-accent hover:text-primary dark:hover:text-primary transition-all rounded-xs flex items-center justify-center space-x-2 cursor-pointer"
                   >
                     <span>PROCEED TO CHECKOUT</span>

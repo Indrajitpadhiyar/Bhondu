@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { products } from '../data/products';
+import { useGetProductsQuery } from '../services/productApi';
 import ProductCard from '../components/ProductCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
@@ -14,6 +14,7 @@ import 'swiper/css/pagination';
 
 const Man = () => {
   const location = useLocation();
+  const { data: products = [], isLoading } = useGetProductsQuery({ gender: 'man' });
 
   // Filter states
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -23,11 +24,11 @@ const Man = () => {
 
   // Mock Men's categories list
   const categoriesList = [
-    { name: 'ALL', count: products.filter(p => p.gender === 'man').length },
-    { name: 'Tournament Wear', count: products.filter(p => p.gender === 'man' && p.category === 'Tournament Wear').length },
-    { name: 'T-Shirts', count: products.filter(p => p.gender === 'man' && p.category === 'T-Shirts').length },
-    { name: 'Shirts', count: products.filter(p => p.gender === 'man' && p.category === 'Shirts').length },
-    { name: 'Shoes', count: products.filter(p => p.gender === 'man' && p.category === 'Shoes').length },
+    { name: 'ALL', count: products.length },
+    { name: 'Tournament Wear', count: products.filter(p => p.category === 'Tournament Wear').length },
+    { name: 'T-Shirts', count: products.filter(p => p.category === 'T-Shirts').length },
+    { name: 'Shirts', count: products.filter(p => p.category === 'Shirts').length },
+    { name: 'Shoes', count: products.filter(p => p.category === 'Shoes').length },
   ];
 
   // Subcategories mapping
@@ -49,11 +50,11 @@ const Man = () => {
         setSelectedCategory(match.name);
       }
     }
-  }, [location.search]);
+  }, [location.search, products]);
 
   // Filter effect
   useEffect(() => {
-    let result = products.filter(p => p.gender === 'man');
+    let result = [...products];
 
     if (selectedCategory !== 'ALL') {
       result = result.filter(p => p.category === selectedCategory);
@@ -73,7 +74,7 @@ const Man = () => {
     }
 
     setFilteredProducts(result);
-  }, [selectedCategory, selectedSubcategory, sortBy]);
+  }, [products, selectedCategory, selectedSubcategory, sortBy]);
 
   // Handle Category Change
   const handleCategoryChange = (catName) => {
@@ -100,9 +101,8 @@ const Man = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const menProducts = products.filter(p => p.gender === 'man');
-  const newArrivals = menProducts.filter(p => p.isNewArrival);
-  const bestSellers = menProducts.filter(p => p.isBestSeller);
+  const newArrivals = products.filter(p => p.isNewArrival);
+  const bestSellers = products.filter(p => p.isBestSeller);
 
   // Scroll to products anchor
   const productsSectionRef = useRef(null);

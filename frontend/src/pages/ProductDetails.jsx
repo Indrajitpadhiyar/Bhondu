@@ -2,17 +2,22 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Star, Heart, ShoppingBag, Check, Plus, Minus, ArrowLeft, ArrowRight, ShieldCheck, HelpCircle, RefreshCw } from 'lucide-react';
 import { ShopContext } from '../context/ShopContext';
-import { products } from '../data/products';
+import { useGetProductDetailsQuery, useGetProductsQuery } from '../services/productApi';
 import ProductCard from '../components/ProductCard';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSelector } from 'react-redux';
+import { selectIsAuthenticated } from '../features/auth/authSlice.js';
+import toast from 'react-hot-toast';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart, isInWishlist, toggleWishlist, setIsCartOpen } = useContext(ShopContext);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   // Find the current product
-  const product = products.find(p => p.id === id);
+  const { data: product, isLoading: isProductLoading } = useGetProductDetailsQuery(id);
+  const { data: allProducts = [] } = useGetProductsQuery({ gender: product?.gender, category: product?.category }, { skip: !product });
 
   // States
   const [selectedSize, setSelectedSize] = useState('');
@@ -21,16 +26,24 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('details');
 
-  // Scroll to top and reset configuration when product ID changes
+  // Scroll to top and reset configuration when product ID changes or product finishes loading
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (product) {
-      setSelectedSize(product.sizes[0]);
-      setSelectedColor(product.colors[0]);
+      setSelectedSize(product.sizes[0] || '');
+      setSelectedColor(product.colors[0] || '');
       setActiveImageIdx(0);
       setQuantity(1);
     }
   }, [id, product]);
+
+  if (isProductLoading) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center bg-white dark:bg-zinc-950">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -50,17 +63,27 @@ const ProductDetails = () => {
   const favorited = isInWishlist(product.id);
 
   const handleAddToBag = () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to cart.");
+      navigate('/login');
+      return;
+    }
     addToCart(product, selectedSize, selectedColor, quantity);
   };
 
   const handleBuyNow = () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to buy items.");
+      navigate('/login');
+      return;
+    }
     addToCart(product, selectedSize, selectedColor, quantity);
     setIsCartOpen(true);
   };
 
   // Get related products (same category & gender, excluding current item)
-  const relatedProducts = products
-    .filter(p => p.gender === product.gender && p.category === product.category && p.id !== product.id)
+  const relatedProducts = allProducts
+    .filter(p => p.id !== product.id)
     .slice(0, 4);
 
   return (
@@ -105,7 +128,14 @@ const ProductDetails = () => {
               
               {/* Wishlist Floating Button */}
               <button
-                onClick={() => toggleWishlist(product.id)}
+                onClick={() => {
+                  if (!isAuthenticated) {
+                    toast.error("Please login to manage your wishlist.");
+                    navigate('/login');
+                    return;
+                  }
+                  toggleWishlist(product.id);
+                }}
                 className="absolute top-6 right-6 z-10 p-3 rounded-full border border-secondary/20 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md text-zinc-500 hover:text-red-500 hover:scale-110 transition-all cursor-pointer shadow-sm"
                 aria-label="Add to wishlist"
               >
