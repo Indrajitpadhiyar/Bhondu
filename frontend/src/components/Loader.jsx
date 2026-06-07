@@ -15,7 +15,9 @@ const Loader = ({ finishLoading }) => {
 
     // End loading after the entire sequence completes
     const finishTimer = setTimeout(() => {
-      finishLoading();
+      if (typeof finishLoading === 'function') {
+        finishLoading();
+      }
     }, 2500);
 
     return () => {

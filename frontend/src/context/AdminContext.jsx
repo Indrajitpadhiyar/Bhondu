@@ -13,9 +13,14 @@ export const useAdmin = () => {
   return context;
 };
 
+const EMPTY_ARRAY = [];
+
 export const AdminProvider = ({ children }) => {
-  const { data: dbProducts = [] } = useGetProductsQuery();
-  const { data: dbOrders = [] } = useGetOrdersQuery();
+  const { data: dbProductsData } = useGetProductsQuery();
+  const dbProducts = dbProductsData || EMPTY_ARRAY;
+  
+  const { data: dbOrdersData } = useGetOrdersQuery();
+  const dbOrders = dbOrdersData || EMPTY_ARRAY;
 
   const [createProduct] = useCreateProductMutation();
   const [mutateUpdateProduct] = useUpdateProductMutation();
@@ -35,15 +40,15 @@ export const AdminProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    if (dbProducts) {
-      setProducts(dbProducts);
+    if (dbProductsData && dbProductsData !== products) {
+      setProducts(dbProductsData);
     }
-  }, [dbProducts]);
+  }, [dbProductsData, products]);
 
   useEffect(() => {
-    if (dbOrders) {
+    if (dbOrdersData) {
       // Map order items to direct status
-      setOrders(dbOrders.map(o => ({
+      setOrders(dbOrdersData.map(o => ({
         ...o,
         id: o._id,
         customerName: o.user?.name || o.shippingAddress?.fullName || 'Anonymous Customer',
@@ -54,7 +59,7 @@ export const AdminProvider = ({ children }) => {
           : 'No Address Specified'
       })));
     }
-  }, [dbOrders]);
+  }, [dbOrdersData]);
   
   const [settings, setSettings] = useState({
     storeName: "BHONDU Store",

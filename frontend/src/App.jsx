@@ -33,6 +33,7 @@ import Profile from './pages/Profile';
 import PersistLogin from './components/common/PersistLogin';
 import AdminRoute from './components/common/AdminRoute';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import ScrollToTop from './components/common/ScrollToTop';
 
 function App() {
   const [isLoading, setIsLoading] = useState(() => {
@@ -46,6 +47,7 @@ function App() {
 
   return (
     <AdminProvider>
+      <ScrollToTop />
       <AnimatePresence mode="wait">
         {isLoading && (
           <Loader
@@ -67,8 +69,7 @@ function App() {
 
         {/* Main content body */}
         <main className="flex-grow">
-          <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
+            <Routes>
               <Route element={<PersistLogin />}>
                 {/* Storefront Routes (Accessible to everyone) */}
                 <Route path="/" element={<Home />} />
@@ -107,7 +108,6 @@ function App() {
                 </Route>
               </Route>
             </Routes>
-          </AnimatePresence>
         </main>
 
         {/* Conditional footer: Hide on landing page and admin panel */}

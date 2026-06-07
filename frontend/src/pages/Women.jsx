@@ -11,9 +11,13 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
+const EMPTY_ARRAY = [];
+
 const Women = () => {
   const location = useLocation();
-  const { data: products = [], isLoading } = useGetProductsQuery({ gender: 'women' });
+  const { data: productsData, isLoading } = useGetProductsQuery({ gender: 'women' });
+  const products = productsData || EMPTY_ARRAY;
+  const productsSectionRef = useRef(null);
 
   // Filter states
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -45,11 +49,14 @@ const Women = () => {
     const catParam = params.get('category');
     if (catParam) {
       const match = categoriesList.find(c => c.name.toLowerCase() === catParam.toLowerCase());
-      if (match) {
+      if (match && match.name !== selectedCategory) {
         setSelectedCategory(match.name);
+        setTimeout(() => {
+          productsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
       }
     }
-  }, [location.search, products]);
+  }, [location.search, products, selectedCategory]);
 
   // Filter effect
   useEffect(() => {
@@ -94,7 +101,6 @@ const Women = () => {
     { id: 6, image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=600&auto=format&fit=crop', caption: 'Aether Silhouette', height: 'h-96' },
   ];
 
-  const productsSectionRef = useRef(null);
   const scrollToProducts = () => {
     productsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };

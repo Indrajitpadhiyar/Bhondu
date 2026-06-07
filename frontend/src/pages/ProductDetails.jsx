@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Star, Heart, ShoppingBag, Check, Plus, Minus, ArrowLeft, ArrowRight, ShieldCheck, HelpCircle, RefreshCw } from 'lucide-react';
 import { ShopContext } from '../context/ShopContext';
 import { useGetProductDetailsQuery, useGetProductsQuery } from '../services/productApi';
@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { addToCart, isInWishlist, toggleWishlist, setIsCartOpen } = useContext(ShopContext);
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
@@ -65,7 +66,7 @@ const ProductDetails = () => {
   const handleAddToBag = () => {
     if (!isAuthenticated) {
       toast.error("Please login to add items to cart.");
-      navigate('/login');
+      navigate('/login', { state: { from: location } });
       return;
     }
     addToCart(product, selectedSize, selectedColor, quantity);
@@ -74,7 +75,7 @@ const ProductDetails = () => {
   const handleBuyNow = () => {
     if (!isAuthenticated) {
       toast.error("Please login to buy items.");
-      navigate('/login');
+      navigate('/login', { state: { from: location } });
       return;
     }
     addToCart(product, selectedSize, selectedColor, quantity);
@@ -131,7 +132,7 @@ const ProductDetails = () => {
                 onClick={() => {
                   if (!isAuthenticated) {
                     toast.error("Please login to manage your wishlist.");
-                    navigate('/login');
+                    navigate('/login', { state: { from: location } });
                     return;
                   }
                   toggleWishlist(product.id);

@@ -12,9 +12,13 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
+const EMPTY_ARRAY = [];
+
 const Man = () => {
   const location = useLocation();
-  const { data: products = [], isLoading } = useGetProductsQuery({ gender: 'man' });
+  const { data: productsData, isLoading } = useGetProductsQuery({ gender: 'man' });
+  const products = productsData || EMPTY_ARRAY;
+  const productsSectionRef = useRef(null);
 
   // Filter states
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -46,11 +50,14 @@ const Man = () => {
     const catParam = params.get('category');
     if (catParam) {
       const match = categoriesList.find(c => c.name.toLowerCase() === catParam.toLowerCase());
-      if (match) {
+      if (match && match.name !== selectedCategory) {
         setSelectedCategory(match.name);
+        setTimeout(() => {
+          productsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
       }
     }
-  }, [location.search, products]);
+  }, [location.search, products, selectedCategory]);
 
   // Filter effect
   useEffect(() => {
@@ -105,7 +112,6 @@ const Man = () => {
   const bestSellers = products.filter(p => p.isBestSeller);
 
   // Scroll to products anchor
-  const productsSectionRef = useRef(null);
   const scrollToProducts = () => {
     productsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };

@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { ShopContext } from '../context/ShopContext';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectIsAuthenticated } from '../features/auth/authSlice.js';
 import toast from 'react-hot-toast';
@@ -11,6 +11,7 @@ const ProductCard = ({ product }) => {
   const { isInWishlist, toggleWishlist, addToCart, setQuickViewProduct } = useContext(ShopContext);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const favorited = isInWishlist(product.id);
@@ -19,7 +20,7 @@ const ProductCard = ({ product }) => {
     e.stopPropagation();
     if (!isAuthenticated) {
       toast.error("Please login to add items to cart.");
-      navigate('/login');
+      navigate('/login', { state: { from: location } });
       return;
     }
     // Quick add default first size and color
@@ -51,7 +52,7 @@ const ProductCard = ({ product }) => {
             e.stopPropagation();
             if (!isAuthenticated) {
               toast.error("Please login to manage your wishlist.");
-              navigate('/login');
+              navigate('/login', { state: { from: location } });
               return;
             }
             toggleWishlist(product.id);

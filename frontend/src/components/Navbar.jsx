@@ -79,7 +79,7 @@ const Navbar = () => {
     if (!isAuthenticated) {
       toast.error("Please login to place an order.");
       setIsCartOpen(false);
-      navigate('/login');
+      navigate('/login', { state: { from: location } });
       return;
     }
     

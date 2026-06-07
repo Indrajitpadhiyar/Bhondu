@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectIsAuthenticated, selectCurrentUser } from '../../features/auth/authSlice.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useLoginMutation, useRegisterMutation, useGoogleLoginMutation } from '../../services/authApi';
@@ -18,10 +20,22 @@ import {
 
 export default function AdminAuth() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user = useSelector(selectCurrentUser);
+
   const [isLogin, setIsLogin] = useState(true);
   const [isAdminRole, setIsAdminRole] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const userIsAdmin = user.role === 'Admin' || user.role === 'Super Admin';
+      const from = location.state?.from?.pathname || (userIsAdmin ? '/admin' : '/');
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, user, navigate, location]);
 
   const [success, setSuccess] = useState(false);
 
@@ -80,11 +94,8 @@ export default function AdminAuth() {
       
       setTimeout(() => {
         setSuccess(false);
-        if (userIsAdmin) {
-          navigate('/admin');
-        } else {
-          navigate('/');
-        }
+        const from = location.state?.from?.pathname || (userIsAdmin ? '/admin' : '/');
+        navigate(from);
       }, 1500);
     } catch (err) {
       toast.error(err.data?.message || 'Login failed. Please check your credentials.');
@@ -137,11 +148,8 @@ export default function AdminAuth() {
       
       setTimeout(() => {
         setSuccess(false);
-        if (userIsAdmin) {
-          navigate('/admin');
-        } else {
-          navigate('/');
-        }
+        const from = location.state?.from?.pathname || (userIsAdmin ? '/admin' : '/');
+        navigate(from);
       }, 1500);
     } catch (err) {
       toast.error(err.data?.message || 'Google authentication failed.');
