@@ -46,6 +46,10 @@ const productSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  shippingCost: {
+    type: Number,
+    default: 99,
+  },
   rating: {
     type: Number,
     default: 5.0,

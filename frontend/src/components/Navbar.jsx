@@ -126,8 +126,8 @@ const Navbar = () => {
       }
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_Sq6zVyDSZSLCQA',
-        amount: Math.round((displayCartTotal + 99) * 100), // amount in paise
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_live_Sylrq9o8DJmUYd',
+        amount: Math.round((displayCartTotal + shippingPrice) * 100), // amount in paise
         currency: 'INR',
         name: 'BHONDU Store',
         description: 'Order Payment',
@@ -151,8 +151,8 @@ const Navbar = () => {
                 postalCode: selectedAddress.postalCode,
                 country: selectedAddress.country
               },
-              totalPrice: displayCartTotal + 99,
-              shippingPrice: 99,
+              totalPrice: displayCartTotal + shippingPrice,
+              shippingPrice: shippingPrice,
               paymentStatus: 'Paid',
               paymentMethod: 'Online'
             };
@@ -205,8 +205,8 @@ const Navbar = () => {
             postalCode: selectedAddress.postalCode,
             country: selectedAddress.country
           },
-          totalPrice: displayCartTotal + 99,
-          shippingPrice: 99,
+          totalPrice: displayCartTotal + shippingPrice,
+          shippingPrice: shippingPrice,
           paymentStatus: 'Pending',
           paymentMethod: 'COD'
         };
@@ -250,6 +250,14 @@ const Navbar = () => {
 
   const displayCartCount = displayCartItems.reduce((acc, item) => acc + item.quantity, 0);
   const displayCartTotal = displayCartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  const shippingPrice = displayCartItems.length > 0
+    ? displayCartItems.reduce((max, item) => {
+        const product = products.find(p => p.id === item.id);
+        const itemShipping = product?.shippingCost ?? 99;
+        return Math.max(max, itemShipping);
+      }, 0)
+    : 0;
 
   // Filter wishlist items by active section gender
   const displayWishlist = wishlist.filter(id => {
@@ -1075,12 +1083,12 @@ const Navbar = () => {
                       </div>
                       <div className="flex justify-between items-center text-[10px] text-zinc-400 uppercase tracking-wider">
                         <span>Standard shipping</span>
-                        <span>₹99.00</span>
+                        <span>₹{shippingPrice.toFixed(2)}</span>
                       </div>
                       <div className="h-[1px] bg-secondary dark:bg-zinc-800/80 my-1" />
                       <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-primary dark:text-zinc-100">
                         <span>Grand Total</span>
-                        <span className="text-accent text-sm">₹{(displayCartTotal + 99).toFixed(2)}</span>
+                        <span className="text-accent text-sm">₹{(displayCartTotal + shippingPrice).toFixed(2)}</span>
                       </div>
                     </div>
                   </div>

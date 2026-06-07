@@ -55,7 +55,8 @@ export default function AdminProducts() {
     sizes: [],
     colors: [],
     tags: '',
-    imageUrl: ''
+    imageUrl: '',
+    shippingCost: '99'
   });
 
   // Watch URL search parameters for actions or pre-filters
@@ -179,7 +180,8 @@ export default function AdminProducts() {
       images,
       price: Number(newProduct.price),
       salePrice: newProduct.salePrice ? Number(newProduct.salePrice) : null,
-      stock: Number(newProduct.stock)
+      stock: Number(newProduct.stock),
+      shippingCost: Number(newProduct.shippingCost || 99)
     });
 
     // Reset Form
@@ -195,7 +197,8 @@ export default function AdminProducts() {
       sizes: [],
       colors: [],
       tags: '',
-      imageUrl: ''
+      imageUrl: '',
+      shippingCost: '99'
     });
 
     setIsAddOpen(false);
@@ -605,16 +608,29 @@ export default function AdminProducts() {
                   </div>
                 </div>
 
-                {/* Stock Quantity */}
-                <div className="space-y-1">
-                  <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Stock Quantity</label>
-                  <input
-                    type="number"
-                    required
-                    value={newProduct.stock}
-                    onChange={(e) => setNewProduct(prev => ({ ...prev, stock: e.target.value }))}
-                    className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
-                  />
+                {/* Stock Quantity & Shipping Cost */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Stock Quantity</label>
+                    <input
+                      type="number"
+                      required
+                      value={newProduct.stock}
+                      onChange={(e) => setNewProduct(prev => ({ ...prev, stock: e.target.value }))}
+                      className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Shipping Cost (₹)</label>
+                    <input
+                      type="number"
+                      required
+                      value={newProduct.shippingCost}
+                      onChange={(e) => setNewProduct(prev => ({ ...prev, shippingCost: e.target.value }))}
+                      placeholder="99"
+                      className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
+                    />
+                  </div>
                 </div>
 
                 {/* Photo Upload Section */}

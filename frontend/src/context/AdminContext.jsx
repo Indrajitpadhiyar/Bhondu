@@ -103,7 +103,8 @@ export const AdminProvider = ({ children }) => {
         sizes: newProduct.sizes || ["M", "L"],
         colors: newProduct.colors || ["#111111"],
         description: newProduct.description,
-        stock: Number(newProduct.stock || 20)
+        stock: Number(newProduct.stock || 20),
+        shippingCost: newProduct.shippingCost ? Number(newProduct.shippingCost) : 99
       };
       await createProduct(formatted).unwrap();
       toast.success('Product created successfully in database!');

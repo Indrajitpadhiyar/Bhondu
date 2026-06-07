@@ -34,11 +34,10 @@ export const productApi = baseApi.injectEndpoints({
       providesTags: ['Categories'],
     }),
     createProduct: builder.mutation({
-      query: (formData) => ({
+      query: (data) => ({
         url: '/products',
         method: 'POST',
-        data: formData, // FormData for multiple image uploads
-        headers: { 'Content-Type': 'multipart/form-data' },
+        data,
       }),
       invalidatesTags: ['Products'],
     }),
