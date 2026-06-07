@@ -219,6 +219,17 @@ export default function AdminProducts() {
     });
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewProduct(prev => ({ ...prev, imageUrl: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header section */}
@@ -594,25 +605,60 @@ export default function AdminProducts() {
                   </div>
                 </div>
 
-                {/* Image URL & Stock */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Stock Quantity</label>
-                    <input
-                      type="number"
-                      required
-                      value={newProduct.stock}
-                      onChange={(e) => setNewProduct(prev => ({ ...prev, stock: e.target.value }))}
-                      className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Image URL</label>
+                {/* Stock Quantity */}
+                <div className="space-y-1">
+                  <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Stock Quantity</label>
+                  <input
+                    type="number"
+                    required
+                    value={newProduct.stock}
+                    onChange={(e) => setNewProduct(prev => ({ ...prev, stock: e.target.value }))}
+                    className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
+                  />
+                </div>
+
+                {/* Photo Upload Section */}
+                <div className="space-y-2">
+                  <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold block">Product Photo</label>
+                  
+                  {newProduct.imageUrl ? (
+                    <div className="relative w-full h-48 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-100 dark:bg-zinc-950 group">
+                      <img src={newProduct.imageUrl} alt="Product Preview" className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setNewProduct(prev => ({ ...prev, imageUrl: '' }))}
+                        className="absolute top-2.5 right-2.5 p-1.5 bg-black/60 hover:bg-black/85 text-white rounded-full transition-colors cursor-pointer border-0 flex items-center justify-center"
+                        title="Remove Image"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-zinc-250 hover:border-accent dark:border-zinc-800 dark:hover:border-accent rounded-xl cursor-pointer bg-white dark:bg-zinc-950 transition-colors p-6 text-center">
+                      <div className="flex flex-col items-center justify-center space-y-2 text-zinc-400">
+                        <Upload className="w-8 h-8 text-[#C9A87C] mb-1" />
+                        <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">Drag & Drop Image</p>
+                        <p className="text-[10px] text-zinc-400">PNG, JPG, JPEG up to 5MB</p>
+                        <span className="px-3 py-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[9px] font-bold uppercase rounded-md mt-2">
+                          Browse Files
+                        </span>
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
+
+                  <div className="space-y-1 pt-1.5">
+                    <label className="text-[10px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-semibold block">Or paste Image URL</label>
                     <input
                       type="text"
                       value={newProduct.imageUrl}
                       onChange={(e) => setNewProduct(prev => ({ ...prev, imageUrl: e.target.value }))}
-                      placeholder="e.g. Unsplash URL"
+                      placeholder="e.g. https://images.unsplash.com/photo-..."
                       className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
                     />
                   </div>

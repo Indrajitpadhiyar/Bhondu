@@ -106,9 +106,9 @@ const ProductCard = ({ product }) => {
           {product.subcategory}
         </p>
         <div className="mt-auto flex items-center space-x-2.5">
-          <span className="text-xs font-bold text-accent">${product.price}</span>
+          <span className="text-xs font-bold text-accent">₹{product.price}</span>
           {product.discount > 0 && (
-            <span className="text-[10px] text-zinc-400 line-through">${product.originalPrice}</span>
+            <span className="text-[10px] text-zinc-400 line-through">₹{product.originalPrice}</span>
           )}
         </div>
       </div>

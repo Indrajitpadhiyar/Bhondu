@@ -106,9 +106,9 @@ const QuickViewModal = () => {
 
               {/* Price */}
               <div className="flex items-center space-x-3.5">
-                <span className="text-xl font-bold text-accent">${quickViewProduct.price}</span>
+                <span className="text-xl font-bold text-accent">₹{quickViewProduct.price}</span>
                 {quickViewProduct.discount > 0 && (
-                  <span className="text-sm text-zinc-400 line-through">${quickViewProduct.originalPrice}</span>
+                  <span className="text-sm text-zinc-400 line-through">₹{quickViewProduct.originalPrice}</span>
                 )}
               </div>
 

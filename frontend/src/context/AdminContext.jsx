@@ -35,20 +35,23 @@ export const AdminProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    if (dbProducts && dbProducts.length > 0) {
+    if (dbProducts) {
       setProducts(dbProducts);
     }
   }, [dbProducts]);
 
   useEffect(() => {
-    if (dbOrders && dbOrders.length > 0) {
+    if (dbOrders) {
       // Map order items to direct status
       setOrders(dbOrders.map(o => ({
         ...o,
         id: o._id,
         customerName: o.user?.name || o.shippingAddress?.fullName || 'Anonymous Customer',
         amount: o.totalPrice,
-        date: new Date(o.createdAt).toISOString().split('T')[0]
+        date: new Date(o.createdAt).toISOString().split('T')[0],
+        address: o.shippingAddress
+          ? `${o.shippingAddress.street}, ${o.shippingAddress.city}, ${o.shippingAddress.state} - ${o.shippingAddress.postalCode}, ${o.shippingAddress.country}`
+          : 'No Address Specified'
       })));
     }
   }, [dbOrders]);

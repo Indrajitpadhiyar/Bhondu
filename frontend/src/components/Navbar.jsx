@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Search, Heart, ShoppingBag, User, Menu, X,
-  Trash2, Plus, Minus, Moon, Sun, ArrowRight, ShoppingCart
+  Trash2, Plus, Minus, Moon, Sun, ArrowRight, ShoppingCart,
+  CreditCard, Truck, RotateCw, MapPin, Shield
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useLogoutMutation } from '../services/authApi';
@@ -11,6 +12,8 @@ import { useGetProductsQuery } from '../services/productApi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { selectIsAuthenticated } from '../features/auth/authSlice.js';
+import { useGetProfileQuery, useAddAddressMutation } from '../services/userApi.js';
+import { useCreateOrderMutation } from '../services/orderApi.js';
 
 const Navbar = () => {
   const {
@@ -33,7 +36,8 @@ const Navbar = () => {
     setSearchQuery,
     cartCount,
     cartTotal,
-    addToCart
+    addToCart,
+    clearCart
   } = useContext(ShopContext);
 
   const navigate = useNavigate();
@@ -42,6 +46,181 @@ const Navbar = () => {
 
   const { data: products = [] } = useGetProductsQuery();
   const [logout] = useLogoutMutation();
+
+  const { data: profileData, refetch: refetchProfile } = useGetProfileQuery(undefined, { skip: !isAuthenticated });
+  const userProfile = profileData?.data?.user;
+  const savedAddresses = userProfile?.addresses || [];
+
+  const [addAddress] = useAddAddressMutation();
+  const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
+
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('Razorpay'); // 'Razorpay' | 'COD'
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
+  const [newAddressForm, setNewAddressForm] = useState({
+    street: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    country: '',
+    isDefault: true
+  });
+
+  useEffect(() => {
+    if (savedAddresses.length > 0 && !selectedAddressId) {
+      const defaultAddr = savedAddresses.find(a => a.isDefault) || savedAddresses[0];
+      setSelectedAddressId(defaultAddr._id);
+    }
+  }, [savedAddresses, selectedAddressId]);
+
+  const handleProceedToCheckout = () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to place an order.");
+      setIsCartOpen(false);
+      navigate('/login');
+      return;
+    }
+    
+    setIsCartOpen(false);
+    setIsCheckoutOpen(true);
+    if (savedAddresses.length === 0) {
+      setIsAddingNewAddress(true);
+    } else {
+      setIsAddingNewAddress(false);
+      const defaultAddr = savedAddresses.find(a => a.isDefault) || savedAddresses[0];
+      setSelectedAddressId(defaultAddr._id);
+    }
+  };
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const selectedAddress = savedAddresses.find(a => a._id === selectedAddressId);
+
+  const handlePayment = async () => {
+    if (!selectedAddressId || !selectedAddress) {
+      toast.error('Please select or add a shipping address.');
+      return;
+    }
+
+    if (paymentMethod === 'Razorpay') {
+      setIsProcessing(true);
+      const res = await loadRazorpayScript();
+      if (!res) {
+        toast.error('Razorpay SDK failed to load. Are you online?');
+        setIsProcessing(false);
+        return;
+      }
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_Sq6zVyDSZSLCQA',
+        amount: Math.round((displayCartTotal + 99) * 100), // amount in paise
+        currency: 'INR',
+        name: 'BHONDU Store',
+        description: 'Order Payment',
+        image: '/bhondu_logo.png',
+        handler: async function (response) {
+          try {
+            const orderData = {
+              items: displayCartItems.map(item => ({
+                product: item.id,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                size: item.size,
+                color: item.color,
+                image: item.image
+              })),
+              shippingAddress: {
+                street: selectedAddress.street,
+                city: selectedAddress.city,
+                state: selectedAddress.state,
+                postalCode: selectedAddress.postalCode,
+                country: selectedAddress.country
+              },
+              totalPrice: displayCartTotal + 99,
+              shippingPrice: 99,
+              paymentStatus: 'Paid',
+              paymentMethod: 'Online'
+            };
+            
+            await createOrder(orderData).unwrap();
+            clearCart();
+            setIsCheckoutOpen(false);
+            toast.success('Payment successful and order placed!');
+          } catch (err) {
+            toast.error(err.data?.message || 'Failed to place order.');
+          } finally {
+            setIsProcessing(false);
+          }
+        },
+        prefill: {
+          name: userProfile?.name || '',
+          email: userProfile?.email || '',
+          contact: userProfile?.phone || ''
+        },
+        theme: {
+          color: '#C9A87C'
+        },
+        modal: {
+          ondismiss: function () {
+            setIsProcessing(false);
+          }
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } else {
+      // Cash on Delivery
+      try {
+        setIsProcessing(true);
+        const orderData = {
+          items: displayCartItems.map(item => ({
+            product: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            size: item.size,
+            color: item.color,
+            image: item.image
+          })),
+          shippingAddress: {
+            street: selectedAddress.street,
+            city: selectedAddress.city,
+            state: selectedAddress.state,
+            postalCode: selectedAddress.postalCode,
+            country: selectedAddress.country
+          },
+          totalPrice: displayCartTotal + 99,
+          shippingPrice: 99,
+          paymentStatus: 'Pending',
+          paymentMethod: 'COD'
+        };
+        await createOrder(orderData).unwrap();
+        clearCart();
+        setIsCheckoutOpen(false);
+        toast.success('Order placed successfully (Cash on Delivery)!');
+      } catch (err) {
+        toast.error(err.data?.message || 'Failed to place order.');
+      } finally {
+        setIsProcessing(false);
+      }
+    }
+  };
 
   const handleLogout = async () => {
     setIsProfileOpen(false);
@@ -394,7 +573,7 @@ const Navbar = () => {
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <span className="text-xs font-bold text-accent">${p.price}</span>
+                            <span className="text-xs font-bold text-accent">₹{p.price}</span>
                             <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 text-accent transform translate-x-[-10px] group-hover:translate-x-0 transition-all" />
                           </div>
                         </div>
@@ -491,7 +670,7 @@ const Navbar = () => {
                               <Plus className="w-3 h-3" />
                             </button>
                           </div>
-                          <span className="text-xs font-bold text-accent">${item.price * item.quantity}</span>
+                          <span className="text-xs font-bold text-accent">₹{item.price * item.quantity}</span>
                         </div>
                       </div>
                     </div>
@@ -515,20 +694,10 @@ const Navbar = () => {
                 <div className="p-6 border-t border-secondary dark:border-zinc-800 bg-secondary/30 dark:bg-zinc-900/30">
                   <div className="flex justify-between items-center mb-6">
                     <span className="text-xs font-bold tracking-widest uppercase text-zinc-400">SUBTOTAL</span>
-                    <span className="font-luxury-sans text-lg font-bold text-accent">${displayCartTotal}</span>
+                    <span className="font-luxury-sans text-lg font-bold text-accent">₹{displayCartTotal}</span>
                   </div>
                   <button
-                    onClick={() => {
-                      if (!isAuthenticated) {
-                        toast.error("Please login to place an order.");
-                        setIsCartOpen(false);
-                        navigate('/login');
-                        return;
-                      }
-                      clearCart();
-                      setIsCartOpen(false);
-                      toast.success(`Order placed successfully! Total: $${displayCartTotal}`);
-                    }}
+                    onClick={handleProceedToCheckout}
                     className="w-full py-4 bg-primary text-secondary dark:bg-zinc-100 dark:text-zinc-950 text-xs font-bold uppercase tracking-widest hover:bg-accent dark:hover:bg-accent hover:text-primary dark:hover:text-primary transition-all rounded-xs flex items-center justify-center space-x-2 cursor-pointer"
                   >
                     <span>PROCEED TO CHECKOUT</span>
@@ -600,7 +769,7 @@ const Navbar = () => {
                                 <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
-                            <p className="text-xs font-bold text-accent mt-2">${product.price}</p>
+                            <p className="text-xs font-bold text-accent mt-2">₹{product.price}</p>
                           </div>
                           <button
                             onClick={() => {
@@ -630,6 +799,322 @@ const Navbar = () => {
               </div>
             </motion.div>
           </>
+        )}
+      </AnimatePresence>
+
+      {/* 5. Checkout / Payment Gateway Drawer */}
+      <AnimatePresence>
+        {isCheckoutOpen && (
+          <div className="fixed inset-0 z-[150] flex justify-end">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              onClick={() => {
+                if (!isProcessing) setIsCheckoutOpen(false);
+              }}
+              className="fixed inset-0 bg-black"
+            />
+
+            {/* Drawer Body - Full Height, Wider width */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'tween', duration: 0.3 }}
+              className="relative w-full max-w-5xl bg-[#F8F7F4] dark:bg-zinc-950 shadow-2xl z-10 flex flex-col h-full text-left"
+            >
+              {/* Header Bar */}
+              <div className="p-6 border-b border-secondary/45 dark:border-zinc-800 flex justify-between items-center bg-white dark:bg-zinc-900">
+                <div>
+                  <span className="text-[9px] font-bold text-accent tracking-[0.25em] uppercase">Checkout Gateway</span>
+                  <h3 className="font-luxury-serif text-lg sm:text-xl font-bold uppercase tracking-widest text-primary dark:text-zinc-100 mt-0.5">
+                    Logistics & Payment
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setIsCheckoutOpen(false)}
+                  disabled={isProcessing}
+                  className="p-1.5 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:text-primary dark:text-zinc-150 transition-colors disabled:opacity-30 cursor-pointer bg-transparent"
+                  aria-label="Close checkout"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Main Content Area split into 2 columns */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 flex-1 overflow-hidden">
+                
+                {/* Left Column: Forms and selection */}
+                <div className="lg:col-span-7 p-6 sm:p-8 overflow-y-auto space-y-6">
+                  {isAddingNewAddress ? (
+                    /* Address addition Form */
+                    <form
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+                        if (!newAddressForm.street || !newAddressForm.city || !newAddressForm.state || !newAddressForm.postalCode || !newAddressForm.country) {
+                          toast.error("Please populate all address fields.");
+                          return;
+                        }
+                        try {
+                          setIsProcessing(true);
+                          await addAddress(newAddressForm).unwrap();
+                          const freshProfile = await refetchProfile().unwrap();
+                          const freshAddresses = freshProfile?.data?.user?.addresses || [];
+                          if (freshAddresses.length > 0) {
+                            const newAddr = freshAddresses[freshAddresses.length - 1];
+                            setSelectedAddressId(newAddr._id);
+                          }
+                          setIsAddingNewAddress(false);
+                          toast.success("Delivery coordinates saved successfully!");
+                        } catch (err) {
+                          toast.error(err.data?.message || "Failed to save address coordinates.");
+                        } finally {
+                          setIsProcessing(false);
+                        }
+                      }}
+                      className="space-y-4 text-xs"
+                    >
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-accent flex items-center gap-2">
+                        <MapPin className="w-4 h-4" /> Add Shipping Point
+                      </h4>
+
+                      <div className="space-y-1">
+                        <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">Street Address</label>
+                        <input
+                          type="text"
+                          required
+                          value={newAddressForm.street}
+                          onChange={(e) => setNewAddressForm(prev => ({ ...prev, street: e.target.value }))}
+                          className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-sm focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 transition-colors"
+                          placeholder="e.g. 123 Luxury Avenue, Floor 2"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">City</label>
+                          <input
+                            type="text"
+                            required
+                            value={newAddressForm.city}
+                            onChange={(e) => setNewAddressForm(prev => ({ ...prev, city: e.target.value }))}
+                            className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-sm focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 transition-colors"
+                            placeholder="e.g. Mumbai"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">State</label>
+                          <input
+                            type="text"
+                            required
+                            value={newAddressForm.state}
+                            onChange={(e) => setNewAddressForm(prev => ({ ...prev, state: e.target.value }))}
+                            className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-sm focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 transition-colors"
+                            placeholder="e.g. Maharashtra"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">Postal Code</label>
+                          <input
+                            type="text"
+                            required
+                            value={newAddressForm.postalCode}
+                            onChange={(e) => setNewAddressForm(prev => ({ ...prev, postalCode: e.target.value }))}
+                            className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-sm focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 transition-colors"
+                            placeholder="e.g. 400001"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">Country</label>
+                          <input
+                            type="text"
+                            required
+                            value={newAddressForm.country}
+                            onChange={(e) => setNewAddressForm(prev => ({ ...prev, country: e.target.value }))}
+                            className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-sm focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 transition-colors"
+                            placeholder="e.g. India"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2 justify-end pt-4">
+                        {savedAddresses.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => setIsAddingNewAddress(false)}
+                            disabled={isProcessing}
+                            className="px-4 py-2.5 border border-secondary/45 dark:border-zinc-800 rounded-sm hover:bg-secondary/5 font-semibold transition-colors cursor-pointer bg-transparent text-zinc-650 dark:text-zinc-350"
+                          >
+                            Use Saved Address
+                          </button>
+                        )}
+                        <button
+                          type="submit"
+                          disabled={isProcessing}
+                          className="px-6 py-2.5 bg-zinc-900 dark:bg-white dark:text-zinc-950 text-white font-bold uppercase tracking-widest rounded-sm hover:opacity-90 transition-all flex items-center gap-1.5 cursor-pointer"
+                        >
+                          {isProcessing && <RotateCw className="w-3.5 h-3.5 animate-spin" />}
+                          Save Address
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    /* Standard Confirmation & Payment Panel */
+                    <div className="space-y-6 text-xs">
+                      {/* Delivery Address Details */}
+                      <div className="space-y-2.5">
+                        <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                          <span>DELIVERY DESTINATION</span>
+                          <button
+                            onClick={() => {
+                              setNewAddressForm({ street: '', city: '', state: '', postalCode: '', country: '', isDefault: true });
+                              setIsAddingNewAddress(true);
+                            }}
+                            disabled={isProcessing}
+                            className="text-accent hover:underline cursor-pointer border-0 bg-transparent font-bold tracking-wider"
+                          >
+                            + Add Address
+                          </button>
+                        </div>
+
+                        <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                          {savedAddresses.map((addr) => (
+                            <label
+                              key={addr._id}
+                              className={`p-3 border rounded-sm flex items-start gap-3 cursor-pointer transition-all ${
+                                selectedAddressId === addr._id
+                                  ? 'border-accent bg-accent/[0.02] shadow-sm'
+                                  : 'border-secondary dark:border-zinc-800 hover:border-accent/40 bg-zinc-50/50 dark:bg-zinc-950/10'
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name="checkoutAddress"
+                                checked={selectedAddressId === addr._id}
+                                onChange={() => setSelectedAddressId(addr._id)}
+                                disabled={isProcessing}
+                                className="mt-0.5 accent-accent"
+                              />
+                              <div className="flex-1 space-y-0.5">
+                                <p className="font-semibold text-zinc-800 dark:text-zinc-200">{addr.street}</p>
+                                <p className="text-[11px] text-zinc-400">{addr.city}, {addr.state} - {addr.postalCode}, {addr.country}</p>
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Payment Mode Selector */}
+                      <div className="space-y-2.5">
+                        <h4 className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                          SELECT PAYMENT CHANNEL
+                        </h4>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            onClick={() => setPaymentMethod('Razorpay')}
+                            disabled={isProcessing}
+                            className={`p-4 border rounded-sm flex flex-col items-center justify-center gap-2 transition-all cursor-pointer bg-transparent ${
+                              paymentMethod === 'Razorpay'
+                                ? 'border-accent text-accent bg-accent/[0.02]'
+                                : 'border-secondary dark:border-zinc-800 text-zinc-400 hover:border-accent/40 hover:text-zinc-650'
+                            }`}
+                          >
+                            <CreditCard className="w-5 h-5" />
+                            <span className="font-bold tracking-wider uppercase text-[9px]">Pay Online (Razorpay)</span>
+                          </button>
+                          <button
+                            onClick={() => setPaymentMethod('COD')}
+                            disabled={isProcessing}
+                            className={`p-4 border rounded-sm flex flex-col items-center justify-center gap-2 transition-all cursor-pointer bg-transparent ${
+                              paymentMethod === 'COD'
+                                ? 'border-accent text-accent bg-accent/[0.02]'
+                                : 'border-secondary dark:border-zinc-800 text-zinc-400 hover:border-accent/40 hover:text-zinc-650'
+                            }`}
+                          >
+                            <Truck className="w-5 h-5" />
+                            <span className="font-bold tracking-wider uppercase text-[9px]">Cash on Delivery</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Right Column: Order Summary & Action (Sidebar) */}
+                <div className="lg:col-span-5 bg-white dark:bg-zinc-900 border-t lg:border-t-0 lg:border-l border-secondary/45 dark:border-zinc-800 p-6 sm:p-8 flex flex-col justify-between h-full overflow-y-auto">
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-400">Order Summary</h4>
+                      <div className="w-8 h-[1px] bg-accent mt-1" />
+                    </div>
+
+                    {/* Cart Items Scroll Area */}
+                    <div className="space-y-4 max-h-[30vh] lg:max-h-[40vh] overflow-y-auto pr-1">
+                      {displayCartItems.map((item, idx) => (
+                        <div key={idx} className="flex gap-3 pb-3 border-b border-secondary/20 dark:border-zinc-800/40 last:border-b-0 animate-fade-in">
+                          <img src={item.image} alt={item.name} className="w-12 h-14 object-cover rounded-sm border border-secondary/20 dark:border-zinc-800" />
+                          <div className="flex-1 min-w-0 text-xs">
+                            <p className="font-bold text-zinc-800 dark:text-zinc-100 truncate uppercase tracking-wider">{item.name}</p>
+                            <p className="text-[10px] text-zinc-400 mt-0.5">Size: {item.size} | Qty: {item.quantity}</p>
+                            <p className="inline-block w-3.5 h-3.5 rounded-full border align-middle mt-1" style={{ backgroundColor: item.color }} />
+                          </div>
+                          <div className="text-right text-xs font-bold text-zinc-900 dark:text-zinc-100">
+                            ₹{(item.price * item.quantity).toFixed(2)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Cost breakdown */}
+                    <div className="p-4 bg-zinc-50 dark:bg-zinc-950/30 border border-secondary dark:border-zinc-800 rounded-sm space-y-2 text-xs font-medium">
+                      <div className="flex justify-between items-center text-[10px] text-zinc-400 uppercase tracking-wider">
+                        <span>Cart Subtotal</span>
+                        <span>₹{displayCartTotal.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-[10px] text-zinc-400 uppercase tracking-wider">
+                        <span>Standard shipping</span>
+                        <span>₹99.00</span>
+                      </div>
+                      <div className="h-[1px] bg-secondary dark:bg-zinc-800/80 my-1" />
+                      <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-primary dark:text-zinc-100">
+                        <span>Grand Total</span>
+                        <span className="text-accent text-sm">₹{(displayCartTotal + 99).toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Main checkout confirm button */}
+                  <div className="pt-6 border-t border-secondary/20 dark:border-zinc-800/40">
+                    <button
+                      onClick={handlePayment}
+                      disabled={isProcessing || isCreatingOrder || !selectedAddressId || isAddingNewAddress}
+                      className="w-full py-4 bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 text-xs font-bold uppercase tracking-widest hover:bg-accent dark:hover:bg-accent hover:text-primary dark:hover:text-primary transition-all rounded-xs flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
+                    >
+                      {isProcessing ? (
+                        <>
+                          <RotateCw className="w-4 h-4 animate-spin" />
+                          <span>PROCESSING...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>CONFIRM & PLACE ORDER</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </>
+                      )}
+                    </button>
+                    {!selectedAddressId && !isAddingNewAddress && (
+                      <p className="text-[10px] text-red-500 font-semibold text-center mt-2">
+                        Please select or add a delivery address to place order.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </>

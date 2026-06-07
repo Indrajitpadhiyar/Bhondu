@@ -33,6 +33,11 @@ const orderSchema = new mongoose.Schema({
     enum: ['Pending', 'Paid', 'Failed'],
     default: 'Pending',
   },
+  paymentMethod: {
+    type: String,
+    enum: ['Online', 'COD'],
+    default: 'Online',
+  },
   shippingPrice: {
     type: Number,
     default: 99,

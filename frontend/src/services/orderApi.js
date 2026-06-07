@@ -8,6 +8,7 @@ export const orderApi = baseApi.injectEndpoints({
         method: 'GET',
         params,
       }),
+      transformResponse: (response) => response.data.orders,
       providesTags: ['Orders'],
     }),
     getOrderDetails: builder.query({

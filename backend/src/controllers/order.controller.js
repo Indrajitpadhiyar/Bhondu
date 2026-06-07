@@ -4,7 +4,7 @@ import AppError from '../utils/appError.js';
 import { ROLES } from '../constants/roles.js';
 
 export const createOrder = asyncHandler(async (req, res, next) => {
-  const { items, shippingAddress, totalPrice, shippingPrice } = req.body;
+  const { items, shippingAddress, totalPrice, shippingPrice, paymentStatus, paymentMethod } = req.body;
 
   const order = await Order.create({
     user: req.user._id,
@@ -12,6 +12,8 @@ export const createOrder = asyncHandler(async (req, res, next) => {
     shippingAddress,
     totalPrice,
     shippingPrice,
+    paymentStatus: paymentStatus || 'Pending',
+    paymentMethod: paymentMethod || 'Online',
   });
 
   res.status(201).json({

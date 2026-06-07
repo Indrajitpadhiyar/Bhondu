@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
   User,
@@ -16,7 +17,8 @@ import {
   Edit2,
   Check,
   X,
-  Compass
+  Compass,
+  ArrowLeft
 } from 'lucide-react';
 import {
   useGetProfileQuery,
@@ -29,6 +31,7 @@ import {
 import { useChangePasswordMutation } from '../services/authApi';
 
 export default function Profile() {
+  const navigate = useNavigate();
   const { data: profileData, isLoading: isProfileLoading, refetch } = useGetProfileQuery();
   const user = profileData?.data?.user;
 
@@ -290,6 +293,26 @@ export default function Profile() {
               <Lock className="w-4 h-4" />
               Security Gateway
             </button>
+
+            {/* Backwards navigation options */}
+            <div className="pt-4 border-t border-secondary/20 dark:border-zinc-800/80 mt-4 space-y-2">
+              {(user?.role === 'Admin' || user?.role === 'Store Owner') && (
+                <button
+                  onClick={() => navigate('/admin')}
+                  className="w-full text-left py-3.5 px-4 border border-secondary/45 dark:border-zinc-800 bg-zinc-900 dark:bg-white text-white dark:text-zinc-950 text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-3 cursor-pointer hover:opacity-90"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Admin Dashboard
+                </button>
+              )}
+              <button
+                onClick={() => navigate(-1)}
+                className="w-full text-left py-3.5 px-4 border border-secondary/45 dark:border-zinc-800 bg-transparent text-zinc-500 hover:text-primary dark:hover:text-zinc-200 text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-3 cursor-pointer"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Go Backward
+              </button>
+            </div>
           </div>
 
           {/* Main Panel Content Box */}

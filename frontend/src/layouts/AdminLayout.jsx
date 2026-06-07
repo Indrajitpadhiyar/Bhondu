@@ -28,6 +28,9 @@ import {
   Sun
 } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../features/auth/authSlice.js';
+import { useGetProfileQuery } from '../services/userApi';
 
 export default function AdminLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -45,6 +48,9 @@ export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { alerts, orders } = useAdmin();
+  const user = useSelector(selectCurrentUser);
+  const { data: profileData } = useGetProfileQuery();
+  const dbUser = profileData?.data?.user;
 
   // Tick current time
   useEffect(() => {
@@ -492,17 +498,23 @@ export default function AdminLayout() {
             </button>
 
             {/* Profile Dropdown Indicator */}
-            <div className="flex items-center gap-2 border-l border-zinc-200 dark:border-zinc-800 pl-4">
-              <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop"
-                alt="Admin Avatar"
-                className="w-8 h-8 rounded-full border border-[#C9A87C] object-cover"
-              />
+            <Link to="/profile" className="flex items-center gap-2 border-l border-zinc-200 dark:border-zinc-800 pl-4 hover:opacity-85 transition-opacity cursor-pointer">
+              {dbUser?.avatar?.url ? (
+                <img
+                  src={dbUser.avatar.url}
+                  alt={dbUser.name}
+                  className="w-8 h-8 rounded-full border border-[#C9A87C] object-cover"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full border border-[#C9A87C] bg-zinc-150 dark:bg-zinc-800 flex items-center justify-center font-bold text-[10px] text-zinc-650 dark:text-zinc-350">
+                  {(dbUser?.name || user?.name || "I").charAt(0).toUpperCase()}
+                </div>
+              )}
               <div className="hidden sm:block text-left">
-                <p className="text-xs font-semibold">Indrajit P.</p>
-                <p className="text-[10px] text-zinc-400">Store Owner</p>
+                <p className="text-xs font-semibold">{dbUser?.name || user?.name || "Indrajit P."}</p>
+                <p className="text-[10px] text-zinc-400">{dbUser?.role || user?.role || "Store Owner"}</p>
               </div>
-            </div>
+            </Link>
           </div>
         </header>
 

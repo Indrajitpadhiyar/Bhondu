@@ -119,6 +119,49 @@ export default function AdminDashboard() {
     .filter(o => o.date === todayDate && o.status !== 'Cancelled')
     .reduce((sum, o) => sum + o.amount, 0);
 
+  // Compute dynamic monthly revenue trend for past 6 months
+  const getMonthlyRevenueData = () => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const last6Months = [];
+    const now = new Date();
+    
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      last6Months.push({
+        month: months[d.getMonth()],
+        year: d.getFullYear(),
+        monthNum: d.getMonth(),
+        revenue: 0
+      });
+    }
+
+    orders.forEach(order => {
+      if (order.status === 'Cancelled') return;
+      const orderDate = new Date(order.createdAt);
+      if (isNaN(orderDate.getTime())) return;
+      
+      const orderMonth = orderDate.getMonth();
+      const orderYear = orderDate.getFullYear();
+      
+      const match = last6Months.find(m => m.monthNum === orderMonth && m.year === orderYear);
+      if (match) {
+        match.revenue += order.amount;
+      }
+    });
+
+    return last6Months;
+  };
+
+  const monthlyRevenueData = getMonthlyRevenueData();
+
+  // Simulated traffic channel acquisition metrics
+  const trafficSourcesData = [
+    { name: 'Direct Search', value: 45, color: '#C9A87C' },
+    { name: 'Social Media', value: 30, color: '#111111' },
+    { name: 'Referrals', value: 15, color: '#71717a' },
+    { name: 'Email Campaign', value: 10, color: '#a1a1aa' }
+  ];
+
   const stats = [
     {
       title: 'Total Revenue',
@@ -240,7 +283,7 @@ export default function AdminDashboard() {
           </div>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={dashboardAnalytics.monthlyRevenue} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={monthlyRevenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#C9A87C" stopOpacity={0.2}/>
@@ -270,7 +313,7 @@ export default function AdminDashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={dashboardAnalytics.trafficSources}
+                  data={trafficSourcesData}
                   cx="50%"
                   cy="50%"
                   innerRadius={65}
@@ -278,7 +321,7 @@ export default function AdminDashboard() {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {dashboardAnalytics.trafficSources.map((entry, index) => (
+                  {trafficSourcesData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -291,7 +334,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2 mt-2">
-            {dashboardAnalytics.trafficSources.map((source, index) => (
+            {trafficSourcesData.map((source, index) => (
               <div key={index} className="flex items-center gap-2 text-xs">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: source.color }} />
                 <span className="text-zinc-500 dark:text-zinc-400 truncate">{source.name}</span>
@@ -346,6 +389,8 @@ export default function AdminDashboard() {
                         className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                           order.status === 'Delivered'
                             ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-400'
+                            : order.status === 'Shipped'
+                            ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/20 dark:text-indigo-400'
                             : order.status === 'Processing'
                             ? 'bg-blue-100 text-blue-800 dark:bg-blue-950/20 dark:text-blue-400'
                             : order.status === 'Pending'

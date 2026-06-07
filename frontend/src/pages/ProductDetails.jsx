@@ -195,9 +195,9 @@ const ProductDetails = () => {
 
               {/* Pricing */}
               <div className="flex items-center space-x-4">
-                <span className="text-2xl font-bold text-accent">${product.price}</span>
+                <span className="text-2xl font-bold text-accent">₹{product.price}</span>
                 {product.discount > 0 && (
-                  <span className="text-sm text-zinc-400 line-through">${product.originalPrice}</span>
+                  <span className="text-sm text-zinc-400 line-through">₹{product.originalPrice}</span>
                 )}
               </div>
 
@@ -338,7 +338,7 @@ const ProductDetails = () => {
                       transition={{ duration: 0.2 }}
                       className="space-y-2"
                     >
-                      <p>• Free express courier shipping on orders exceeding $150.</p>
+                      <p>• Free express courier shipping on orders exceeding ₹10,000.</p>
                       <p>• Delivered inside signature premium carbon audit packaging box.</p>
                       <p>• Easy returns and replacements within 30 days of dispatch date.</p>
                     </motion.div>

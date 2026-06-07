@@ -27,6 +27,7 @@ export default function AdminOrders() {
   // Search and tabs state
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('All');
+  const [paymentFilter, setPaymentFilter] = useState('All');
 
   // Sync tab with URL query parameter
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function AdminOrders() {
     }
   }, [location.search]);
 
-  const tabs = ['All', 'Pending', 'Processing', 'Delivered', 'Cancelled'];
+  const tabs = ['All', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -61,13 +62,17 @@ export default function AdminOrders() {
 
     const matchesStatus = activeTab === 'All' ? true : order.status === activeTab;
 
-    return matchesSearch && matchesStatus;
+    const matchesPayment = paymentFilter === 'All' ? true : order.paymentMethod === paymentFilter;
+
+    return matchesSearch && matchesStatus && matchesPayment;
   });
 
   const getStatusBadgeStyles = (status) => {
     switch (status) {
       case 'Delivered':
         return 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-900/30';
+      case 'Shipped':
+        return 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/20 dark:text-indigo-400 border border-indigo-200/50 dark:border-indigo-900/30';
       case 'Processing':
         return 'bg-blue-50 text-blue-700 dark:bg-blue-950/20 dark:text-blue-400 border border-blue-200/50 dark:border-blue-900/30';
       case 'Pending':
@@ -124,6 +129,28 @@ export default function AdminOrders() {
         </div>
       </div>
 
+      {/* Payment Method Filter Toggle */}
+      <div className="flex items-center gap-2 text-xs py-1">
+        <span className="text-zinc-400 font-medium mr-2">Payment Method:</span>
+        {[
+          { label: 'All Payments', value: 'All' },
+          { label: 'Already Paid (Prepaid)', value: 'Online' },
+          { label: 'Cash on Delivery (COD)', value: 'COD' }
+        ].map((item) => (
+          <button
+            key={item.value}
+            onClick={() => setPaymentFilter(item.value)}
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-all border ${
+              paymentFilter === item.value
+                ? 'bg-zinc-900 border-zinc-900 text-white dark:bg-white dark:border-white dark:text-zinc-900 shadow-sm'
+                : 'bg-white border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700'
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
       {/* Orders Table */}
       <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200/60 dark:border-zinc-800/80 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
@@ -165,8 +192,21 @@ export default function AdminOrders() {
                       <td className="py-4 px-4 font-mono font-medium">
                         {itemCount} {itemCount === 1 ? 'item' : 'items'}
                       </td>
-                      <td className="py-4 px-4 font-bold text-zinc-900 dark:text-zinc-100">
-                        ₹{order.amount.toFixed(2)}
+                      <td className="py-4 px-4">
+                        <div className="font-bold text-zinc-900 dark:text-zinc-100">
+                          ₹{order.amount.toFixed(2)}
+                        </div>
+                        <div className="mt-1 flex flex-col gap-1 items-start">
+                          {order.paymentMethod === 'COD' ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold bg-amber-50 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400 border border-amber-200/50 dark:border-amber-900/30 uppercase tracking-wider">
+                              COD
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-900/30 uppercase tracking-wider">
+                              Already Paid
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="py-4 px-4">
                         <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold ${getStatusBadgeStyles(order.status)}`}>
@@ -244,8 +284,8 @@ export default function AdminOrders() {
                       Currently: <span className="text-[#C9A87C]">{selectedOrder.status}</span>
                     </p>
                   </div>
-                  <div className="flex gap-2">
-                    {['Pending', 'Processing', 'Delivered', 'Cancelled'].map((status) => (
+                  <div className="flex flex-wrap gap-2">
+                    {['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].map((status) => (
                       <button
                         key={status}
                         onClick={() => {
@@ -276,8 +316,14 @@ export default function AdminOrders() {
                     </div>
                     <div className="p-3 bg-white dark:bg-zinc-950 rounded-lg border border-zinc-200/50 dark:border-zinc-800/70 text-xs space-y-1">
                       <p className="font-semibold text-zinc-400 flex items-center gap-1.5"><CreditCard className="w-3.5 h-3.5" /> Payment</p>
-                      <p className="font-bold text-zinc-900 dark:text-zinc-100 mt-1">{selectedOrder.paymentMethod}</p>
-                      <p className="text-zinc-400">Term: Cash/Prepaid</p>
+                      <p className="font-bold text-zinc-900 dark:text-zinc-100 mt-1">
+                        {selectedOrder.paymentMethod === 'COD' ? 'Cash on Delivery (COD)' : 'Already Paid (Online)'}
+                      </p>
+                      <p className="text-zinc-400">
+                        Status: <span className={selectedOrder.paymentStatus === 'Paid' ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-amber-600 dark:text-amber-400 font-semibold'}>
+                          {selectedOrder.paymentStatus || 'Pending'}
+                        </span>
+                      </p>
                     </div>
                   </div>
                   <div className="p-3 bg-white dark:bg-zinc-950 rounded-lg border border-zinc-200/50 dark:border-zinc-800/70 text-xs space-y-1">
@@ -343,7 +389,14 @@ export default function AdminOrders() {
                   Print Invoice
                 </button>
                 <button
-                  onClick={() => alert(`Marking package dispatched for order: ${selectedOrder.id}`)}
+                  onClick={async () => {
+                    try {
+                      await updateOrderStatus(selectedOrder.id, 'Shipped');
+                      setSelectedOrder(prev => ({ ...prev, status: 'Shipped' }));
+                    } catch (err) {
+                      // Handled by updateOrderStatus toast in context
+                    }
+                  }}
                   className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-lg text-xs font-semibold hover:bg-zinc-850 dark:hover:bg-zinc-100"
                 >
                   <Truck className="w-3.5 h-3.5" />
