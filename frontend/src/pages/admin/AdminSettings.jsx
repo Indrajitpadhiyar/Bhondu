@@ -13,7 +13,8 @@ import {
   Plus,
   Trash2,
   Lock,
-  Users
+  Users,
+  Edit2
 } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 
@@ -60,8 +61,78 @@ export default function AdminSettings() {
     metaDescription: settings.seo.metaDescription
   });
 
-  const [shippingMethods, setShippingMethods] = useState(settings.shippingMethods);
+  const [shippingMethods, setShippingMethods] = useState(settings.shippingMethods || []);
   const [paymentMethods, setPaymentMethods] = useState(settings.paymentMethods);
+
+  // Sync shippingMethods when settings change in context
+  useEffect(() => {
+    if (settings.shippingMethods) {
+      setShippingMethods(settings.shippingMethods);
+    }
+  }, [settings.shippingMethods]);
+
+  // Custom Shipping Form State
+  const [showShippingForm, setShowShippingForm] = useState(false);
+  const [shippingForm, setShippingForm] = useState({ id: '', name: '', price: '' });
+
+  const handleOpenCreateShipping = () => {
+    setShippingForm({ id: '', name: '', price: '' });
+    setShowShippingForm(true);
+  };
+
+  const handleOpenEditShipping = (method) => {
+    setShippingForm({ id: method.id, name: method.name, price: String(method.price) });
+    setShowShippingForm(true);
+  };
+
+  const handleSaveShippingMethod = (e) => {
+    e.preventDefault();
+    if (!shippingForm.name.trim() || !shippingForm.price.trim()) {
+      alert("Please enter a name and rate.");
+      return;
+    }
+    const priceNum = Number(shippingForm.price);
+    if (isNaN(priceNum) || priceNum < 0) {
+      alert("Rate must be a positive number.");
+      return;
+    }
+
+    let updated;
+    if (shippingForm.id) {
+      // Editing existing
+      updated = shippingMethods.map(sm => 
+        sm.id === shippingForm.id 
+          ? { ...sm, name: shippingForm.name, price: priceNum }
+          : sm
+      );
+    } else {
+      // Creating new
+      const newMethod = {
+        id: `sm-${Date.now()}`,
+        name: shippingForm.name,
+        price: priceNum,
+        active: true
+      };
+      updated = [...shippingMethods, newMethod];
+    }
+
+    setShippingMethods(updated);
+    saveSettings({ shippingMethods: updated });
+    setShowShippingForm(false);
+    setShippingForm({ id: '', name: '', price: '' });
+  };
+
+  const handleDeleteShippingMethod = (id) => {
+    if (window.confirm("Are you sure you want to delete this shipping method?")) {
+      const updated = shippingMethods.filter(sm => sm.id !== id);
+      setShippingMethods(updated);
+      saveSettings({ shippingMethods: updated });
+      if (shippingForm.id === id) {
+        setShowShippingForm(false);
+        setShippingForm({ id: '', name: '', price: '' });
+      }
+    }
+  };
 
   // System Users List
   const [systemUsers, setSystemUsers] = useState([
@@ -289,13 +360,63 @@ export default function AdminSettings() {
                   <h3 className="font-semibold text-sm font-luxury-serif text-zinc-900 dark:text-white">Shipping & Freight Allocators</h3>
                   <p className="text-[11px] text-zinc-400">Configure delivery channels and flat pricing rates.</p>
                 </div>
-                <button
-                  onClick={() => alert("Creating a custom delivery carrier channel...")}
-                  className="px-2.5 py-1.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded text-[10px] font-bold"
-                >
-                  Create Method
-                </button>
+                {!showShippingForm && (
+                  <button
+                    onClick={handleOpenCreateShipping}
+                    className="px-2.5 py-1.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded text-[10px] font-bold flex items-center gap-1 cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> Create Method
+                  </button>
+                )}
               </div>
+
+              {/* Edit/Create Shipping Form */}
+              {showShippingForm && (
+                <form onSubmit={handleSaveShippingMethod} className="p-4 bg-zinc-50 dark:bg-zinc-950/40 border border-zinc-200 dark:border-zinc-800 rounded-xl space-y-4">
+                  <h4 className="font-semibold text-xs text-zinc-850 dark:text-zinc-150 uppercase tracking-wider">
+                    {shippingForm.id ? 'Edit Shipping Method' : 'Create Shipping Method'}
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold">Method Name</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Standard Delivery (3-5 days)"
+                        value={shippingForm.name}
+                        onChange={(e) => setShippingForm(prev => ({ ...prev, name: e.target.value }))}
+                        className="w-full p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 text-xs text-zinc-850 dark:text-zinc-150"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold">Rate (₹)</label>
+                      <input
+                        type="number"
+                        required
+                        placeholder="e.g. 99"
+                        value={shippingForm.price}
+                        onChange={(e) => setShippingForm(prev => ({ ...prev, price: e.target.value }))}
+                        className="w-full p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 text-xs text-zinc-850 dark:text-zinc-150"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => setShowShippingForm(false)}
+                      className="px-3.5 py-1.5 border border-zinc-200 dark:border-zinc-800 rounded-lg text-[10px] font-bold text-zinc-500 cursor-pointer bg-transparent"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-3.5 py-1.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer"
+                    >
+                      <Save className="w-3.5 h-3.5" /> Save Method
+                    </button>
+                  </div>
+                </form>
+              )}
 
               <div className="space-y-3">
                 {shippingMethods.map((sm) => (
@@ -311,16 +432,32 @@ export default function AdminSettings() {
                       <p className="font-bold text-zinc-900 dark:text-white">{sm.name}</p>
                       <p className="text-[10px] text-[#C9A87C] font-semibold font-mono mt-0.5">₹{sm.price.toFixed(2)} rate</p>
                     </div>
-                    <button
-                      onClick={() => toggleShippingActive(sm.id)}
-                      className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold transition-all ${
-                        sm.active
-                          ? 'bg-red-50 hover:bg-red-100 text-red-655 border-red-200'
-                          : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-655 border-emerald-250'
-                      }`}
-                    >
-                      {sm.active ? 'Disable' : 'Enable'}
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleOpenEditShipping(sm)}
+                        className="p-1.5 text-zinc-400 hover:text-zinc-900 dark:hover:text-white cursor-pointer bg-transparent border-0"
+                        title="Edit Method"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteShippingMethod(sm.id)}
+                        className="p-1.5 text-zinc-400 hover:text-red-500 cursor-pointer bg-transparent border-0"
+                        title="Delete Method"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => toggleShippingActive(sm.id)}
+                        className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold transition-all cursor-pointer ${
+                          sm.active
+                            ? 'bg-red-55 hover:bg-red-100 text-red-650 border-red-200'
+                            : 'bg-emerald-55 hover:bg-emerald-100 text-emerald-650 border-emerald-200'
+                        }`}
+                      >
+                        {sm.active ? 'Disable' : 'Enable'}
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

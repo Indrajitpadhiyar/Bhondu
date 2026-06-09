@@ -20,7 +20,7 @@ import {
 import { useAdmin } from '../../context/AdminContext';
 
 export default function AdminProducts() {
-  const { products, addProduct, deleteProduct } = useAdmin();
+  const { products, addProduct, deleteProduct, updateProduct } = useAdmin();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -41,6 +41,7 @@ export default function AdminProducts() {
 
   // Add Product Modal
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [editingProductId, setEditingProductId] = useState(null);
   
   // Form State
   const [newProduct, setNewProduct] = useState({
@@ -55,7 +56,7 @@ export default function AdminProducts() {
     sizes: [],
     colors: [],
     tags: '',
-    imageUrl: '',
+    imageUrls: [],
     shippingCost: '99'
   });
 
@@ -171,18 +172,31 @@ export default function AdminProducts() {
     }
 
     // Default placeholder images if none specified
-    const images = newProduct.imageUrl 
-      ? [newProduct.imageUrl] 
+    const images = newProduct.imageUrls.length > 0
+      ? newProduct.imageUrls
       : ["https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop"];
 
-    addProduct({
-      ...newProduct,
-      images,
+    const formattedProduct = {
+      name: newProduct.name,
+      description: newProduct.description,
       price: Number(newProduct.price),
       salePrice: newProduct.salePrice ? Number(newProduct.salePrice) : null,
+      category: newProduct.category,
+      subcategory: newProduct.subcategory,
+      gender: newProduct.gender,
       stock: Number(newProduct.stock),
-      shippingCost: Number(newProduct.shippingCost || 99)
-    });
+      sizes: newProduct.sizes,
+      colors: newProduct.colors,
+      tags: newProduct.tags,
+      shippingCost: Number(newProduct.shippingCost || 99),
+      images
+    };
+
+    if (editingProductId) {
+      updateProduct(editingProductId, formattedProduct);
+    } else {
+      addProduct(formattedProduct);
+    }
 
     // Reset Form
     setNewProduct({
@@ -197,11 +211,52 @@ export default function AdminProducts() {
       sizes: [],
       colors: [],
       tags: '',
-      imageUrl: '',
+      imageUrls: [],
       shippingCost: '99'
     });
 
+    setEditingProductId(null);
     setIsAddOpen(false);
+  };
+
+  const handleEditClick = (product) => {
+    setNewProduct({
+      name: product.name || '',
+      description: product.description || '',
+      price: product.price || '',
+      salePrice: product.salePrice || '',
+      category: product.category || 'Tournament Wear',
+      subcategory: product.subcategory || '',
+      gender: product.gender || 'man',
+      stock: product.stock !== undefined ? String(product.stock) : '25',
+      sizes: product.sizes || [],
+      colors: product.colors || [],
+      tags: product.tags || '',
+      imageUrls: product.images || [],
+      shippingCost: product.shippingCost !== undefined ? String(product.shippingCost) : '99'
+    });
+    setEditingProductId(product.id);
+    setIsAddOpen(true);
+  };
+
+  const handleAddClick = () => {
+    setNewProduct({
+      name: '',
+      description: '',
+      price: '',
+      salePrice: '',
+      category: 'Tournament Wear',
+      subcategory: '',
+      gender: 'man',
+      stock: '25',
+      sizes: [],
+      colors: [],
+      tags: '',
+      imageUrls: [],
+      shippingCost: '99'
+    });
+    setEditingProductId(null);
+    setIsAddOpen(true);
   };
 
   const toggleSize = (size) => {
@@ -223,14 +278,17 @@ export default function AdminProducts() {
   };
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setNewProduct(prev => ({ ...prev, imageUrl: reader.result }));
+        setNewProduct(prev => ({
+          ...prev,
+          imageUrls: [...prev.imageUrls, reader.result]
+        }));
       };
       reader.readAsDataURL(file);
-    }
+    });
   };
 
   return (
@@ -242,7 +300,7 @@ export default function AdminProducts() {
           <p className="text-sm text-zinc-500">Manage BHONDU's premium apparel collection.</p>
         </div>
         <button
-          onClick={() => setIsAddOpen(true)}
+          onClick={handleAddClick}
           className="flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-lg hover:bg-zinc-850 dark:hover:bg-zinc-100 text-xs font-semibold shadow"
         >
           <Plus className="w-4 h-4" />
@@ -405,11 +463,15 @@ export default function AdminProducts() {
                       <td className="py-3 px-4 font-medium">
                         {product.discount > 0 ? (
                           <div className="flex flex-col">
-                            <span className="text-zinc-900 dark:text-zinc-100">₹{product.price}</span>
+                            <span className="text-zinc-900 dark:text-zinc-100 font-semibold">₹{product.price}</span>
                             <span className="text-[10px] text-zinc-400 line-through">₹{product.originalPrice}</span>
+                            <span className="text-[9px] text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mt-0.5">Ship: ₹{product.shippingCost ?? 99}</span>
                           </div>
                         ) : (
-                          <span>₹{product.price}</span>
+                          <div className="flex flex-col">
+                            <span className="text-zinc-900 dark:text-zinc-100 font-semibold">₹{product.price}</span>
+                            <span className="text-[9px] text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mt-0.5">Ship: ₹{product.shippingCost ?? 99}</span>
+                          </div>
                         )}
                       </td>
 
@@ -421,12 +483,12 @@ export default function AdminProducts() {
                       {/* Stock Status Badge */}
                       <td className="py-3 px-4">
                         <span
-                          className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold ${
+                          className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold border ${
                             isOut
-                              ? 'bg-red-100 text-red-800 dark:bg-red-950/20 dark:text-red-400'
+                              ? 'bg-red-50 text-red-700 border-red-200/50 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20'
                               : isLow
-                              ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/20 dark:text-amber-400'
-                              : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-400'
+                              ? 'bg-amber-50 text-amber-700 border-amber-200/50 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20'
+                              : 'bg-emerald-50 text-emerald-700 border-emerald-200/50 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20'
                           }`}
                         >
                           {isOut ? 'Out of Stock' : isLow ? 'Low Stock' : 'Active'}
@@ -442,6 +504,13 @@ export default function AdminProducts() {
                             title="Quick View"
                           >
                             <Eye className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleEditClick(product)}
+                            className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                            title="Edit Product"
+                          >
+                            <Edit className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => deleteProduct(product.id)}
@@ -515,9 +584,11 @@ export default function AdminProducts() {
                 <div>
                   <h3 className="font-semibold text-lg font-luxury-serif text-zinc-950 dark:text-white flex items-center gap-1.5">
                     <Sparkles className="w-4 h-4 text-[#C9A87C]" />
-                    Curate New Product
+                    {editingProductId ? 'Edit Product Details' : 'Curate New Product'}
                   </h3>
-                  <p className="text-[11px] text-zinc-400">Add apparel details to the luxury collections.</p>
+                  <p className="text-[11px] text-zinc-400">
+                    {editingProductId ? 'Update coordinates of this luxury piece.' : 'Add apparel details to the luxury collections.'}
+                  </p>
                 </div>
                 <button
                   onClick={() => setIsAddOpen(false)}
@@ -621,7 +692,7 @@ export default function AdminProducts() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Shipping Cost (₹)</label>
+                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Shipping Charge (₹)</label>
                     <input
                       type="number"
                       required
@@ -635,48 +706,96 @@ export default function AdminProducts() {
 
                 {/* Photo Upload Section */}
                 <div className="space-y-2">
-                  <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold block">Product Photo</label>
+                  <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold block">Product Photos</label>
                   
-                  {newProduct.imageUrl ? (
-                    <div className="relative w-full h-48 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-100 dark:bg-zinc-950 group">
-                      <img src={newProduct.imageUrl} alt="Product Preview" className="w-full h-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => setNewProduct(prev => ({ ...prev, imageUrl: '' }))}
-                        className="absolute top-2.5 right-2.5 p-1.5 bg-black/60 hover:bg-black/85 text-white rounded-full transition-colors cursor-pointer border-0 flex items-center justify-center"
-                        title="Remove Image"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
+                  {/* Thumbnails Grid */}
+                  {newProduct.imageUrls && newProduct.imageUrls.length > 0 && (
+                    <div className="grid grid-cols-3 gap-2.5 pb-2">
+                      {newProduct.imageUrls.map((url, idx) => (
+                        <div key={idx} className="relative aspect-[3/4] rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-150 dark:bg-zinc-950 group">
+                          <img src={url} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
+                          
+                          {/* Badge for first image */}
+                          {idx === 0 && (
+                            <span className="absolute top-1 left-1.5 px-1.5 py-0.5 bg-accent text-primary text-[8px] font-bold uppercase rounded-sm shadow-sm select-none">
+                              Primary
+                            </span>
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setNewProduct(prev => ({
+                                ...prev,
+                                imageUrls: prev.imageUrls.filter((_, i) => i !== idx)
+                              }));
+                            }}
+                            className="absolute top-1 right-1 p-1 bg-black/60 hover:bg-black/85 text-white rounded-full transition-colors cursor-pointer border-0 flex items-center justify-center shadow-md animate-fade-in"
+                            title="Remove Image"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
                     </div>
-                  ) : (
-                    <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-zinc-250 hover:border-accent dark:border-zinc-800 dark:hover:border-accent rounded-xl cursor-pointer bg-white dark:bg-zinc-950 transition-colors p-6 text-center">
-                      <div className="flex flex-col items-center justify-center space-y-2 text-zinc-400">
-                        <Upload className="w-8 h-8 text-[#C9A87C] mb-1" />
-                        <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">Drag & Drop Image</p>
-                        <p className="text-[10px] text-zinc-400">PNG, JPG, JPEG up to 5MB</p>
-                        <span className="px-3 py-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[9px] font-bold uppercase rounded-md mt-2">
-                          Browse Files
-                        </span>
-                      </div>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                      />
-                    </label>
                   )}
 
+                  {/* Upload Dropzone */}
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-zinc-250 hover:border-accent dark:border-zinc-800 dark:hover:border-accent rounded-xl cursor-pointer bg-white dark:bg-zinc-950 transition-colors p-4 text-center">
+                    <div className="flex flex-col items-center justify-center space-y-1 text-zinc-400">
+                      <Upload className="w-6 h-6 text-[#C9A87C] mb-1" />
+                      <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider font-logo">Upload Images</p>
+                      <p className="text-[9px] text-zinc-400">PNG, JPG, JPEG (Select multiple)</p>
+                    </div>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </label>
+
+                  {/* Add via Paste URL */}
                   <div className="space-y-1 pt-1.5">
                     <label className="text-[10px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-semibold block">Or paste Image URL</label>
-                    <input
-                      type="text"
-                      value={newProduct.imageUrl}
-                      onChange={(e) => setNewProduct(prev => ({ ...prev, imageUrl: e.target.value }))}
-                      placeholder="e.g. https://images.unsplash.com/photo-..."
-                      className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
-                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        id="paste-image-url-input"
+                        placeholder="e.g. https://images.unsplash.com/photo-..."
+                        className="flex-1 text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 outline-none focus:border-zinc-400"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            const val = e.target.value.trim();
+                            if (val) {
+                              setNewProduct(prev => ({
+                                ...prev,
+                                imageUrls: [...prev.imageUrls, val]
+                              }));
+                              e.target.value = '';
+                            }
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const input = document.getElementById('paste-image-url-input');
+                          if (input && input.value.trim()) {
+                            setNewProduct(prev => ({
+                              ...prev,
+                              imageUrls: [...prev.imageUrls, input.value.trim()]
+                            }));
+                            input.value = '';
+                          }
+                        }}
+                        className="px-4 py-2.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 rounded-lg text-xs font-bold hover:bg-zinc-850 dark:hover:bg-zinc-100 transition-colors border-0 cursor-pointer"
+                      >
+                        Add URL
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -751,7 +870,7 @@ export default function AdminProducts() {
                   type="submit"
                   className="w-full py-3 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-lg text-xs font-semibold hover:bg-zinc-800 dark:hover:bg-zinc-100 shadow transition-colors"
                 >
-                  Create & Publish Product
+                  {editingProductId ? 'Update & Save Product' : 'Create & Publish Product'}
                 </button>
 
               </form>

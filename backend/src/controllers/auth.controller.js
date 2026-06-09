@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import AuthService from '../services/auth.service.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { env } from '../config/environment.js';
@@ -47,11 +48,31 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const logout = asyncHandler(async (req, res) => {
-  const userId = req.user ? req.user._id : null;
+  let token;
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies && req.cookies.accessToken) {
+    token = req.cookies.accessToken;
+  }
+
+  let userId = req.user ? req.user._id : null;
+  if (!userId && token) {
+    try {
+      const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET, { ignoreExpiration: true });
+      userId = decoded.id;
+    } catch (err) {
+      // Ignore token verification/expiration errors for logout
+    }
+  }
+
   const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
   if (userId && refreshToken) {
-    await AuthService.logout(userId, refreshToken);
+    try {
+      await AuthService.logout(userId, refreshToken);
+    } catch (err) {
+      // Ignore database session deletion errors to ensure frontend logs out
+    }
   }
 
   // Clear HTTP Only Cookies

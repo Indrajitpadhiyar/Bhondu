@@ -11,6 +11,8 @@ export const updateProfileSchema = z.object({
 
 export const addressSchema = z.object({
   body: z.object({
+    name: z.string({ required_error: 'Name is required' }).trim().min(2, 'Name is too short'),
+    phone: z.string({ required_error: 'Mobile number is required' }).trim().min(10, 'Mobile number must be at least 10 digits'),
     street: z.string({ required_error: 'Street is required' }).trim().min(3, 'Street is too short'),
     city: z.string({ required_error: 'City is required' }).trim().min(2, 'City is too short'),
     state: z.string({ required_error: 'State is required' }).trim().min(2, 'State is too short'),

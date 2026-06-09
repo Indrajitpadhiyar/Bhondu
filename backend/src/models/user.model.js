@@ -4,6 +4,8 @@ import { ROLES, ROLE_LIST } from '../constants/roles.js';
 import './product.model.js';
 
 const addressSchema = new mongoose.Schema({
+  name: { type: String, required: true, trim: true },
+  phone: { type: String, required: true, trim: true },
   street: { type: String, required: true, trim: true },
   city: { type: String, required: true, trim: true },
   state: { type: String, required: true, trim: true },

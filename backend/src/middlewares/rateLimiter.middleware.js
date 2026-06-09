@@ -1,10 +1,14 @@
 import rateLimit from 'express-rate-limit';
+import { env } from '../config/environment.js';
 
 const makeLimiter = (maxRequests, windowMinutes, customMessage) => {
-  const isDev = process.env.NODE_ENV === 'development';
+  const isDev = env.NODE_ENV === 'development';
+  if (isDev) {
+    return (req, res, next) => next();
+  }
   return rateLimit({
     windowMs: windowMinutes * 60 * 1000,
-    max: isDev ? 1000 : maxRequests, // Relax limits in development
+    max: maxRequests,
     handler: (req, res) => {
       res.status(429).json({
         success: false,
@@ -15,6 +19,7 @@ const makeLimiter = (maxRequests, windowMinutes, customMessage) => {
     legacyHeaders: false,
   });
 };
+
 
 // Global API: 100 requests / 15 min
 export const apiLimiter = makeLimiter(100, 15, 'Too many requests. Please try again later.');

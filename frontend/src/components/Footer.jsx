@@ -60,10 +60,10 @@ const Footer = () => {
           <div>
             <h4 className="text-xs font-bold uppercase tracking-[0.2em] mb-6 text-primary dark:text-zinc-100">SUPPORT</h4>
             <ul className="space-y-3 text-xs tracking-widest text-zinc-500 uppercase">
-              <li><a href="#contact" className="hover:text-accent transition-colors">CONTACT US</a></li>
-              <li><a href="#shipping" className="hover:text-accent transition-colors">SHIPPING & FEES</a></li>
-              <li><a href="#returns" className="hover:text-accent transition-colors">RETURNS & REFUNDS</a></li>
-              <li><a href="#size" className="hover:text-accent transition-colors">SIZE GUIDE</a></li>
+              <li><Link to="/contact" className="hover:text-accent transition-colors">CONTACT US</Link></li>
+              <li><Link to="/shipping" className="hover:text-accent transition-colors">SHIPPING & FEES</Link></li>
+              <li><Link to="/returns" className="hover:text-accent transition-colors">RETURNS & REFUNDS</Link></li>
+              <li><Link to="/size-guide" className="hover:text-accent transition-colors">SIZE GUIDE</Link></li>
             </ul>
           </div>
 
@@ -71,10 +71,10 @@ const Footer = () => {
           <div>
             <h4 className="text-xs font-bold uppercase tracking-[0.2em] mb-6 text-primary dark:text-zinc-100">COMPANY</h4>
             <ul className="space-y-3 text-xs tracking-widest text-zinc-500 uppercase">
-              <li><a href="#about" className="hover:text-accent transition-colors">ABOUT US</a></li>
-              <li><a href="#careers" className="hover:text-accent transition-colors">CAREERS</a></li>
-              <li><a href="#sustainability" className="hover:text-accent transition-colors">SUSTAINABILITY</a></li>
-              <li><a href="#privacy" className="hover:text-accent transition-colors">PRIVACY POLICY</a></li>
+              <li><Link to="/about" className="hover:text-accent transition-colors">ABOUT US</Link></li>
+              <li><Link to="/careers" className="hover:text-accent transition-colors">CAREERS</Link></li>
+              <li><Link to="/sustainability" className="hover:text-accent transition-colors">SUSTAINABILITY</Link></li>
+              <li><Link to="/privacy" className="hover:text-accent transition-colors">PRIVACY POLICY</Link></li>
             </ul>
           </div>
 

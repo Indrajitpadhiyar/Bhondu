@@ -9,6 +9,32 @@ import { useSelector } from 'react-redux';
 import { selectIsAuthenticated } from '../features/auth/authSlice.js';
 import toast from 'react-hot-toast';
 
+const MAN_APPAREL = [
+  { size: 'XS', chest: { IN: '32 - 34', CM: '81 - 86' }, waist: { IN: '26 - 28', CM: '66 - 71' }, hips: { IN: '32 - 34', CM: '81 - 86' } },
+  { size: 'S', chest: { IN: '35 - 37', CM: '89 - 94' }, waist: { IN: '29 - 31', CM: '74 - 79' }, hips: { IN: '35 - 37', CM: '89 - 94' } },
+  { size: 'M', chest: { IN: '38 - 40', CM: '97 - 102' }, waist: { IN: '32 - 34', CM: '81 - 86' }, hips: { IN: '38 - 40', CM: '97 - 102' } },
+  { size: 'L', chest: { IN: '41 - 43', CM: '104 - 109' }, waist: { IN: '35 - 37', CM: '89 - 94' }, hips: { IN: '41 - 43', CM: '104 - 109' } },
+  { size: 'XL', chest: { IN: '44 - 46', CM: '112 - 117' }, waist: { IN: '38 - 40', CM: '97 - 102' }, hips: { IN: '44 - 46', CM: '112 - 117' } },
+  { size: 'XXL', chest: { IN: '47 - 49', CM: '119 - 124' }, waist: { IN: '41 - 43', CM: '104 - 109' }, hips: { IN: '47 - 49', CM: '119 - 124' } }
+];
+
+const WOMAN_APPAREL = [
+  { size: 'XS', chest: { IN: '30 - 32', CM: '76 - 81' }, waist: { IN: '23 - 25', CM: '58 - 63' }, hips: { IN: '33 - 35', CM: '84 - 89' } },
+  { size: 'S', chest: { IN: '33 - 35', CM: '84 - 89' }, waist: { IN: '26 - 28', CM: '66 - 71' }, hips: { IN: '36 - 38', CM: '91 - 96' } },
+  { size: 'M', chest: { IN: '36 - 38', CM: '91 - 96' }, waist: { IN: '29 - 31', CM: '74 - 79' }, hips: { IN: '39 - 41', CM: '99 - 104' } },
+  { size: 'L', chest: { IN: '39 - 41', CM: '99 - 104' }, waist: { IN: '32 - 34', CM: '81 - 86' }, hips: { IN: '42 - 44', CM: '107 - 112' } },
+  { size: 'XL', chest: { IN: '42 - 44', CM: '107 - 112' }, waist: { IN: '35 - 37', CM: '89 - 94' }, hips: { IN: '45 - 47', CM: '114 - 119' } }
+];
+
+const SHOE_SIZES = [
+  { us: '7', uk: '6', eu: '40', cm: '25.0', in: '9.8' },
+  { us: '8', uk: '7', eu: '41', cm: '26.0', in: '10.2' },
+  { us: '9', uk: '8', eu: '42.5', cm: '27.0', in: '10.6' },
+  { us: '10', uk: '9', eu: '44', cm: '28.0', in: '11.0' },
+  { us: '11', uk: '10', eu: '45', cm: '29.0', in: '11.4' },
+  { us: '12', uk: '11', eu: '46', cm: '30.0', in: '11.8' }
+];
+
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -26,6 +52,8 @@ const ProductDetails = () => {
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('details');
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const [sizeUnit, setSizeUnit] = useState('IN');
 
   // Scroll to top and reset configuration when product ID changes or product finishes loading
   useEffect(() => {
@@ -205,13 +233,17 @@ const ProductDetails = () => {
               {/* Short Description */}
               <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed uppercase tracking-widest font-light">
                 {product.description}
-              </p>
-
-              {/* Sizing options */}
+              </p>              {/* Sizing options */}
               <div className="space-y-3 pt-2">
                 <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-zinc-400">
                   <span>SELECT SIZE</span>
-                  <a href="#size" className="text-accent underline hover:text-zinc-300">SIZE GUIDE</a>
+                  <button
+                    type="button"
+                    onClick={() => setShowSizeGuide(!showSizeGuide)}
+                    className="text-accent underline hover:text-zinc-350 cursor-pointer text-[10px] font-bold uppercase"
+                  >
+                    {showSizeGuide ? 'HIDE SIZE GUIDE' : 'SIZE GUIDE'}
+                  </button>
                 </div>
                 <div className="flex flex-wrap gap-2.5">
                   {product.sizes.map((size) => (
@@ -224,6 +256,88 @@ const ProductDetails = () => {
                     </button>
                   ))}
                 </div>
+
+                {/* Animated Inline Size Guide */}
+                <AnimatePresence>
+                  {showSizeGuide && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                      animate={{ height: 'auto', opacity: 1, marginTop: 16 }}
+                      exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden border border-secondary dark:border-zinc-850 p-4 rounded-sm bg-secondary/5 dark:bg-zinc-900/5 text-left space-y-4"
+                    >
+                      <div className="flex justify-between items-center text-[9px] tracking-widest uppercase font-semibold text-zinc-400">
+                        <span className="font-bold text-accent">
+                          {product.category?.toLowerCase() === 'shoes' ? 'SHOE SIZING' : `${product.gender.toUpperCase()} APPAREL SIZING`}
+                        </span>
+                        {/* Unit Switcher */}
+                        <div className="flex bg-secondary/55 dark:bg-zinc-900/55 p-0.5 rounded-sm border border-secondary dark:border-zinc-800">
+                          <button
+                            type="button"
+                            onClick={() => setSizeUnit('IN')}
+                            className={`px-2 py-0.5 text-[8px] font-bold transition-all cursor-pointer ${sizeUnit === 'IN' ? 'bg-primary text-white dark:bg-accent dark:text-primary' : 'text-zinc-500'}`}
+                          >
+                            IN
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setSizeUnit('CM')}
+                            className={`px-2 py-0.5 text-[8px] font-bold transition-all cursor-pointer ${sizeUnit === 'CM' ? 'bg-primary text-white dark:bg-accent dark:text-primary' : 'text-zinc-500'}`}
+                          >
+                            CM
+                          </button>
+                        </div>
+                      </div>
+
+                      {product.category?.toLowerCase() === 'shoes' ? (
+                        <table className="w-full text-[9px] tracking-wider uppercase border-collapse text-left">
+                          <thead>
+                            <tr className="border-b border-secondary dark:border-zinc-800 text-zinc-455 font-bold">
+                              <th className="py-2 px-1">US</th>
+                              <th className="py-2 px-1">UK</th>
+                              <th className="py-2 px-1">EU</th>
+                              <th className="py-2 px-1">LENGTH</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-secondary dark:divide-zinc-900">
+                            {SHOE_SIZES.map((row, idx) => (
+                              <tr key={idx} className="hover:bg-secondary/20 dark:hover:bg-zinc-900/30 transition-colors">
+                                <td className="py-2 px-1 font-bold text-accent">US {row.us}</td>
+                                <td className="py-2 px-1 text-zinc-500">UK {row.uk}</td>
+                                <td className="py-2 px-1 text-zinc-500">EU {row.eu}</td>
+                                <td className="py-2 px-1 text-zinc-550 dark:text-zinc-300">
+                                  {sizeUnit === 'IN' ? `${row.in} IN` : `${row.cm} CM`}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      ) : (
+                        <table className="w-full text-[9px] tracking-wider uppercase border-collapse text-left">
+                          <thead>
+                            <tr className="border-b border-secondary dark:border-zinc-800 text-zinc-455 font-bold">
+                              <th className="py-2 px-1">SIZE</th>
+                              <th className="py-2 px-1">CHEST ({sizeUnit})</th>
+                              <th className="py-2 px-1">WAIST ({sizeUnit})</th>
+                              <th className="py-2 px-1">HIPS ({sizeUnit})</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-secondary dark:divide-zinc-900">
+                            {(product.gender === 'women' ? WOMAN_APPAREL : MAN_APPAREL).map((row, idx) => (
+                              <tr key={idx} className="hover:bg-secondary/20 dark:hover:bg-zinc-900/30 transition-colors">
+                                <td className="py-2 px-1 font-bold text-accent">{row.size}</td>
+                                <td className="py-2 px-1 text-zinc-550 dark:text-zinc-300">{row.chest[sizeUnit]}</td>
+                                <td className="py-2 px-1 text-zinc-550 dark:text-zinc-300">{row.waist[sizeUnit]}</td>
+                                <td className="py-2 px-1 text-zinc-550 dark:text-zinc-300">{row.hips[sizeUnit]}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Coloring options */}

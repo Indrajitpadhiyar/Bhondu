@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Search, Heart, ShoppingBag, User, Menu, X,
   Trash2, Plus, Minus, Moon, Sun, ArrowRight, ShoppingCart,
-  CreditCard, Truck, RotateCw, MapPin, Shield
+  CreditCard, Truck, RotateCw, MapPin, Shield, Tag
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useLogoutMutation } from '../services/authApi';
@@ -14,8 +14,10 @@ import { useSelector } from 'react-redux';
 import { selectIsAuthenticated } from '../features/auth/authSlice.js';
 import { useGetProfileQuery, useAddAddressMutation } from '../services/userApi.js';
 import { useCreateOrderMutation } from '../services/orderApi.js';
+import { useAdmin } from '../context/AdminContext.jsx';
 
 const Navbar = () => {
+  const { coupons, settings } = useAdmin();
   const {
     cartItems,
     wishlist,
@@ -60,6 +62,8 @@ const Navbar = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
   const [newAddressForm, setNewAddressForm] = useState({
+    name: '',
+    phone: '',
     street: '',
     city: '',
     state: '',
@@ -75,6 +79,52 @@ const Navbar = () => {
     }
   }, [savedAddresses, selectedAddressId]);
 
+  // Coupon States and Handlers
+  const [couponInput, setCouponCodeInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponError, setCouponError] = useState('');
+
+  // Shipping Method Selection
+  const activeShippingMethods = settings?.shippingMethods?.filter(sm => sm.active) || [];
+  const [selectedShippingMethodId, setSelectedShippingMethodId] = useState('');
+
+  const handleApplyCoupon = () => {
+    setCouponError('');
+    if (!couponInput.trim()) {
+      setCouponError('Please enter a coupon code.');
+      return;
+    }
+    const coupon = coupons.find(
+      (c) => c.code.toUpperCase() === couponInput.trim().toUpperCase()
+    );
+    if (!coupon) {
+      setCouponError('Invalid coupon code.');
+      setAppliedCoupon(null);
+      return;
+    }
+    if (coupon.status !== 'Active') {
+      setCouponError('This coupon is no longer active.');
+      setAppliedCoupon(null);
+      return;
+    }
+    if (coupon.expiry && new Date(coupon.expiry) < new Date()) {
+      setCouponError('This coupon has expired.');
+      setAppliedCoupon(null);
+      return;
+    }
+    setAppliedCoupon(coupon);
+    toast.success(`Coupon "${coupon.code}" applied!`);
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCodeInput('');
+    setCouponError('');
+    toast.success('Coupon removed.');
+  };
+
+
+
   const handleProceedToCheckout = () => {
     if (!isAuthenticated) {
       toast.error("Please login to place an order.");
@@ -85,6 +135,13 @@ const Navbar = () => {
     
     setIsCartOpen(false);
     setIsCheckoutOpen(true);
+    setAppliedCoupon(null);
+    setCouponCodeInput('');
+    setCouponError('');
+
+    const activeMethods = settings?.shippingMethods?.filter(sm => sm.active) || [];
+    setSelectedShippingMethodId(activeMethods[0]?.id || '');
+
     if (savedAddresses.length === 0) {
       setIsAddingNewAddress(true);
     } else {
@@ -127,7 +184,7 @@ const Navbar = () => {
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_live_Sylrq9o8DJmUYd',
-        amount: Math.round((displayCartTotal + shippingPrice) * 100), // amount in paise
+        amount: Math.round(grandTotal * 100), // amount in paise
         currency: 'INR',
         name: 'BHONDU Store',
         description: 'Order Payment',
@@ -145,13 +202,15 @@ const Navbar = () => {
                 image: item.image
               })),
               shippingAddress: {
+                name: selectedAddress.name,
+                phone: selectedAddress.phone,
                 street: selectedAddress.street,
                 city: selectedAddress.city,
                 state: selectedAddress.state,
                 postalCode: selectedAddress.postalCode,
                 country: selectedAddress.country
               },
-              totalPrice: displayCartTotal + shippingPrice,
+              totalPrice: grandTotal,
               shippingPrice: shippingPrice,
               paymentStatus: 'Paid',
               paymentMethod: 'Online'
@@ -199,13 +258,15 @@ const Navbar = () => {
             image: item.image
           })),
           shippingAddress: {
+            name: selectedAddress.name,
+            phone: selectedAddress.phone,
             street: selectedAddress.street,
             city: selectedAddress.city,
             state: selectedAddress.state,
             postalCode: selectedAddress.postalCode,
             country: selectedAddress.country
           },
-          totalPrice: displayCartTotal + shippingPrice,
+          totalPrice: grandTotal,
           shippingPrice: shippingPrice,
           paymentStatus: 'Pending',
           paymentMethod: 'COD'
@@ -251,13 +312,25 @@ const Navbar = () => {
   const displayCartCount = displayCartItems.reduce((acc, item) => acc + item.quantity, 0);
   const displayCartTotal = displayCartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-  const shippingPrice = displayCartItems.length > 0
-    ? displayCartItems.reduce((max, item) => {
-        const product = products.find(p => p.id === item.id);
-        const itemShipping = product?.shippingCost ?? 99;
-        return Math.max(max, itemShipping);
-      }, 0)
+  const selectedShippingMethod = activeShippingMethods.find(sm => sm.id === selectedShippingMethodId) || activeShippingMethods[0];
+
+  const shippingPrice = selectedShippingMethod
+    ? selectedShippingMethod.price
+    : (displayCartItems.length > 0
+        ? displayCartItems.reduce((max, item) => {
+            const product = products.find(p => p.id === item.id);
+            const itemShipping = product?.shippingCost ?? 99;
+            return Math.max(max, itemShipping);
+          }, 0)
+        : 0);
+
+  const discountAmount = appliedCoupon
+    ? appliedCoupon.type === 'Percentage'
+      ? Math.round(displayCartTotal * (appliedCoupon.value / 100))
+      : Math.min(appliedCoupon.value, displayCartTotal)
     : 0;
+
+  const grandTotal = Math.max(0, displayCartTotal + shippingPrice - discountAmount);
 
   // Filter wishlist items by active section gender
   const displayWishlist = wishlist.filter(id => {
@@ -420,8 +493,14 @@ const Navbar = () => {
                         transition={{ duration: 0.15 }}
                         className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 border border-secondary dark:border-zinc-800 shadow-2xl py-2 z-50 rounded-sm text-xs tracking-wider"
                       >
+                        {(userProfile?.role === 'Admin' || userProfile?.role === 'Store Owner') && (
+                          <>
+                            <Link to="/admin" onClick={() => setIsProfileOpen(false)} className="block px-4 py-2 text-accent hover:text-accent/80 font-bold transition-colors">ADMIN PANEL</Link>
+                            <div className="border-b border-secondary dark:border-zinc-800 my-1" />
+                          </>
+                        )}
                         <Link to="/profile" onClick={() => setIsProfileOpen(false)} className="block px-4 py-2 text-zinc-700 dark:text-zinc-200 hover:bg-secondary dark:hover:bg-zinc-800 transition-colors">MY PROFILE</Link>
-                        <a href="#orders" className="block px-4 py-2 text-zinc-700 dark:text-zinc-200 hover:bg-secondary dark:hover:bg-zinc-800 transition-colors">MY ORDERS</a>
+                        <Link to="/profile?tab=orders" onClick={() => setIsProfileOpen(false)} className="block px-4 py-2 text-zinc-700 dark:text-zinc-200 hover:bg-secondary dark:hover:bg-zinc-800 transition-colors">MY ORDERS</Link>
                         <a href="#settings" className="block px-4 py-2 text-zinc-700 dark:text-zinc-200 hover:bg-secondary dark:hover:bg-zinc-800 transition-colors">SETTINGS</a>
                         <div className="border-t border-secondary dark:border-zinc-800 my-1" />
                         <button onClick={handleLogout} className="w-full text-left block px-4 py-2 text-red-500 hover:bg-secondary dark:hover:bg-zinc-800 transition-colors cursor-pointer">
@@ -503,14 +582,20 @@ const Navbar = () => {
                 <div className="border-t border-secondary dark:border-zinc-800 my-2" />
 
                 <div className="space-y-3 pl-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+                  {(userProfile?.role === 'Admin' || userProfile?.role === 'Store Owner') && (
+                    <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 text-accent font-bold py-1.5">
+                      <Shield className="w-4 h-4 text-accent" />
+                      <span>Admin Panel</span>
+                    </Link>
+                  )}
                   <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 hover:text-accent py-1.5 text-zinc-500 dark:text-zinc-400">
                     <User className="w-4 h-4" />
                     <span>My Profile</span>
                   </Link>
-                  <a href="#orders" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 hover:text-accent py-1.5">
+                  <Link to="/profile?tab=orders" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 hover:text-accent py-1.5 text-zinc-500 dark:text-zinc-400">
                     <ShoppingBag className="w-4 h-4" />
                     <span>My Orders</span>
-                  </a>
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left flex items-center space-x-3 text-red-500 hover:text-red-650 py-1.5 cursor-pointer"
@@ -861,7 +946,7 @@ const Navbar = () => {
                     <form
                       onSubmit={async (e) => {
                         e.preventDefault();
-                        if (!newAddressForm.street || !newAddressForm.city || !newAddressForm.state || !newAddressForm.postalCode || !newAddressForm.country) {
+                        if (!newAddressForm.name || !newAddressForm.phone || !newAddressForm.street || !newAddressForm.city || !newAddressForm.state || !newAddressForm.postalCode || !newAddressForm.country) {
                           toast.error("Please populate all address fields.");
                           return;
                         }
@@ -887,6 +972,32 @@ const Navbar = () => {
                       <h4 className="text-xs font-bold uppercase tracking-wider text-accent flex items-center gap-2">
                         <MapPin className="w-4 h-4" /> Add Shipping Point
                       </h4>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">Full Name</label>
+                          <input
+                            type="text"
+                            required
+                            value={newAddressForm.name}
+                            onChange={(e) => setNewAddressForm(prev => ({ ...prev, name: e.target.value }))}
+                            className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-sm focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 transition-colors"
+                            placeholder="Recipient's Name"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">Mobile Number</label>
+                          <input
+                            type="tel"
+                            required
+                            pattern="[0-9]{10,15}"
+                            value={newAddressForm.phone}
+                            onChange={(e) => setNewAddressForm(prev => ({ ...prev, phone: e.target.value }))}
+                            className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-sm focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 transition-colors"
+                            placeholder="10-digit mobile number"
+                          />
+                        </div>
+                      </div>
 
                       <div className="space-y-1">
                         <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">Street Address</label>
@@ -977,7 +1088,7 @@ const Navbar = () => {
                           <span>DELIVERY DESTINATION</span>
                           <button
                             onClick={() => {
-                              setNewAddressForm({ street: '', city: '', state: '', postalCode: '', country: '', isDefault: true });
+                              setNewAddressForm({ name: '', phone: '', street: '', city: '', state: '', postalCode: '', country: '', isDefault: true });
                               setIsAddingNewAddress(true);
                             }}
                             disabled={isProcessing}
@@ -1006,6 +1117,10 @@ const Navbar = () => {
                                 className="mt-0.5 accent-accent"
                               />
                               <div className="flex-1 space-y-0.5">
+                                <div className="flex justify-between items-center text-zinc-800 dark:text-zinc-200">
+                                  <span className="font-bold">{addr.name}</span>
+                                  <span className="text-[11px] text-zinc-400 font-medium">{addr.phone}</span>
+                                </div>
                                 <p className="font-semibold text-zinc-800 dark:text-zinc-200">{addr.street}</p>
                                 <p className="text-[11px] text-zinc-400">{addr.city}, {addr.state} - {addr.postalCode}, {addr.country}</p>
                               </div>
@@ -1013,6 +1128,48 @@ const Navbar = () => {
                           ))}
                         </div>
                       </div>
+
+                      {/* Shipping Method Selector */}
+                      {activeShippingMethods.length > 0 && (
+                        <div className="space-y-2.5">
+                          <h4 className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                            SELECT SHIPPING METHOD
+                          </h4>
+                          <div className="space-y-2.5">
+                            {activeShippingMethods.map((sm) => (
+                              <button
+                                key={sm.id}
+                                type="button"
+                                onClick={() => setSelectedShippingMethodId(sm.id)}
+                                disabled={isProcessing}
+                                className={`w-full p-3 border rounded-sm flex items-center justify-between transition-all cursor-pointer bg-transparent text-left ${
+                                  (selectedShippingMethodId === sm.id || (!selectedShippingMethodId && activeShippingMethods[0].id === sm.id))
+                                    ? 'border-accent bg-accent/[0.02]'
+                                    : 'border-secondary dark:border-zinc-800 text-zinc-400 hover:border-accent/40'
+                                }`}
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${
+                                    (selectedShippingMethodId === sm.id || (!selectedShippingMethodId && activeShippingMethods[0].id === sm.id))
+                                      ? 'border-accent'
+                                      : 'border-zinc-400'
+                                  }`}>
+                                    {(selectedShippingMethodId === sm.id || (!selectedShippingMethodId && activeShippingMethods[0].id === sm.id)) && (
+                                      <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                                    )}
+                                  </div>
+                                  <span className={`font-bold uppercase tracking-wider text-[9px] ${
+                                    (selectedShippingMethodId === sm.id || (!selectedShippingMethodId && activeShippingMethods[0].id === sm.id))
+                                      ? 'text-zinc-850 dark:text-zinc-150'
+                                      : 'text-zinc-550 dark:text-zinc-450'
+                                  }`}>{sm.name}</span>
+                                </div>
+                                <span className="font-bold text-xs text-accent">₹{sm.price.toFixed(2)}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       {/* Payment Mode Selector */}
                       <div className="space-y-2.5">
@@ -1075,20 +1232,73 @@ const Navbar = () => {
                       ))}
                     </div>
 
+                    {/* Coupon Code Input */}
+                    <div className="space-y-2 pt-2 border-t border-dashed border-secondary/40 dark:border-zinc-800/60">
+                      <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                        Promo Code / Coupon
+                      </label>
+                      {appliedCoupon ? (
+                        <div className="flex items-center justify-between p-2.5 border border-emerald-200 dark:border-emerald-900 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-sm text-xs">
+                          <div className="flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400">
+                            <Tag className="w-3.5 h-3.5 text-emerald-500" />
+                            <span>
+                              {appliedCoupon.code} ({appliedCoupon.type === 'Percentage' ? `${appliedCoupon.value}% Off` : `₹${appliedCoupon.value} Off`})
+                            </span>
+                          </div>
+                          <button
+                            onClick={handleRemoveCoupon}
+                            className="text-[10px] uppercase tracking-wider font-bold text-red-500 hover:text-red-700 hover:underline cursor-pointer border-0 bg-transparent"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="space-y-1.5">
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              placeholder="ENTER CODE (e.g. BHONDU10)"
+                              value={couponInput}
+                              onChange={(e) => {
+                                setCouponCodeInput(e.target.value);
+                                setCouponError('');
+                              }}
+                              className="flex-1 px-3 py-2 border border-secondary dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-sm focus:outline-none focus:border-accent text-xs font-mono uppercase tracking-wider text-zinc-850 dark:text-zinc-150 transition-colors placeholder:text-zinc-450"
+                            />
+                            <button
+                              onClick={handleApplyCoupon}
+                              className="px-4 py-2 bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 hover:bg-accent dark:hover:bg-accent hover:text-primary dark:hover:text-primary transition-all text-[10px] font-bold uppercase tracking-wider rounded-sm cursor-pointer"
+                            >
+                              Apply
+                            </button>
+                          </div>
+                          {couponError && (
+                            <p className="text-[10px] text-red-500 font-semibold">{couponError}</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
                     {/* Cost breakdown */}
                     <div className="p-4 bg-zinc-50 dark:bg-zinc-950/30 border border-secondary dark:border-zinc-800 rounded-sm space-y-2 text-xs font-medium">
                       <div className="flex justify-between items-center text-[10px] text-zinc-400 uppercase tracking-wider">
                         <span>Cart Subtotal</span>
                         <span>₹{displayCartTotal.toFixed(2)}</span>
                       </div>
+                      {appliedCoupon && (
+                        <div className="flex justify-between items-center text-[10px] text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-bold">
+                          <span>Promo Discount ({appliedCoupon.code})</span>
+                          <span>- ₹{discountAmount.toFixed(2)}</span>
+                        </div>
+                      )}
                       <div className="flex justify-between items-center text-[10px] text-zinc-400 uppercase tracking-wider">
-                        <span>Standard shipping</span>
+                        <span>Shipping ({selectedShippingMethod?.name || 'Standard'})</span>
                         <span>₹{shippingPrice.toFixed(2)}</span>
                       </div>
                       <div className="h-[1px] bg-secondary dark:bg-zinc-800/80 my-1" />
                       <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-primary dark:text-zinc-100">
                         <span>Grand Total</span>
-                        <span className="text-accent text-sm">₹{(displayCartTotal + shippingPrice).toFixed(2)}</span>
+                        <span className="text-accent text-sm">₹{grandTotal.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>

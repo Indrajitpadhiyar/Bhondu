@@ -53,7 +53,7 @@ class AuthService {
     user.isVerified = true;
     user.verificationToken = undefined;
     user.verificationTokenExpires = undefined;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     // Send Welcome Email
     EmailService.sendWelcomeEmail(user.email, user.name);
@@ -81,7 +81,7 @@ class AuthService {
 
     // Add to user's refresh tokens
     user.refreshTokens.push(refreshToken);
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     const userObj = user.toObject();
     delete userObj.password;
@@ -99,7 +99,7 @@ class AuthService {
     if (user) {
       // Remove current refresh token
       user.refreshTokens = user.refreshTokens.filter(t => t !== refreshToken);
-      await user.save();
+      await user.save({ validateBeforeSave: false });
     }
     return { success: true };
   }
@@ -129,7 +129,7 @@ class AuthService {
     if (!user.refreshTokens.includes(oldRefreshToken)) {
       // Suspected theft: invalidate all user refresh tokens immediately to force re-login
       user.refreshTokens = [];
-      await user.save();
+      await user.save({ validateBeforeSave: false });
       logger.warn(`🛑 Token reuse detected for User: ${user._id}. All sessions revoked.`);
       throw new AppError('Security breach suspected. All sessions cleared. Please log in again.', 403);
     }
@@ -141,7 +141,7 @@ class AuthService {
     const newRefreshToken = this.generateRefreshToken(user._id);
 
     user.refreshTokens.push(newRefreshToken);
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     return {
       accessToken: newAccessToken,
@@ -244,7 +244,7 @@ class AuthService {
       // Mark as verified if logging in with Google
       if (!user.isVerified) {
         user.isVerified = true;
-        await user.save();
+        await user.save({ validateBeforeSave: false });
       }
     }
 
@@ -254,7 +254,7 @@ class AuthService {
 
     // Add to user's active refresh tokens list
     user.refreshTokens.push(refreshToken);
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     const userObj = user.toObject();
     delete userObj.password;

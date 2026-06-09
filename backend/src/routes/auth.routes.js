@@ -24,7 +24,7 @@ router.get('/verify-email', AuthController.verifyEmail); // Supports browser que
 router.post('/verify-email', validate(verifyEmailSchema), AuthController.verifyEmail); // Supports JSON payload POST
 router.post('/login', loginLimiter, validate(loginSchema), AuthController.login);
 router.post('/google-login', validate(googleLoginSchema), AuthController.googleLogin);
-router.post('/logout', authenticateUser, AuthController.logout);
+router.post('/logout', AuthController.logout);
 router.post('/refresh-token', AuthController.refreshToken);
 router.post('/forgot-password', forgotPasswordLimiter, validate(forgotPasswordSchema), AuthController.forgotPassword);
 router.post('/reset-password', forgotPasswordLimiter, validate(resetPasswordSchema), AuthController.resetPassword);

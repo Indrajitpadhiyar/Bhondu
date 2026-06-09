@@ -18,7 +18,12 @@ import {
   Check,
   X,
   Compass,
-  ArrowLeft
+  ArrowLeft,
+  ShoppingBag,
+  Package,
+  Clock,
+  CreditCard,
+  Truck
 } from 'lucide-react';
 import {
   useGetProfileQuery,
@@ -29,6 +34,7 @@ import {
   useSetDefaultAddressMutation
 } from '../services/userApi';
 import { useChangePasswordMutation } from '../services/authApi';
+import { useGetOrdersQuery } from '../services/orderApi';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -41,9 +47,24 @@ export default function Profile() {
   const [deleteAddress, { isLoading: isDeletingAddress }] = useDeleteAddressMutation();
   const [setDefaultAddress, { isLoading: isSettingDefault }] = useSetDefaultAddressMutation();
   const [changePassword, { isLoading: isChangingPassword }] = useChangePasswordMutation();
+  const { data: orders, isLoading: isOrdersLoading } = useGetOrdersQuery();
 
   // Active sub-tab state
-  const [activeTab, setActiveTab] = useState('general'); // 'general' | 'addresses' | 'security'
+  const [activeTab, setActiveTab] = useState('general'); // 'general' | 'addresses' | 'security' | 'orders'
+
+  // Synchronize tab state with URL query search parameters
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab');
+    if (tabParam && ['general', 'addresses', 'security', 'orders'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [window.location.search]);
+
+  const handleTabChange = (tabName) => {
+    setActiveTab(tabName);
+    navigate(`/profile?tab=${tabName}`);
+  };
 
   // General profile form states
   const [profileForm, setProfileForm] = useState({ name: '', phone: '' });
@@ -58,6 +79,8 @@ export default function Profile() {
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState(null); // null means adding new
   const [addressForm, setAddressForm] = useState({
+    name: '',
+    phone: '',
     street: '',
     city: '',
     state: '',
@@ -134,7 +157,7 @@ export default function Profile() {
   // Add or Edit Address submit
   const handleAddressSubmit = async (e) => {
     e.preventDefault();
-    if (!addressForm.street || !addressForm.city || !addressForm.state || !addressForm.postalCode || !addressForm.country) {
+    if (!addressForm.name || !addressForm.phone || !addressForm.street || !addressForm.city || !addressForm.state || !addressForm.postalCode || !addressForm.country) {
       toast.error("Please populate all address fields.");
       return;
     }
@@ -158,6 +181,8 @@ export default function Profile() {
   const startEditAddress = (addr) => {
     setEditingAddressId(addr._id);
     setAddressForm({
+      name: addr.name || '',
+      phone: addr.phone || '',
       street: addr.street || '',
       city: addr.city || '',
       state: addr.state || '',
@@ -196,6 +221,8 @@ export default function Profile() {
     setShowAddressForm(false);
     setEditingAddressId(null);
     setAddressForm({
+      name: '',
+      phone: '',
       street: '',
       city: '',
       state: '',
@@ -261,7 +288,7 @@ export default function Profile() {
           {/* Navigation Sidebar Panel */}
           <div className="lg:col-span-1 space-y-2">
             <button
-              onClick={() => setActiveTab('general')}
+              onClick={() => handleTabChange('general')}
               className={`w-full text-left py-3.5 px-4 border rounded-sm text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-3 ${
                 activeTab === 'general'
                   ? 'border-accent bg-white dark:bg-zinc-900 text-accent shadow-sm'
@@ -272,7 +299,18 @@ export default function Profile() {
               General profile
             </button>
             <button
-              onClick={() => setActiveTab('addresses')}
+              onClick={() => handleTabChange('orders')}
+              className={`w-full text-left py-3.5 px-4 border rounded-sm text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-3 ${
+                activeTab === 'orders'
+                  ? 'border-accent bg-white dark:bg-zinc-900 text-accent shadow-sm'
+                  : 'border-secondary/45 dark:border-zinc-800 bg-white/40 dark:bg-zinc-950/20 text-zinc-500 hover:text-primary dark:hover:text-zinc-200'
+              }`}
+            >
+              <ShoppingBag className="w-4 h-4" />
+              My Orders
+            </button>
+            <button
+              onClick={() => handleTabChange('addresses')}
               className={`w-full text-left py-3.5 px-4 border rounded-sm text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-3 ${
                 activeTab === 'addresses'
                   ? 'border-accent bg-white dark:bg-zinc-900 text-accent shadow-sm'
@@ -283,7 +321,7 @@ export default function Profile() {
               Saved destinations
             </button>
             <button
-              onClick={() => setActiveTab('security')}
+              onClick={() => handleTabChange('security')}
               className={`w-full text-left py-3.5 px-4 border rounded-sm text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-3 ${
                 activeTab === 'security'
                   ? 'border-accent bg-white dark:bg-zinc-900 text-accent shadow-sm'
@@ -429,7 +467,7 @@ export default function Profile() {
                         <button
                           onClick={() => {
                             setEditingAddressId(null);
-                            setAddressForm({ street: '', city: '', state: '', postalCode: '', country: '', isDefault: false });
+                            setAddressForm({ name: '', phone: '', street: '', city: '', state: '', postalCode: '', country: '', isDefault: false });
                             setShowAddressForm(true);
                           }}
                           className="px-3.5 py-2 border border-accent rounded-sm text-[10px] font-bold uppercase tracking-widest text-accent hover:bg-accent/5 transition-all flex items-center gap-1.5 cursor-pointer"
@@ -453,6 +491,30 @@ export default function Profile() {
                         </h4>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-[9px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-bold block">Full Name</label>
+                            <input
+                              type="text"
+                              required
+                              value={addressForm.name}
+                              onChange={(e) => setAddressForm(prev => ({ ...prev, name: e.target.value }))}
+                              className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-850 bg-white dark:bg-zinc-900 rounded-sm focus:outline-none focus:border-accent text-zinc-800 dark:text-zinc-200"
+                              placeholder="Recipient's Name"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[9px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-bold block">Mobile Number</label>
+                            <input
+                              type="tel"
+                              required
+                              pattern="[0-9]{10,15}"
+                              value={addressForm.phone}
+                              onChange={(e) => setAddressForm(prev => ({ ...prev, phone: e.target.value }))}
+                              className="w-full px-3 py-2.5 border border-secondary/45 dark:border-zinc-850 bg-white dark:bg-zinc-900 rounded-sm focus:outline-none focus:border-accent text-zinc-800 dark:text-zinc-200"
+                              placeholder="10-digit mobile number"
+                            />
+                          </div>
+
                           <div className="space-y-1 sm:col-span-2">
                             <label className="text-[9px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-bold block">Street Address</label>
                             <input
@@ -556,7 +618,11 @@ export default function Profile() {
                                   </span>
                                 )}
                               </div>
-                              <p className="font-semibold text-zinc-800 dark:text-zinc-200 mt-1">{addr.street}</p>
+                              <div className="flex justify-between items-center text-zinc-800 dark:text-zinc-200 mt-1">
+                                <span className="font-bold">{addr.name}</span>
+                                <span className="text-[11px] text-zinc-400 font-medium">{addr.phone}</span>
+                              </div>
+                              <p className="font-semibold text-zinc-800 dark:text-zinc-200">{addr.street}</p>
                               <p className="text-zinc-500 dark:text-zinc-400">{addr.city}, {addr.state} - {addr.postalCode}</p>
                               <p className="text-[10px] text-zinc-450 dark:text-zinc-500 uppercase tracking-wider font-semibold">{addr.country}</p>
                             </div>
@@ -773,6 +839,138 @@ export default function Profile() {
                         </button>
                       </div>
                     </form>
+                  </motion.div>
+                )}
+
+                {/* 4. ORDERS HISTORY PANEL */}
+                {activeTab === 'orders' && (
+                  <motion.div
+                    key="orders-tab"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-8 text-left text-xs"
+                  >
+                    <div className="border-b border-secondary/45 dark:border-zinc-800 pb-4 flex justify-between items-center">
+                      <div>
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-primary dark:text-zinc-100">Order History</h3>
+                        <p className="text-[11px] text-zinc-400 mt-1">Review past orders, check fulfillment logs, and track shipments.</p>
+                      </div>
+                    </div>
+
+                    {isOrdersLoading ? (
+                      <div className="py-20 flex items-center justify-center">
+                        <RotateCw className="w-8 h-8 text-[#C9A87C] animate-spin" />
+                      </div>
+                    ) : orders && orders.length > 0 ? (
+                      <div className="space-y-6">
+                        {orders.map((order) => (
+                          <div
+                            key={order._id}
+                            className="border border-secondary/45 dark:border-zinc-800 rounded-sm p-5 space-y-4 bg-zinc-50/20 dark:bg-zinc-950/10 hover:shadow-md transition-shadow"
+                          >
+                            {/* Order Header Info */}
+                            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-secondary/30 dark:border-zinc-850/30 pb-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+                              <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                                <span className="text-primary dark:text-zinc-100 font-mono">ORDER ID: #{order._id.substring(order._id.length - 8).toUpperCase()}</span>
+                                <span>DATE: {new Date(order.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-zinc-550 dark:text-zinc-450">Total: ₹{order.totalPrice.toFixed(2)}</span>
+                                <span className={`px-2.5 py-0.5 rounded-full border text-[9px] uppercase tracking-wider font-semibold ${
+                                  order.status === 'Delivered'
+                                    ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400'
+                                    : order.status === 'Shipping'
+                                    ? 'bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400'
+                                    : 'bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400'
+                                }`}>
+                                  {order.status}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Order items grid */}
+                            <div className="space-y-3">
+                              {order.items.map((item, idx) => (
+                                <div key={idx} className="flex gap-4 items-center">
+                                  <img
+                                    src={item.image || (item.product?.images && item.product.images[0]) || "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop"}
+                                    alt={item.name || (item.product && item.product.name)}
+                                    className="w-12 h-14 object-cover rounded-sm border border-secondary/20 dark:border-zinc-800"
+                                  />
+                                  <div className="flex-1 min-w-0 text-left">
+                                    <p className="font-bold text-zinc-800 dark:text-zinc-200 truncate uppercase tracking-wider">
+                                      {item.name || (item.product && item.product.name)}
+                                    </p>
+                                    <p className="text-[10px] text-zinc-450 dark:text-zinc-450 mt-0.5">
+                                      Size: {item.size} | Qty: {item.quantity}
+                                    </p>
+                                    <div className="flex items-center gap-1.5 mt-1">
+                                      <span className="text-[10px] text-zinc-450 dark:text-zinc-550">Color:</span>
+                                      <span
+                                        className="inline-block w-3 h-3 rounded-full border align-middle"
+                                        style={{ backgroundColor: item.color }}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="text-right font-bold text-zinc-900 dark:text-zinc-100">
+                                    ₹{(item.price * item.quantity).toFixed(2)}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Address details and Payment details */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-secondary/20 dark:border-zinc-850/20 text-[10px] text-zinc-500 dark:text-zinc-400 font-semibold leading-relaxed">
+                              <div>
+                                <span className="block uppercase tracking-wider text-zinc-400 font-bold mb-1">Logistics Destination</span>
+                                <p className="text-zinc-650 dark:text-zinc-350">
+                                  {order.shippingAddress.name} ({order.shippingAddress.phone})<br />
+                                  {order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.postalCode}, {order.shippingAddress.country}
+                                </p>
+                              </div>
+                              <div className="sm:text-right space-y-1">
+                                <div>
+                                  <span className="uppercase tracking-wider text-zinc-400 font-bold">Payment Method:</span>{' '}
+                                  <span className="text-zinc-650 dark:text-zinc-350 uppercase font-mono">{order.paymentMethod}</span>
+                                </div>
+                                <div>
+                                  <span className="uppercase tracking-wider text-zinc-400 font-bold">Payment Status:</span>{' '}
+                                  <span className={`px-2 py-0.5 rounded text-[9px] uppercase tracking-wider font-semibold font-mono ${
+                                    order.paymentStatus === 'Paid'
+                                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                      : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                                  }`}>
+                                    {order.paymentStatus}
+                                  </span>
+                                </div>
+                                {order.shippingPrice > 0 && (
+                                  <div>
+                                    <span className="uppercase tracking-wider text-zinc-400 font-bold">Shipping Premium:</span>{' '}
+                                    <span className="text-zinc-650 dark:text-zinc-350 font-mono">₹{order.shippingPrice.toFixed(2)}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="py-16 border border-dashed border-secondary/45 dark:border-zinc-800 flex flex-col items-center justify-center text-center space-y-4 rounded-sm">
+                        <ShoppingBag className="w-12 h-12 text-zinc-350 dark:text-zinc-650 stroke-[1]" />
+                        <div className="space-y-1">
+                          <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Order Logs Empty</p>
+                          <p className="text-[10px] text-zinc-400 font-medium">You have not logged any purchases inside this account context yet.</p>
+                        </div>
+                        <button
+                          onClick={() => navigate('/man')}
+                          className="px-5 py-2.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity rounded-sm cursor-pointer"
+                        >
+                          Explore Collections
+                        </button>
+                      </div>
+                    )}
                   </motion.div>
                 )}
 

@@ -98,7 +98,12 @@ export default function AdminAuth() {
         navigate(from);
       }, 1500);
     } catch (err) {
-      toast.error(err.data?.message || 'Login failed. Please check your credentials.');
+      const msg = err.data?.message || '';
+      if (msg.includes('validation failed') || msg.includes('ValidationError') || msg.includes('User validation failed') || msg.includes('is required')) {
+        toast.error('Login failed. Please ensure your account profile details are valid.');
+      } else {
+        toast.error(msg || 'Login failed. Please check your credentials.');
+      }
     }
   };
 

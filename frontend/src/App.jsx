@@ -28,6 +28,13 @@ import AdminCMS from './pages/admin/AdminCMS';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminAuth from './pages/admin/AdminAuth';
 import Profile from './pages/Profile';
+import Contact from './pages/Contact';
+import Shipping from './pages/Shipping';
+import Returns from './pages/Returns';
+import SizeGuide from './pages/SizeGuide';
+import Careers from './pages/Careers';
+import Sustainability from './pages/Sustainability';
+import Privacy from './pages/Privacy';
 
 // Protection Guards
 import PersistLogin from './components/common/PersistLogin';
@@ -78,6 +85,13 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/product/:id" element={<ProductDetails />} />
                 <Route path="/login" element={<AdminAuth />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/shipping" element={<Shipping />} />
+                <Route path="/returns" element={<Returns />} />
+                <Route path="/size-guide" element={<SizeGuide />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/sustainability" element={<Sustainability />} />
+                <Route path="/privacy" element={<Privacy />} />
                 <Route
                   path="/profile"
                   element={
@@ -110,8 +124,8 @@ function App() {
             </Routes>
         </main>
 
-        {/* Conditional footer: Hide on landing page and admin panel */}
-        {!isHome && !isHideGlobalUI && <Footer />}
+        {/* Global storefront footer: Hide only on admin panel routes */}
+        {!isAdmin && <Footer />}
 
         {/* Interactive global utilities */}
         {!isHideGlobalUI && <QuickViewModal />}

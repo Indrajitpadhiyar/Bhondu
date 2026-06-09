@@ -30,7 +30,17 @@ export const AdminProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [customers, setCustomers] = useState([]);
-  const [coupons, setCoupons] = useState([]);
+  const [coupons, setCoupons] = useState(() => {
+    const localCoupons = localStorage.getItem('bhondu_coupons');
+    return localCoupons ? JSON.parse(localCoupons) : [
+      { code: "BHONDU10", type: "Percentage", value: 10, expiry: "2026-12-31", usageCount: 2, status: "Active" },
+      { code: "WELCOME100", type: "Fixed Amount", value: 100, expiry: "2026-12-31", usageCount: 5, status: "Active" }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('bhondu_coupons', JSON.stringify(coupons));
+  }, [coupons]);
   const [subscribers, setSubscribers] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [cms, setCms] = useState({
@@ -51,43 +61,50 @@ export const AdminProvider = ({ children }) => {
       setOrders(dbOrdersData.map(o => ({
         ...o,
         id: o._id,
-        customerName: o.user?.name || o.shippingAddress?.fullName || 'Anonymous Customer',
+        customerName: o.user?.name || o.shippingAddress?.name || o.shippingAddress?.fullName || 'Anonymous Customer',
         amount: o.totalPrice,
         date: new Date(o.createdAt).toISOString().split('T')[0],
         address: o.shippingAddress
-          ? `${o.shippingAddress.street}, ${o.shippingAddress.city}, ${o.shippingAddress.state} - ${o.shippingAddress.postalCode}, ${o.shippingAddress.country}`
+          ? `${o.shippingAddress.name ? `${o.shippingAddress.name} (${o.shippingAddress.phone || ''}) - ` : ''}${o.shippingAddress.street}, ${o.shippingAddress.city}, ${o.shippingAddress.state} - ${o.shippingAddress.postalCode}, ${o.shippingAddress.country}`
           : 'No Address Specified'
       })));
     }
   }, [dbOrdersData]);
   
-  const [settings, setSettings] = useState({
-    storeName: "BHONDU Store",
-    supportEmail: "support@bhondu.com",
-    contactPhone: "+91 98765 43210",
-    currency: "INR",
-    taxRate: 18,
-    brandColors: {
-      primary: "#111111",
-      accent: "#C9A87C",
-      background: "#F8F7F4"
-    },
-    shippingMethods: [
-      { id: "sm-1", name: "Standard Delivery (3-5 Business Days)", price: 99, active: true },
-      { id: "sm-2", name: "Premium Express Courier (Next Day)", price: 299, active: true },
-      { id: "sm-3", name: "International Insured Cargo", price: 1499, active: false }
-    ],
-    paymentMethods: {
-      creditCard: true,
-      upi: true,
-      cod: true,
-      netbanking: true
-    },
-    seo: {
-      title: "BHONDU | Premium Luxury E-Sports & Fashion Wear",
-      metaDescription: "Curated premium minimalist street wear and custom-tailored gaming jerseys for elite performance and luxury comfort."
-    }
+  const [settings, setSettings] = useState(() => {
+    const localSettings = localStorage.getItem('bhondu_settings');
+    return localSettings ? JSON.parse(localSettings) : {
+      storeName: "BHONDU Store",
+      supportEmail: "support@bhondu.com",
+      contactPhone: "+91 98765 43210",
+      currency: "INR",
+      taxRate: 18,
+      brandColors: {
+        primary: "#111111",
+        accent: "#C9A87C",
+        background: "#F8F7F4"
+      },
+      shippingMethods: [
+        { id: "sm-1", name: "Standard Delivery (3-5 Business Days)", price: 99, active: true },
+        { id: "sm-2", name: "Premium Express Courier (Next Day)", price: 299, active: true },
+        { id: "sm-3", name: "International Insured Cargo", price: 1499, active: false }
+      ],
+      paymentMethods: {
+        creditCard: true,
+        upi: true,
+        cod: true,
+        netbanking: true
+      },
+      seo: {
+        title: "BHONDU | Premium Luxury E-Sports & Fashion Wear",
+        metaDescription: "Curated premium minimalist street wear and custom-tailored gaming jerseys for elite performance and luxury comfort."
+      }
+    };
   });
+
+  useEffect(() => {
+    localStorage.setItem('bhondu_settings', JSON.stringify(settings));
+  }, [settings]);
 
   // Action methods linked to real database mutations
   const addProduct = async (newProduct) => {

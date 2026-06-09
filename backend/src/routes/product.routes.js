@@ -10,6 +10,7 @@ router.get('/:id', ProductController.getProductDetails);
 
 // Admin-only endpoints
 router.post('/', authenticateUser, authorizeRoles('Admin', 'Super Admin'), ProductController.createProduct);
+router.patch('/:id', authenticateUser, authorizeRoles('Admin', 'Super Admin'), ProductController.updateProduct);
 router.delete('/:id', authenticateUser, authorizeRoles('Admin', 'Super Admin'), ProductController.deleteProduct);
 
 export default router;

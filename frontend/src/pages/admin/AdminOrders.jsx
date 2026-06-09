@@ -12,7 +12,8 @@ import {
   MapPin,
   Calendar,
   IndianRupee,
-  ShoppingBag
+  ShoppingBag,
+  Check
 } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 
@@ -23,6 +24,30 @@ export default function AdminOrders() {
 
   // Selected order details drawer state
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState('');
+
+  useEffect(() => {
+    if (selectedOrder) {
+      setSelectedStatus(selectedOrder.status);
+    } else {
+      setSelectedStatus('');
+    }
+  }, [selectedOrder]);
+
+  const getAllowedStatuses = (currentStatus) => {
+    switch (currentStatus) {
+      case 'Pending':
+        return ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+      case 'Processing':
+        return ['Processing', 'Shipped', 'Delivered', 'Cancelled'];
+      case 'Shipped':
+        return ['Shipped', 'Delivered', 'Cancelled'];
+      case 'Delivered':
+      case 'Cancelled':
+      default:
+        return [];
+    }
+  };
   
   // Search and tabs state
   const [search, setSearch] = useState('');
@@ -70,16 +95,16 @@ export default function AdminOrders() {
   const getStatusBadgeStyles = (status) => {
     switch (status) {
       case 'Delivered':
-        return 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-900/30';
+        return 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-500/20';
       case 'Shipped':
-        return 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/20 dark:text-indigo-400 border border-indigo-200/50 dark:border-indigo-900/30';
+        return 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400 border border-indigo-200/50 dark:border-indigo-500/20';
       case 'Processing':
-        return 'bg-blue-50 text-blue-700 dark:bg-blue-950/20 dark:text-blue-400 border border-blue-200/50 dark:border-blue-900/30';
+        return 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 border border-blue-200/50 dark:border-blue-500/20';
       case 'Pending':
-        return 'bg-amber-50 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400 border border-amber-200/50 dark:border-amber-900/30';
+        return 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border border-amber-200/50 dark:border-amber-500/20';
       case 'Cancelled':
       default:
-        return 'bg-red-50 text-red-700 dark:bg-red-950/20 dark:text-red-400 border border-red-200/50 dark:border-red-900/30';
+        return 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400 border border-red-200/50 dark:border-red-500/20';
     }
   };
 
@@ -277,32 +302,63 @@ export default function AdminOrders() {
               <div className="flex-1 overflow-y-auto py-4 space-y-6 scrollbar-thin">
                 
                 {/* Status Update Form */}
-                <div className="p-4 bg-white dark:bg-zinc-950 rounded-xl border border-zinc-200/60 dark:border-zinc-800/80 shadow-sm flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold">Fulfillment status</p>
-                    <p className="text-xs font-bold mt-0.5 text-zinc-900 dark:text-zinc-100">
-                      Currently: <span className="text-[#C9A87C]">{selectedOrder.status}</span>
-                    </p>
+                <div className="p-4 bg-white dark:bg-zinc-950 rounded-xl border border-zinc-200/60 dark:border-zinc-800/80 shadow-sm flex flex-col gap-3">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold">Fulfillment status</p>
+                      <p className="text-xs font-bold mt-0.5 text-zinc-900 dark:text-zinc-100">
+                        Currently:{' '}
+                        <span className={`font-extrabold ${
+                          selectedOrder.status === 'Delivered' ? 'text-emerald-600 dark:text-emerald-400' :
+                          selectedOrder.status === 'Shipped' ? 'text-indigo-600 dark:text-indigo-400' :
+                          selectedOrder.status === 'Processing' ? 'text-blue-600 dark:text-blue-400' :
+                          selectedOrder.status === 'Pending' ? 'text-amber-600 dark:text-amber-400' :
+                          'text-red-650 dark:text-red-400'
+                        }`}>
+                          {selectedOrder.status}
+                        </span>
+                      </p>
+                    </div>
+                    {getAllowedStatuses(selectedOrder.status).length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {getAllowedStatuses(selectedOrder.status).map((status) => (
+                          <button
+                            key={status}
+                            onClick={() => setSelectedStatus(status)}
+                            className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold border transition-all ${
+                              selectedStatus === status
+                                ? 'bg-zinc-900 border-zinc-900 text-white dark:bg-white dark:border-white dark:text-zinc-900 shadow-sm'
+                                : 'bg-white border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 hover:bg-zinc-50 text-zinc-600 dark:text-zinc-400'
+                            }`}
+                          >
+                            {status}
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-[10px] px-2.5 py-1 rounded-md bg-zinc-50 dark:bg-zinc-900 text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-800 font-semibold">
+                        Fulfillment Completed
+                      </span>
+                    )}
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].map((status) => (
+                  {selectedStatus !== selectedOrder.status && (
+                    <div className="flex justify-end pt-2 border-t border-dashed border-zinc-100 dark:border-zinc-800/50">
                       <button
-                        key={status}
-                        onClick={() => {
-                          updateOrderStatus(selectedOrder.id, status);
-                          // Sync local drawer view state
-                          setSelectedOrder(prev => ({ ...prev, status }));
+                        onClick={async () => {
+                          try {
+                            await updateOrderStatus(selectedOrder.id, selectedStatus);
+                            setSelectedOrder(prev => ({ ...prev, status: selectedStatus }));
+                          } catch (err) {
+                            // Handled by context toast
+                          }
                         }}
-                        className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold border transition-all ${
-                          selectedOrder.status === status
-                            ? 'bg-zinc-900 border-zinc-900 text-white dark:bg-white dark:border-white dark:text-zinc-900'
-                            : 'bg-white border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 hover:bg-zinc-50 text-zinc-600 dark:text-zinc-400'
-                        }`}
+                        className="px-4 py-1.5 bg-[#C9A87C] text-white hover:bg-[#b59469] rounded-lg text-[10px] font-bold transition-all shadow-sm flex items-center gap-1.5"
                       >
-                        {status}
+                        <Check className="w-3.5 h-3.5" />
+                        Save Status
                       </button>
-                    ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Customer Details Summary */}
@@ -388,20 +444,65 @@ export default function AdminOrders() {
                   <Printer className="w-3.5 h-3.5" />
                   Print Invoice
                 </button>
-                <button
-                  onClick={async () => {
-                    try {
-                      await updateOrderStatus(selectedOrder.id, 'Shipped');
-                      setSelectedOrder(prev => ({ ...prev, status: 'Shipped' }));
-                    } catch (err) {
-                      // Handled by updateOrderStatus toast in context
-                    }
-                  }}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-lg text-xs font-semibold hover:bg-zinc-850 dark:hover:bg-zinc-100"
-                >
-                  <Truck className="w-3.5 h-3.5" />
-                  Ship Package
-                </button>
+                {selectedStatus !== selectedOrder.status ? (
+                  <button
+                    onClick={async () => {
+                      try {
+                        await updateOrderStatus(selectedOrder.id, selectedStatus);
+                        setSelectedOrder(prev => ({ ...prev, status: selectedStatus }));
+                      } catch (err) {
+                        // Handled by updateOrderStatus toast in context
+                      }
+                    }}
+                    className="flex-grow flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-[#C9A87C] text-white rounded-lg text-xs font-semibold hover:bg-[#b59469] transition-all"
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    Save Status to {selectedStatus}
+                  </button>
+                ) : selectedOrder.status === 'Delivered' ? (
+                  <button
+                    disabled
+                    className="flex-grow flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500 rounded-lg text-xs font-semibold cursor-not-allowed"
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    Delivered
+                  </button>
+                ) : selectedOrder.status === 'Cancelled' ? (
+                  <button
+                    disabled
+                    className="flex-grow flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500 rounded-lg text-xs font-semibold cursor-not-allowed"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    Cancelled
+                  </button>
+                ) : (
+                  <button
+                    onClick={async () => {
+                      const nextStatus = (selectedOrder.status === 'Pending' || selectedOrder.status === 'Processing') 
+                        ? 'Shipped' 
+                        : 'Delivered';
+                      try {
+                        await updateOrderStatus(selectedOrder.id, nextStatus);
+                        setSelectedOrder(prev => ({ ...prev, status: nextStatus }));
+                      } catch (err) {
+                        // Handled by updateOrderStatus toast in context
+                      }
+                    }}
+                    className="flex-grow flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-lg text-xs font-semibold hover:bg-zinc-850 dark:hover:bg-zinc-100"
+                  >
+                    {selectedOrder.status === 'Shipped' ? (
+                      <>
+                        <Check className="w-3.5 h-3.5" />
+                        Deliver Package
+                      </>
+                    ) : (
+                      <>
+                        <Truck className="w-3.5 h-3.5" />
+                        Ship Package
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
 
             </motion.div>
