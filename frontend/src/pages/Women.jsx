@@ -106,7 +106,7 @@ const Women = () => {
   };
 
   return (
-    <div className="w-full bg-white dark:bg-zinc-950 transition-colors duration-300">
+    <div className="w-full overflow-hidden bg-white dark:bg-zinc-950 transition-colors duration-300">
       
       {/* ==================== HERO BANNER ==================== */}
       <div className="relative h-[65vh] sm:h-[80vh] w-full flex items-center justify-center overflow-hidden bg-[#EADCC9]">
@@ -232,7 +232,7 @@ const Women = () => {
 
         {/* Catalog grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

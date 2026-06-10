@@ -101,6 +101,7 @@ body {
 /* Smooth Scrolling */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* Image lookbook grid aspect ratios */
@@ -145,6 +146,11 @@ html {
 /* Swiper Custom Pagination & Overlap Fix */
 .swiper {
   padding-bottom: 3rem !important;
+}
+
+.swiper {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 @media (min-width: 769px) {

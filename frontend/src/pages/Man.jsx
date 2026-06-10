@@ -117,7 +117,7 @@ const Man = () => {
   };
 
   return (
-    <div className="w-full bg-white dark:bg-zinc-950 transition-colors duration-300">
+    <div className="w-full overflow-hidden bg-white dark:bg-zinc-950 transition-colors duration-300">
       
       {/* ==================== HERO BANNER ==================== */}
       <div className="relative h-[65vh] sm:h-[80vh] w-full flex items-center justify-center overflow-hidden bg-primary">
@@ -234,7 +234,7 @@ const Man = () => {
 
         {/* Shop Product Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -330,7 +330,7 @@ const Man = () => {
           <div className="w-12 h-[1px] bg-accent mx-auto mt-4" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
           {bestSellers.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

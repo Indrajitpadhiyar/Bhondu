@@ -85,10 +85,10 @@ const About = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full bg-secondary/20 dark:bg-zinc-950 transition-colors duration-300">
+    <div ref={containerRef} className="w-full overflow-hidden bg-secondary/20 dark:bg-zinc-950 transition-colors duration-300">
 
       {/* ==================== PANEL 1: GENESIS ==================== */}
-      <section className="scroll-panel panel-1 min-h-screen w-full flex flex-col md:flex-row items-center justify-between relative bg-white dark:bg-zinc-900 border-b border-secondary dark:border-zinc-800 p-8 sm:p-12 lg:p-24 z-10">
+      <section className="scroll-panel panel-1 min-h-screen w-full flex flex-col md:flex-row items-center justify-between relative bg-white dark:bg-zinc-900 border-b border-secondary dark:border-zinc-800 p-6 sm:p-12 lg:p-24 z-10 overflow-hidden">
         <div className="w-full md:w-1/2 space-y-6 text-left max-w-lg">
           <span className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase">THE GENESIS</span>
           <h2 className="font-luxury-serif text-4xl sm:text-5xl font-bold uppercase tracking-widest text-primary dark:text-zinc-100 leading-tight">
@@ -114,7 +114,7 @@ const About = () => {
             />
           </div>
           {/* Parallax Card (moves up/down) */}
-          <div className="side-image-1 absolute -bottom-10 -left-6 sm:left-4 w-40 sm:w-48 aspect-[3/4] border border-accent/40 rounded-sm overflow-hidden shadow-2xl z-20">
+          <div className="side-image-1 absolute -bottom-10 left-0 sm:left-4 w-32 sm:w-48 aspect-[3/4] border border-accent/40 rounded-sm overflow-hidden shadow-2xl z-20">
             <img
               src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop"
               alt="Atelier detail"
@@ -125,7 +125,7 @@ const About = () => {
       </section>
 
       {/* ==================== PANEL 2: ATELIER (Pinning & Horizontal Sliders) ==================== */}
-      <section className="scroll-panel panel-2 min-h-screen w-full flex flex-col items-center justify-center relative bg-secondary/50 dark:bg-zinc-950/80 border-b border-secondary dark:border-zinc-800 p-8 sm:p-12 lg:p-24 z-20">
+      <section className="scroll-panel panel-2 min-h-screen w-full flex flex-col items-center justify-center relative bg-secondary/50 dark:bg-zinc-950/80 border-b border-secondary dark:border-zinc-800 p-6 sm:p-12 lg:p-24 z-20 overflow-hidden">
         <div className="text-center max-w-xl space-y-6 mb-16 relative z-10">
           <span className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase">THE ATELIER</span>
           <h2 className="font-luxury-serif text-3xl sm:text-4xl font-bold uppercase tracking-widest text-primary dark:text-zinc-100">
@@ -139,7 +139,7 @@ const About = () => {
 
         {/* Sliders meeting in center */}
         <div className="w-full max-w-5xl flex flex-col md:flex-row justify-center items-center gap-8 relative">
-          <div className="left-slide-card w-72 aspect-[3/4] border border-secondary dark:border-zinc-800 rounded-sm overflow-hidden bg-white dark:bg-zinc-900 shadow-xl p-4">
+          <div className="left-slide-card w-full sm:w-72 max-w-xs aspect-[3/4] border border-secondary dark:border-zinc-800 rounded-sm overflow-hidden bg-white dark:bg-zinc-900 shadow-xl p-4">
             <img
               src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop"
               alt="Weaving fibers"
@@ -151,7 +151,7 @@ const About = () => {
             </div>
           </div>
 
-          <div className="right-slide-card w-72 aspect-[3/4] border border-secondary dark:border-zinc-800 rounded-sm overflow-hidden bg-white dark:bg-zinc-900 shadow-xl p-4">
+          <div className="right-slide-card w-full sm:w-72 max-w-xs aspect-[3/4] border border-secondary dark:border-zinc-800 rounded-sm overflow-hidden bg-white dark:bg-zinc-900 shadow-xl p-4">
             <img
               src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=600&auto=format&fit=crop"
               alt="Tailoring"
@@ -166,7 +166,7 @@ const About = () => {
       </section>
 
       {/* ==================== PANEL 3: VISION (Vertical Stacking Cards) ==================== */}
-      <section className="scroll-panel panel-3 min-h-screen w-full flex flex-col items-center justify-center relative bg-white dark:bg-zinc-900 p-8 sm:p-12 lg:p-24 z-30">
+      <section className="scroll-panel panel-3 min-h-screen w-full flex flex-col items-center justify-center relative bg-white dark:bg-zinc-900 p-6 sm:p-12 lg:p-24 z-30 overflow-hidden">
         <div className="text-center max-w-xl space-y-6 mb-16">
           <span className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase">THE SUSTAINABILITY</span>
           <h2 className="font-luxury-serif text-3xl sm:text-4xl font-bold uppercase tracking-widest text-primary dark:text-zinc-100">
