@@ -2,6 +2,10 @@ import rateLimit from 'express-rate-limit';
 import { env } from '../config/environment.js';
 
 const makeLimiter = (maxRequests, windowMinutes, customMessage) => {
+  // TODO: TEMPORARY — rate limiting disabled. Remove this line & uncomment below to re-enable.
+  return (req, res, next) => next();
+
+  /*
   const isDev = env.NODE_ENV === 'development';
   if (isDev) {
     return (req, res, next) => next();
@@ -18,6 +22,7 @@ const makeLimiter = (maxRequests, windowMinutes, customMessage) => {
     standardHeaders: true,
     legacyHeaders: false,
   });
+  */
 };
 
 

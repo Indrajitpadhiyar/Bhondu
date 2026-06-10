@@ -1917,3 +1917,41 @@
 {"level":"info","message":"POST /api/v1/auth/login - 200 (241ms)","timestamp":"2026-06-10 11:01:43"}
 {"level":"info","message":"POST /api/v1/products - 201 (2894ms)","timestamp":"2026-06-10 11:05:49"}
 {"level":"info","message":"GET /api/v1/products - 200 (1556ms)","timestamp":"2026-06-10 11:05:50"}
+{"level":"error","message":"💥 Error: Invalid or expired token. Please log in again.","stack":"Error: Invalid or expired token. Please log in again.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:26:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-10 11:25:04"}
+{"level":"info","message":"GET /api/v1/orders - 401 (5ms)","timestamp":"2026-06-10 11:25:04"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (132ms)","timestamp":"2026-06-10 11:25:04"}
+{"level":"info","message":"GET /api/v1/orders - 200 (428ms)","timestamp":"2026-06-10 11:25:04"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (325ms)","timestamp":"2026-06-10 11:26:41"}
+{"level":"info","message":"🔄 Resolved concurrent Mongoose VersionError collision using cached rotated token.","timestamp":"2026-06-10 11:26:41"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (374ms)","timestamp":"2026-06-10 11:26:41"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (148ms)","timestamp":"2026-06-10 11:26:41"}
+{"level":"info","message":"GET /api/v1/orders - 304 (1118ms)","timestamp":"2026-06-10 11:26:41"}
+{"level":"info","message":"GET /api/v1/products - 304 (2737ms)","timestamp":"2026-06-10 11:26:43"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 200 (1760ms)","timestamp":"2026-06-10 11:26:44"}
+{"level":"error","message":"💥 Error: Can't find /api/v1/products/6a28f7b2868c65525bac3e8f/reviews?page=1&limit=10 on this server!","stack":"Error: Can't find /api/v1/products/6a28f7b2868c65525bac3e8f/reviews?page=1&limit=10 on this server!\n    at file:///D:/MiniProjects/bhondu/backend/src/app.js:81:8\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:295:15\n    at param (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:600:14)\n    at param (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:610:14)\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:664:3)","timestamp":"2026-06-10 11:26:45"}
+{"level":"info","message":"GET /api/v1/products/6a28f7b2868c65525bac3e8f/reviews?page=1&limit=10 - 404 (3ms)","timestamp":"2026-06-10 11:26:45"}
+{"level":"info","message":"GET /api/v1/products/6a28f7b2868c65525bac3e8f - 200 (645ms)","timestamp":"2026-06-10 11:26:46"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Shirts - 200 (366ms)","timestamp":"2026-06-10 11:26:46"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (1150ms)","timestamp":"2026-06-10 11:56:38"}
+{"level":"error","message":"💥 Error: Invalid or expired token. Please log in again.","stack":"Error: Invalid or expired token. Please log in again.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:26:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:295:15\n    at param (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:600:14)\n    at param (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:610:14)","timestamp":"2026-06-10 12:13:36"}
+{"level":"info","message":"DELETE /api/v1/products/6a25aab1db6fe5adab48dc20 - 401 (4ms)","timestamp":"2026-06-10 12:13:36"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (140ms)","timestamp":"2026-06-10 12:13:36"}
+{"level":"info","message":"DELETE /api/v1/products/6a25aab1db6fe5adab48dc20 - 204 (337ms)","timestamp":"2026-06-10 12:13:36"}
+{"level":"error","message":"💥 Error: No product found with that ID","stack":"Error: No product found with that ID\n    at file:///D:/MiniProjects/bhondu/backend/src/controllers/product.controller.js:115:17\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)","timestamp":"2026-06-10 12:13:38"}
+{"level":"info","message":"DELETE /api/v1/products/6a25aab1db6fe5adab48dc20 - 404 (1025ms)","timestamp":"2026-06-10 12:13:38"}
+{"level":"info","message":"GET /api/v1/products - 200 (1930ms)","timestamp":"2026-06-10 12:13:38"}
+{"level":"info","message":"GET /api/v1/products - 304 (1251ms)","timestamp":"2026-06-10 12:13:39"}
+{"level":"info","message":"DELETE /api/v1/products/6a28f7b2868c65525bac3e8f - 204 (417ms)","timestamp":"2026-06-10 12:13:41"}
+{"level":"info","message":"GET /api/v1/products - 200 (1383ms)","timestamp":"2026-06-10 12:13:42"}
+{"level":"info","message":"DELETE /api/v1/products/6a25aa7fdb6fe5adab48dc1b - 204 (483ms)","timestamp":"2026-06-10 12:13:44"}
+{"level":"info","message":"GET /api/v1/products - 200 (733ms)","timestamp":"2026-06-10 12:13:45"}
+{"level":"info","message":"DELETE /api/v1/products/6a283179b546632f2d4ce322 - 204 (936ms)","timestamp":"2026-06-10 12:13:47"}
+{"level":"info","message":"GET /api/v1/products - 200 (48ms)","timestamp":"2026-06-10 12:13:47"}
+{"level":"info","message":"DELETE /api/v1/products/6a2408bd150cbf5a34f775b8 - 204 (145ms)","timestamp":"2026-06-10 12:13:48"}
+{"level":"info","message":"GET /api/v1/products - 200 (47ms)","timestamp":"2026-06-10 12:13:48"}
+{"level":"info","message":"DELETE /api/v1/products/6a2408bd150cbf5a34f775bd - 204 (136ms)","timestamp":"2026-06-10 12:13:50"}
+{"level":"info","message":"GET /api/v1/products - 200 (57ms)","timestamp":"2026-06-10 12:13:50"}
+{"level":"info","message":"DELETE /api/v1/products/6a2408bd150cbf5a34f775b0 - 204 (91ms)","timestamp":"2026-06-10 12:13:51"}
+{"level":"info","message":"GET /api/v1/products - 200 (46ms)","timestamp":"2026-06-10 12:13:51"}
+{"level":"info","message":"DELETE /api/v1/products/6a2408bd150cbf5a34f775a9 - 204 (147ms)","timestamp":"2026-06-10 12:13:53"}
+{"level":"info","message":"GET /api/v1/products - 200 (53ms)","timestamp":"2026-06-10 12:13:54"}
