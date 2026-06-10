@@ -13,4 +13,10 @@ router.post('/', authenticateUser, authorizeRoles('Admin', 'Super Admin'), Produ
 router.patch('/:id', authenticateUser, authorizeRoles('Admin', 'Super Admin'), ProductController.updateProduct);
 router.delete('/:id', authenticateUser, authorizeRoles('Admin', 'Super Admin'), ProductController.deleteProduct);
 
+// Review endpoints
+router.get('/:id/reviews', ProductController.getProductReviews);
+router.post('/:id/reviews', authenticateUser, ProductController.createReview);
+router.delete('/:id/reviews/:reviewId', authenticateUser, ProductController.deleteReview);
+
 export default router;
+

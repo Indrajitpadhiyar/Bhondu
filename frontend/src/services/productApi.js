@@ -70,6 +70,36 @@ export const productApi = baseApi.injectEndpoints({
         'Reviews',
       ],
     }),
+    getProductReviews: builder.query({
+      query: ({ productId, page = 1, limit = 10 }) => ({
+        url: `/products/${productId}/reviews`,
+        method: 'GET',
+        params: { page, limit },
+      }),
+      transformResponse: (response) => response.data,
+      providesTags: (result, error, { productId }) => [
+        { type: 'Reviews', id: productId },
+      ],
+    }),
+    deleteReview: builder.mutation({
+      query: ({ productId, reviewId }) => ({
+        url: `/products/${productId}/reviews/${reviewId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: (result, error, { productId }) => [
+        { type: 'Products', id: productId },
+        { type: 'Reviews', id: productId },
+      ],
+    }),
+    uploadReviewImages: builder.mutation({
+      query: (formData) => ({
+        url: '/upload/review-images',
+        method: 'POST',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }),
+      transformResponse: (response) => response.data.urls,
+    }),
   }),
 });
 
@@ -81,4 +111,8 @@ export const {
   useUpdateProductMutation,
   useDeleteProductMutation,
   useAddReviewMutation,
+  useGetProductReviewsQuery,
+  useDeleteReviewMutation,
+  useUploadReviewImagesMutation,
 } = productApi;
+

@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Star, Heart, ShoppingBag, Check, Plus, Minus, ArrowLeft, ArrowRight, ShieldCheck, HelpCircle, RefreshCw } from 'lucide-react';
+import { Star, Heart, ShoppingBag, Check, Plus, Minus, ArrowLeft, ArrowRight, ShieldCheck, HelpCircle, RefreshCw, Upload, X, Trash2, User, Camera, RotateCw } from 'lucide-react';
 import { ShopContext } from '../context/ShopContext';
-import { useGetProductDetailsQuery, useGetProductsQuery } from '../services/productApi';
+import { useGetProductDetailsQuery, useGetProductsQuery, useGetProductReviewsQuery, useAddReviewMutation, useDeleteReviewMutation, useUploadReviewImagesMutation } from '../services/productApi';
 import ProductCard from '../components/ProductCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSelector } from 'react-redux';
@@ -54,6 +54,103 @@ const ProductDetails = () => {
   const [activeTab, setActiveTab] = useState('details');
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [sizeUnit, setSizeUnit] = useState('IN');
+
+  // Review states
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewHover, setReviewHover] = useState(0);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewImages, setReviewImages] = useState([]);
+  const [reviewImagePreviews, setReviewImagePreviews] = useState([]);
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState(null);
+
+  // Review API hooks
+  const { data: reviewsData, refetch: refetchReviews } = useGetProductReviewsQuery(
+    { productId: id },
+    { skip: !id }
+  );
+  const [addReview] = useAddReviewMutation();
+  const [deleteReview] = useDeleteReviewMutation();
+  const [uploadReviewImages] = useUploadReviewImagesMutation();
+
+  const reviews = reviewsData?.reviews || [];
+  const reviewTotal = reviewsData?.total || 0;
+  const starCounts = reviewsData?.starCounts || { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+
+  // Review image file select handler
+  const handleReviewImageSelect = (e) => {
+    const files = Array.from(e.target.files);
+    if (reviewImages.length + files.length > 5) {
+      toast.error('Maximum 5 images allowed per review.');
+      return;
+    }
+    const newPreviews = files.map(f => URL.createObjectURL(f));
+    setReviewImages(prev => [...prev, ...files]);
+    setReviewImagePreviews(prev => [...prev, ...newPreviews]);
+  };
+
+  const removeReviewImage = (idx) => {
+    setReviewImages(prev => prev.filter((_, i) => i !== idx));
+    setReviewImagePreviews(prev => {
+      URL.revokeObjectURL(prev[idx]);
+      return prev.filter((_, i) => i !== idx);
+    });
+  };
+
+  // Submit review
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    if (!reviewRating) {
+      toast.error('Please select a star rating.');
+      return;
+    }
+    if (!reviewComment.trim()) {
+      toast.error('Please write a comment.');
+      return;
+    }
+
+    setIsSubmittingReview(true);
+    try {
+      let imageUrls = [];
+      // Upload images to Cloudinary first if any
+      if (reviewImages.length > 0) {
+        const formData = new FormData();
+        reviewImages.forEach(file => formData.append('images', file));
+        imageUrls = await uploadReviewImages(formData).unwrap();
+      }
+
+      await addReview({
+        productId: product.id,
+        reviewData: {
+          rating: reviewRating,
+          comment: reviewComment.trim(),
+          images: imageUrls,
+        },
+      }).unwrap();
+
+      toast.success('Review submitted successfully!');
+      setReviewRating(0);
+      setReviewComment('');
+      setReviewImages([]);
+      setReviewImagePreviews([]);
+      refetchReviews();
+    } catch (err) {
+      toast.error(err.data?.data?.message || err.data?.message || 'Failed to submit review.');
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm('Delete this review?')) return;
+    try {
+      await deleteReview({ productId: product.id, reviewId }).unwrap();
+      toast.success('Review deleted.');
+      refetchReviews();
+    } catch (err) {
+      toast.error(err.data?.message || 'Failed to delete review.');
+    }
+  };
 
   // Scroll to top and reset configuration when product ID changes or product finishes loading
   useEffect(() => {
@@ -426,6 +523,13 @@ const ProductDetails = () => {
                   <span>ECOLOGY</span>
                   {activeTab === 'sustainability' && <div className="absolute bottom-0 left-6 right-6 h-[1.5px] bg-accent" />}
                 </button>
+                <button
+                  onClick={() => setActiveTab('reviews')}
+                  className={`pb-3 px-6 transition-colors relative cursor-pointer ${activeTab === 'reviews' ? 'text-accent' : 'text-zinc-400 hover:text-primary dark:hover:text-zinc-100'}`}
+                >
+                  <span>REVIEWS ({reviewTotal})</span>
+                  {activeTab === 'reviews' && <div className="absolute bottom-0 left-6 right-6 h-[1.5px] bg-accent" />}
+                </button>
               </div>
 
               <div className="py-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed uppercase tracking-wider">
@@ -472,6 +576,216 @@ const ProductDetails = () => {
                       <p>• Low impact organic colors minimizing waste chemical footprints.</p>
                     </motion.div>
                   )}
+                  {activeTab === 'reviews' && (
+                    <motion.div
+                      key="reviews"
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 5 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-8 normal-case tracking-normal"
+                    >
+                      {/* ===== Rating Summary Bar ===== */}
+                      <div className="flex flex-col sm:flex-row gap-8 items-start">
+                        {/* Big average */}
+                        <div className="flex flex-col items-center gap-1 min-w-[100px]">
+                          <span className="text-5xl font-bold text-primary dark:text-zinc-100 font-luxury-serif">{product.rating || 0}</span>
+                          <div className="flex gap-0.5">
+                            {[1,2,3,4,5].map(s => (
+                              <Star key={s} className={`w-4 h-4 ${s <= Math.round(product.rating || 0) ? 'fill-accent text-accent' : 'text-zinc-300 dark:text-zinc-700'}`} />
+                            ))}
+                          </div>
+                          <span className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold mt-1">{reviewTotal} reviews</span>
+                        </div>
+
+                        {/* Star distribution bars */}
+                        <div className="flex-1 space-y-1.5 w-full">
+                          {[5,4,3,2,1].map(star => {
+                            const count = starCounts[star] || 0;
+                            const pct = reviewTotal > 0 ? (count / reviewTotal) * 100 : 0;
+                            return (
+                              <div key={star} className="flex items-center gap-2.5 text-xs">
+                                <span className="text-zinc-500 dark:text-zinc-400 font-semibold w-4 text-right">{star}</span>
+                                <Star className="w-3 h-3 fill-accent text-accent" />
+                                <div className="flex-1 h-2 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                                  <motion.div
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${pct}%` }}
+                                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                                    className="h-full bg-accent rounded-full"
+                                  />
+                                </div>
+                                <span className="text-zinc-400 font-medium w-6 text-right text-[11px]">{count}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* ===== Write a Review Form ===== */}
+                      {isAuthenticated ? (
+                        <form onSubmit={handleReviewSubmit} className="border border-secondary/50 dark:border-zinc-800 rounded-sm p-5 space-y-4 bg-secondary/5 dark:bg-zinc-900/30">
+                          <h4 className="text-xs font-bold uppercase tracking-widest text-accent">Write a Review</h4>
+
+                          {/* Star rating selector */}
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold block">Your Rating</label>
+                            <div className="flex gap-1">
+                              {[1,2,3,4,5].map(s => (
+                                <button
+                                  key={s}
+                                  type="button"
+                                  onClick={() => setReviewRating(s)}
+                                  onMouseEnter={() => setReviewHover(s)}
+                                  onMouseLeave={() => setReviewHover(0)}
+                                  className="cursor-pointer p-0.5 transition-transform hover:scale-110"
+                                >
+                                  <Star className={`w-6 h-6 transition-colors ${s <= (reviewHover || reviewRating) ? 'fill-accent text-accent' : 'text-zinc-300 dark:text-zinc-700'}`} />
+                                </button>
+                              ))}
+                              {reviewRating > 0 && (
+                                <span className="text-xs text-zinc-500 ml-2 self-center font-medium">
+                                  {['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][reviewRating]}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Comment textarea */}
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold block">Your Review</label>
+                            <textarea
+                              rows="3"
+                              value={reviewComment}
+                              onChange={(e) => setReviewComment(e.target.value)}
+                              placeholder="Share your experience with this product..."
+                              maxLength={1000}
+                              className="w-full text-xs p-3 border border-secondary/50 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 focus:outline-none focus:border-accent resize-none text-zinc-700 dark:text-zinc-200"
+                            />
+                            <span className="text-[9px] text-zinc-400 block text-right">{reviewComment.length}/1000</span>
+                          </div>
+
+                          {/* Image upload for review */}
+                          <div className="space-y-2">
+                            <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold block">Add Photos (Optional, max 5)</label>
+
+                            {/* Preview thumbnails */}
+                            {reviewImagePreviews.length > 0 && (
+                              <div className="flex gap-2 flex-wrap">
+                                {reviewImagePreviews.map((url, idx) => (
+                                  <div key={idx} className="relative w-16 h-16 rounded-sm border border-secondary/50 dark:border-zinc-800 overflow-hidden group">
+                                    <img src={url} alt="" className="w-full h-full object-cover" />
+                                    <button
+                                      type="button"
+                                      onClick={() => removeReviewImage(idx)}
+                                      className="absolute top-0.5 right-0.5 p-0.5 bg-black/60 hover:bg-black/80 text-white rounded-full transition-colors cursor-pointer"
+                                    >
+                                      <X className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {reviewImages.length < 5 && (
+                              <label className="flex items-center justify-center gap-2 w-full py-3 border border-dashed border-secondary/50 dark:border-zinc-800 rounded-sm cursor-pointer hover:border-accent transition-colors bg-white dark:bg-zinc-950">
+                                <Camera className="w-4 h-4 text-accent" />
+                                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Upload Photos</span>
+                                <input
+                                  type="file"
+                                  multiple
+                                  accept="image/*"
+                                  onChange={handleReviewImageSelect}
+                                  className="hidden"
+                                />
+                              </label>
+                            )}
+                          </div>
+
+                          {/* Submit button */}
+                          <button
+                            type="submit"
+                            disabled={isSubmittingReview}
+                            className="w-full py-3 bg-primary text-secondary dark:bg-zinc-100 dark:text-zinc-950 text-xs font-bold uppercase tracking-widest hover:bg-accent dark:hover:bg-accent hover:text-primary transition-all rounded-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                          >
+                            {isSubmittingReview ? (
+                              <><RotateCw className="w-3.5 h-3.5 animate-spin" /> Submitting...</>
+                            ) : (
+                              'Submit Review'
+                            )}
+                          </button>
+                        </form>
+                      ) : (
+                        <div className="border border-dashed border-secondary/50 dark:border-zinc-800 rounded-sm p-6 text-center space-y-3">
+                          <p className="text-xs text-zinc-400 uppercase tracking-wider font-semibold">Login to write a review</p>
+                          <button
+                            onClick={() => navigate('/login', { state: { from: location } })}
+                            className="px-6 py-2.5 bg-primary text-secondary dark:bg-zinc-100 dark:text-zinc-950 text-xs font-bold uppercase tracking-widest hover:bg-accent dark:hover:bg-accent hover:text-primary transition-all cursor-pointer"
+                          >
+                            Sign In
+                          </button>
+                        </div>
+                      )}
+
+                      {/* ===== Review List ===== */}
+                      {reviews.length > 0 ? (
+                        <div className="space-y-6">
+                          {reviews.map((rev) => (
+                            <div key={rev._id} className="border-b border-secondary/30 dark:border-zinc-800/50 pb-6 last:border-0 last:pb-0">
+                              <div className="flex items-start justify-between gap-4">
+                                <div className="flex items-center gap-3">
+                                  {/* Avatar */}
+                                  <div className="w-9 h-9 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden flex items-center justify-center border border-secondary/30 dark:border-zinc-700">
+                                    {rev.user?.avatar?.url ? (
+                                      <img src={rev.user.avatar.url} alt={rev.user.name} className="w-full h-full object-cover" />
+                                    ) : (
+                                      <User className="w-4 h-4 text-zinc-400" />
+                                    )}
+                                  </div>
+                                  <div>
+                                    <p className="text-xs font-bold text-primary dark:text-zinc-100">{rev.user?.name || 'Customer'}</p>
+                                    <p className="text-[10px] text-zinc-400">{new Date(rev.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                  {/* Stars */}
+                                  <div className="flex gap-0.5">
+                                    {[1,2,3,4,5].map(s => (
+                                      <Star key={s} className={`w-3.5 h-3.5 ${s <= rev.rating ? 'fill-accent text-accent' : 'text-zinc-300 dark:text-zinc-700'}`} />
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Comment */}
+                              <p className="text-xs text-zinc-600 dark:text-zinc-300 mt-3 leading-relaxed">{rev.comment}</p>
+
+                              {/* Review images */}
+                              {rev.images && rev.images.length > 0 && (
+                                <div className="flex gap-2 mt-3 flex-wrap">
+                                  {rev.images.map((img, idx) => (
+                                    <button
+                                      key={idx}
+                                      type="button"
+                                      onClick={() => setLightboxImage(img)}
+                                      className="w-16 h-16 rounded-sm border border-secondary/40 dark:border-zinc-800 overflow-hidden cursor-pointer hover:ring-1 hover:ring-accent transition-all"
+                                    >
+                                      <img src={img} alt="" className="w-full h-full object-cover" />
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-8">
+                          <p className="text-xs text-zinc-400 uppercase tracking-wider font-semibold">No reviews yet. Be the first to review!</p>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
                 </AnimatePresence>
               </div>
             </div>
@@ -479,6 +793,35 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* ==================== IMAGE LIGHTBOX ==================== */}
+      <AnimatePresence>
+        {lightboxImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setLightboxImage(null)}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 cursor-pointer"
+          >
+            <motion.img
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              src={lightboxImage}
+              alt="Review"
+              className="max-w-full max-h-[85vh] object-contain rounded-sm shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button
+              onClick={() => setLightboxImage(null)}
+              className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ==================== YOU MAY ALSO LIKE / RELATED ITEMS ==================== */}
       {relatedProducts.length > 0 && (
