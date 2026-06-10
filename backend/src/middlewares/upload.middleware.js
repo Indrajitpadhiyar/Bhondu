@@ -19,3 +19,12 @@ export const uploadSingleImage = multer({
     fileSize: 5 * 1024 * 1024, // 5MB
   },
 }).single('avatar'); // We expect 'avatar' key for uploads
+
+export const uploadMultipleImages = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB per file
+  },
+}).array('images', 10); // We expect 'images' key for multiple uploads (max 10)
+

@@ -5,6 +5,7 @@ import UserRepository from '../repositories/user.repository.js';
 import EmailService from './email.service.js';
 import AppError from '../utils/appError.js';
 import logger from '../utils/logger.js';
+import { getCache } from '../config/redis.js';
 
 class AuthService {
   // Helper: Generate Access Token
@@ -117,13 +118,29 @@ class AuthService {
       throw new AppError('Invalid or expired refresh token. Please log in again.', 401);
     }
 
-    // 2) Find user by decoded ID
+    // 2) Concurrency & Duplicate Check via Cache
+    const cache = getCache();
+    const cachedRotated = await cache.get(`rotated_token:${oldRefreshToken}`);
+    if (cachedRotated) {
+      try {
+        const { accessToken, refreshToken } = JSON.parse(cachedRotated);
+        logger.info(`🔄 Concurrency/duplicate refresh request detected for token. Returning cached credentials.`);
+        return {
+          accessToken,
+          refreshToken,
+        };
+      } catch (e) {
+        // Fall back to DB check if JSON parse fails
+      }
+    }
+
+    // 3) Find user by decoded ID
     const user = await UserRepository.findById(decoded.id);
     if (!user) {
       throw new AppError('User not found.', 401);
     }
 
-    // 3) Token reuse detection (Security mechanism)
+    // 4) Token reuse detection (Security mechanism)
     // If the oldRefreshToken is not in the user's active refresh tokens array,
     // it implies the token has already been used or stolen.
     if (!user.refreshTokens.includes(oldRefreshToken)) {
@@ -134,14 +151,47 @@ class AuthService {
       throw new AppError('Security breach suspected. All sessions cleared. Please log in again.', 403);
     }
 
-    // 4) Rotate token: remove old token, create new access and refresh tokens
+    // 5) Rotate token: remove old token, create new access and refresh tokens
     user.refreshTokens = user.refreshTokens.filter(t => t !== oldRefreshToken);
 
     const newAccessToken = this.generateAccessToken(user._id);
     const newRefreshToken = this.generateRefreshToken(user._id);
 
     user.refreshTokens.push(newRefreshToken);
-    await user.save({ validateBeforeSave: false });
+
+    try {
+      await user.save({ validateBeforeSave: false });
+    } catch (err) {
+      // If there's a version/concurrency conflict, double-check cache to see if a parallel thread succeeded
+      const doubleCheckCached = await cache.get(`rotated_token:${oldRefreshToken}`);
+      if (doubleCheckCached) {
+        try {
+          const { accessToken, refreshToken } = JSON.parse(doubleCheckCached);
+          logger.info(`🔄 Resolved concurrent Mongoose VersionError collision using cached rotated token.`);
+          return {
+            accessToken,
+            refreshToken,
+          };
+        } catch (e) {}
+      }
+      logger.error('Error saving user during token refresh rotation:', err);
+      throw new AppError('Unable to update session. Please try again.', 500);
+    }
+
+    // Cache the rotated token details with a 15-second expiration to handle concurrent retries
+    try {
+      await cache.set(
+        `rotated_token:${oldRefreshToken}`,
+        JSON.stringify({
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        }),
+        'EX',
+        15
+      );
+    } catch (cacheErr) {
+      logger.warn('Failed to cache rotated token:', cacheErr.message);
+    }
 
     return {
       accessToken: newAccessToken,

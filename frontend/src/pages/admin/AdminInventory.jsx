@@ -244,10 +244,10 @@ export default function AdminInventory() {
                     <td className="py-3.5 px-4">
                       <span className={`px-2 py-0.5 rounded text-[8px] font-bold ${
                         stock === 0
-                          ? 'bg-red-100 text-red-750'
+                          ? 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400 border border-red-200/50 dark:border-red-500/20'
                           : stock <= 5
-                          ? 'bg-amber-100 text-amber-750'
-                          : 'bg-emerald-100 text-emerald-750'
+                          ? 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border border-amber-200/50 dark:border-amber-500/20'
+                          : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-500/20'
                       }`}>
                         {stock === 0 ? 'OUT OF STOCK' : stock <= 5 ? 'LOW LEVEL' : 'STOCK HEALTHY'}
                       </span>

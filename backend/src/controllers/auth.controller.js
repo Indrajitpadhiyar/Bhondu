@@ -4,12 +4,15 @@ import asyncHandler from '../utils/asyncHandler.js';
 import { env } from '../config/environment.js';
 
 // Cookie options helper
-const getCookieOptions = (maxAgeMs) => ({
-  httpOnly: true,
-  secure: env.NODE_ENV === 'production',
-  sameSite: 'lax',
-  maxAge: maxAgeMs,
-});
+const getCookieOptions = (maxAgeMs) => {
+  const isProd = env.NODE_ENV === 'production';
+  return {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+    maxAge: maxAgeMs,
+  };
+};
 
 export const register = asyncHandler(async (req, res) => {
   const result = await AuthService.register(req.body);
@@ -51,7 +54,7 @@ export const logout = asyncHandler(async (req, res) => {
   let token;
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
-  } else if (req.cookies && req.cookies.accessToken) {
+  } else if (req.cookies?.accessToken) {
     token = req.cookies.accessToken;
   }
 
@@ -65,7 +68,7 @@ export const logout = asyncHandler(async (req, res) => {
     }
   }
 
-  const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+  const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
 
   if (userId && refreshToken) {
     try {
@@ -86,12 +89,12 @@ export const logout = asyncHandler(async (req, res) => {
 });
 
 export const refreshToken = asyncHandler(async (req, res) => {
-  const oldRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
-  
+  const oldRefreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
+
   if (!oldRefreshToken) {
     return res.status(200).json({
       status: 'success',
-      accessToken: null,
+      accessToken: '',
       message: 'No refresh token provided.'
     });
   }

@@ -17,9 +17,23 @@ const app = express();
 // 1) Security HTTP headers
 app.use(helmet());
 
-// 2) CORS configuration (supports credentials for cookies)
+// 2) CORS configuration (supports credentials for cookies with strict whitelist)
+const allowedOrigins = [
+  'https://bhondu.shop',
+  'https://www.bhondu.shop',
+  'http://localhost:5173',
+  'https://bhondu-aih7.onrender.com'
+];
+
 app.use(cors({
-  origin: true, // Auto-reflect requesting origin (useful in development/staging)
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 
