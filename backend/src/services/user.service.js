@@ -37,7 +37,7 @@ class UserService {
     if (updateData.name) user.name = updateData.name;
     if (updateData.phone) user.phone = updateData.phone;
 
-    await user.save();
+    await user.save({ validateModifiedOnly: true });
     return user;
   }
 
