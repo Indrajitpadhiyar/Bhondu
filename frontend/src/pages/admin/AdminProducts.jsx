@@ -15,14 +15,19 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  Filter
+  Filter,
+  RotateCw
 } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
+import { useUploadProductImagesMutation } from '../../services/productApi';
+import toast from 'react-hot-toast';
 
 export default function AdminProducts() {
   const { products, addProduct, deleteProduct, updateProduct } = useAdmin();
   const location = useLocation();
   const navigate = useNavigate();
+  const [uploadProductImages] = useUploadProductImagesMutation();
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
 
   // Search & Filter state
   const [search, setSearch] = useState('');
@@ -277,18 +282,28 @@ export default function AdminProducts() {
     });
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setIsUploadingImages(true);
+    const formData = new FormData();
     files.forEach(file => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewProduct(prev => ({
-          ...prev,
-          imageUrls: [...prev.imageUrls, reader.result]
-        }));
-      };
-      reader.readAsDataURL(file);
+      formData.append('images', file);
     });
+
+    try {
+      const uploadedUrls = await uploadProductImages(formData).unwrap();
+      setNewProduct(prev => ({
+        ...prev,
+        imageUrls: [...prev.imageUrls, ...uploadedUrls]
+      }));
+      toast.success(`${files.length} image(s) uploaded successfully!`);
+    } catch (err) {
+      toast.error(err.data?.message || 'Failed to upload images to server.');
+    } finally {
+      setIsUploadingImages(false);
+    }
   };
 
   return (
@@ -742,16 +757,25 @@ export default function AdminProducts() {
 
                   {/* Upload Dropzone */}
                   <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-zinc-250 hover:border-accent dark:border-zinc-800 dark:hover:border-accent rounded-xl cursor-pointer bg-white dark:bg-zinc-950 transition-colors p-4 text-center">
-                    <div className="flex flex-col items-center justify-center space-y-1 text-zinc-400">
-                      <Upload className="w-6 h-6 text-[#C9A87C] mb-1" />
-                      <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider font-logo">Upload Images</p>
-                      <p className="text-[9px] text-zinc-400">PNG, JPG, JPEG (Select multiple)</p>
-                    </div>
+                    {isUploadingImages ? (
+                      <div className="flex flex-col items-center justify-center space-y-1 text-zinc-400">
+                        <RotateCw className="w-6 h-6 text-[#C9A87C] mb-1 animate-spin" />
+                        <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider font-logo">Uploading to Cloudinary...</p>
+                        <p className="text-[9px] text-zinc-400">Please wait while files upload</p>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center space-y-1 text-zinc-400">
+                        <Upload className="w-6 h-6 text-[#C9A87C] mb-1" />
+                        <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider font-logo">Upload Images</p>
+                        <p className="text-[9px] text-zinc-400">PNG, JPG, JPEG (Select multiple)</p>
+                      </div>
+                    )}
                     <input
                       type="file"
                       multiple
                       accept="image/*"
                       onChange={handleImageUpload}
+                      disabled={isUploadingImages}
                       className="hidden"
                     />
                   </label>
@@ -868,9 +892,17 @@ export default function AdminProducts() {
                 {/* Submit button */}
                 <button
                   type="submit"
-                  className="w-full py-3 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-lg text-xs font-semibold hover:bg-zinc-800 dark:hover:bg-zinc-100 shadow transition-colors"
+                  disabled={isUploadingImages}
+                  className="w-full py-3 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-lg text-xs font-semibold hover:bg-zinc-800 dark:hover:bg-zinc-100 shadow transition-colors disabled:opacity-50"
                 >
-                  {editingProductId ? 'Update & Save Product' : 'Create & Publish Product'}
+                  {isUploadingImages ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                      Uploading Images...
+                    </span>
+                  ) : (
+                    editingProductId ? 'Update & Save Product' : 'Create & Publish Product'
+                  )}
                 </button>
 
               </form>

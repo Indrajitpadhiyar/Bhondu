@@ -132,7 +132,7 @@ export default function Profile() {
     formData.append('name', profileForm.name);
     formData.append('phone', profileForm.phone);
     if (avatarFile) {
-      formData.append('image', avatarFile);
+      formData.append('avatar', avatarFile);
     }
 
     try {

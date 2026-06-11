@@ -1971,3 +1971,168 @@
 {"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-10 17:29:52"}
 {"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1219ms)","timestamp":"2026-06-10 17:29:52"}
 {"level":"info","message":"GET /api/v1/products - 200 (2433ms)","timestamp":"2026-06-10 17:29:53"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-11 10:19:48"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-11 10:19:48"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-11 10:19:52"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-11 10:19:52"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-11 10:19:53"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-11 10:20:45"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 10:20:45"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 10:20:45"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (310ms)","timestamp":"2026-06-11 10:20:45"}
+{"level":"error","message":"💥 Error: No matching document found for id \"6a245f00aa98a351b633491a\" version 112 modifiedPaths \"refreshTokens\"","stack":"VersionError: No matching document found for id \"6a245f00aa98a351b633491a\" version 112 modifiedPaths \"refreshTokens\"\n    at generateVersionError (D:\\MiniProjects\\bhondu\\backend\\node_modules\\mongoose\\lib\\model.js:590:10)\n    at model.save (D:\\MiniProjects\\bhondu\\backend\\node_modules\\mongoose\\lib\\model.js:652:30)\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:149:18)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 10:20:45"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 500 (282ms)","timestamp":"2026-06-11 10:20:45"}
+{"level":"info","message":"GET /api/v1/orders - 401 (284ms)","timestamp":"2026-06-11 10:20:45"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 10:20:45"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 10:20:45"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (188ms)","timestamp":"2026-06-11 10:20:46"}
+{"level":"info","message":"GET /api/v1/products - 304 (1479ms)","timestamp":"2026-06-11 10:20:46"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 200 (1407ms)","timestamp":"2026-06-11 10:20:54"}
+{"level":"info","message":"POST /api/v1/auth/login - 200 (274ms)","timestamp":"2026-06-11 10:21:21"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (114ms)","timestamp":"2026-06-11 10:21:21"}
+{"level":"info","message":"GET /api/v1/orders - 200 (717ms)","timestamp":"2026-06-11 10:21:22"}
+{"level":"info","message":"POST /api/v1/products - 201 (551ms)","timestamp":"2026-06-11 10:22:34"}
+{"level":"info","message":"GET /api/v1/products - 200 (1985ms)","timestamp":"2026-06-11 10:22:36"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (96ms)","timestamp":"2026-06-11 10:22:37"}
+{"level":"info","message":"🔄 Resolved concurrent Mongoose VersionError collision using cached rotated token.","timestamp":"2026-06-11 10:22:37"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (127ms)","timestamp":"2026-06-11 10:22:37"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (136ms)","timestamp":"2026-06-11 10:22:38"}
+{"level":"info","message":"GET /api/v1/products - 304 (2259ms)","timestamp":"2026-06-11 10:22:40"}
+{"level":"info","message":"GET /api/v1/orders - 304 (2396ms)","timestamp":"2026-06-11 10:22:40"}
+{"level":"error","message":"💥 Error: Unexpected field","stack":"MulterError: Unexpected field\n    at wrappedFileFilter (D:\\MiniProjects\\bhondu\\backend\\node_modules\\multer\\index.js:41:19)\n    at Multipart.<anonymous> (D:\\MiniProjects\\bhondu\\backend\\node_modules\\multer\\lib\\make-middleware.js:183:7)\n    at Multipart.emit (node:events:509:28)\n    at HeaderParser.cb (D:\\MiniProjects\\bhondu\\backend\\node_modules\\busboy\\lib\\types\\multipart.js:358:14)\n    at HeaderParser.push (D:\\MiniProjects\\bhondu\\backend\\node_modules\\busboy\\lib\\types\\multipart.js:162:20)\n    at SBMH.ssCb [as _cb] (D:\\MiniProjects\\bhondu\\backend\\node_modules\\busboy\\lib\\types\\multipart.js:394:37)\n    at feed (D:\\MiniProjects\\bhondu\\backend\\node_modules\\streamsearch\\lib\\sbmh.js:248:10)\n    at SBMH.push (D:\\MiniProjects\\bhondu\\backend\\node_modules\\streamsearch\\lib\\sbmh.js:104:16)\n    at Multipart._write (D:\\MiniProjects\\bhondu\\backend\\node_modules\\busboy\\lib\\types\\multipart.js:567:19)\n    at writeOrBuffer (node:internal/streams/writable:570:12)","timestamp":"2026-06-11 10:23:10"}
+{"level":"info","message":"PATCH /api/v1/user/profile - 500 (69ms)","timestamp":"2026-06-11 10:23:10"}
+{"level":"info","message":"GET /api/v1/user/profile - 304 (121ms)","timestamp":"2026-06-11 10:23:10"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 10:25:33"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:30:18"}
+{"level":"error","message":"💥 Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:30:18"}
+{"level":"info","message":"PATCH /api/v1/user/profile - 500 (5518ms)","timestamp":"2026-06-11 10:30:18"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (129ms)","timestamp":"2026-06-11 10:30:18"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 10:31:24"}
+{"level":"error","message":"💥 Error: Invalid or expired token. Please log in again.","stack":"Error: Invalid or expired token. Please log in again.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:26:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-11 10:50:13"}
+{"level":"info","message":"PATCH /api/v1/user/profile - 401 (3ms)","timestamp":"2026-06-11 10:50:13"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 10:50:13"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 10:50:13"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (598ms)","timestamp":"2026-06-11 10:50:13"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 10:50:14"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 10:50:14"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (118ms)","timestamp":"2026-06-11 10:50:14"}
+{"level":"info","message":"POST /api/v1/auth/login - 200 (234ms)","timestamp":"2026-06-11 10:50:31"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (114ms)","timestamp":"2026-06-11 10:50:31"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:50:39"}
+{"level":"error","message":"💥 Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:50:39"}
+{"level":"info","message":"PATCH /api/v1/user/profile - 500 (3706ms)","timestamp":"2026-06-11 10:50:39"}
+{"level":"info","message":"GET /api/v1/user/profile - 304 (116ms)","timestamp":"2026-06-11 10:50:39"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:00"}
+{"level":"error","message":"💥 Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:00"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 500 (3851ms)","timestamp":"2026-06-11 10:51:00"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:02"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:04"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:04"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:04"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:05"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:10"}
+{"level":"error","message":"💥 Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:10"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 500 (1247ms)","timestamp":"2026-06-11 10:51:10"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:13"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:16"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:17"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:17"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:22"}
+{"level":"error","message":"💥 Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:22"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 500 (1415ms)","timestamp":"2026-06-11 10:51:22"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:23"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:25"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:27"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:51:28"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-11 10:54:29"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-11 10:54:29"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-11 10:54:30"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-11 10:54:30"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-11 10:54:31"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:55:11"}
+{"level":"error","message":"💥 Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:55:11"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 500 (3790ms)","timestamp":"2026-06-11 10:55:11"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:55:13"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:55:13"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:55:14"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:55:14"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name Bhondu","timestamp":"2026-06-11 10:55:15"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-11 10:56:12"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-11 10:56:12"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-11 10:56:12"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-11 10:56:13"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-11 10:56:17"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-11 10:59:31"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-11 10:59:31"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-11 10:59:31"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-11 10:59:31"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-11 10:59:32"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (120ms)","timestamp":"2026-06-11 11:00:21"}
+{"level":"info","message":"🔄 Resolved concurrent Mongoose VersionError collision using cached rotated token.","timestamp":"2026-06-11 11:00:21"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (151ms)","timestamp":"2026-06-11 11:00:21"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (150ms)","timestamp":"2026-06-11 11:00:21"}
+{"level":"info","message":"GET /api/v1/orders - 304 (1975ms)","timestamp":"2026-06-11 11:00:23"}
+{"level":"info","message":"GET /api/v1/products - 200 (3044ms)","timestamp":"2026-06-11 11:00:24"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:00:45"}
+{"level":"error","message":"💥 Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:00:45"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 500 (4082ms)","timestamp":"2026-06-11 11:00:45"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:00:47"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:00:48"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:00:48"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:00:49"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:00:50"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (99ms)","timestamp":"2026-06-11 11:01:02"}
+{"level":"info","message":"🔄 Resolved concurrent Mongoose VersionError collision using cached rotated token.","timestamp":"2026-06-11 11:01:02"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (159ms)","timestamp":"2026-06-11 11:01:02"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (130ms)","timestamp":"2026-06-11 11:01:02"}
+{"level":"info","message":"GET /api/v1/orders - 200 (836ms)","timestamp":"2026-06-11 11:01:02"}
+{"level":"info","message":"GET /api/v1/products - 200 (3023ms)","timestamp":"2026-06-11 11:01:05"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:20"}
+{"level":"error","message":"💥 Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:20"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 500 (3681ms)","timestamp":"2026-06-11 11:01:20"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:22"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:22"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:23"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:24"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:27"}
+{"level":"error","message":"💥 Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:27"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 500 (1596ms)","timestamp":"2026-06-11 11:01:28"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:28"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:32"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:32"}
+{"level":"error","message":"💥 Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:32"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 500 (1666ms)","timestamp":"2026-06-11 11:01:32"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:01:32"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 11:01:57"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-11 11:02:21"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-11 11:02:21"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-11 11:02:21"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-11 11:02:21"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-11 11:02:22"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (555ms)","timestamp":"2026-06-11 11:02:48"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (186ms)","timestamp":"2026-06-11 11:02:48"}
+{"level":"info","message":"🔄 Resolved concurrent Mongoose VersionError collision using cached rotated token.","timestamp":"2026-06-11 11:02:48"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (828ms)","timestamp":"2026-06-11 11:02:48"}
+{"level":"info","message":"GET /api/v1/user/profile - 304 (184ms)","timestamp":"2026-06-11 11:02:49"}
+{"level":"info","message":"GET /api/v1/orders - 200 (1154ms)","timestamp":"2026-06-11 11:02:49"}
+{"level":"info","message":"GET /api/v1/products - 200 (3778ms)","timestamp":"2026-06-11 11:02:51"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:03:12"}
+{"level":"error","message":"💥 Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:03:12"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 500 (3728ms)","timestamp":"2026-06-11 11:03:12"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:03:15"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:03:15"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:03:16"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:03:16"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:03:17"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 11:07:57"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:11:21"}
+{"level":"error","message":"💥 Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:11:21"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 500 (6788ms)","timestamp":"2026-06-11 11:11:21"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:11:22"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:11:23"}
+{"level":"error","message":"Cloudinary Upload Error: Invalid cloud_name hondu","timestamp":"2026-06-11 11:11:23"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-11 11:13:25"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-11 11:13:25"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-11 11:13:25"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-11 11:13:25"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-11 11:13:26"}

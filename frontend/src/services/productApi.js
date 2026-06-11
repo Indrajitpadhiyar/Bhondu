@@ -100,6 +100,15 @@ export const productApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response) => response.data.urls,
     }),
+    uploadProductImages: builder.mutation({
+      query: (formData) => ({
+        url: '/upload/multiple',
+        method: 'POST',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }),
+      transformResponse: (response) => response.data.urls,
+    }),
   }),
 });
 
@@ -114,5 +123,6 @@ export const {
   useGetProductReviewsQuery,
   useDeleteReviewMutation,
   useUploadReviewImagesMutation,
+  useUploadProductImagesMutation,
 } = productApi;
 
