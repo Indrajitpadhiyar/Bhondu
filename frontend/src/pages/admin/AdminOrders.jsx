@@ -13,9 +13,12 @@ import {
   Calendar,
   IndianRupee,
   ShoppingBag,
-  Check
+  Check,
+  Download
 } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 export default function AdminOrders() {
   const { orders, updateOrderStatus } = useAdmin();
@@ -394,8 +397,12 @@ export default function AdminOrders() {
                   <div className="space-y-2.5">
                     {selectedOrder.items.map((item, idx) => (
                       <div key={idx} className="flex items-center gap-3 p-2 bg-white dark:bg-zinc-950 rounded-lg border border-zinc-150 dark:border-zinc-850">
-                        <div className="w-10 h-12 bg-zinc-100 dark:bg-zinc-900 rounded flex-shrink-0 flex items-center justify-center font-bold text-zinc-400">
-                          <ShoppingBag className="w-4 h-4 text-zinc-400" />
+                        <div className="w-10 h-12 bg-zinc-100 dark:bg-zinc-900 rounded flex-shrink-0 flex items-center justify-center font-bold overflow-hidden">
+                          {item.image ? (
+                            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <ShoppingBag className="w-4 h-4 text-zinc-400" />
+                          )}
                         </div>
                         <div className="flex-grow min-w-0 text-xs">
                           <p className="font-semibold text-zinc-900 dark:text-zinc-100 truncate">{item.name}</p>
@@ -403,6 +410,23 @@ export default function AdminOrders() {
                             Size: <span className="font-semibold text-zinc-700 dark:text-zinc-200">{item.size}</span> | 
                             Color: <span className="inline-block w-2.5 h-2.5 rounded-full border align-middle ml-1" style={{ backgroundColor: item.color }} />
                           </p>
+                          {item.designId && (
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                try {
+                                  const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1'}/designs/${item.designId}/export`, { withCredentials: true });
+                                  const url = res.data.data.url;
+                                  window.open(url, '_blank');
+                                } catch (err) {
+                                  toast.error('Failed to get download link for custom design.');
+                                }
+                              }}
+                              className="mt-1.5 text-[10px] text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 font-semibold cursor-pointer"
+                            >
+                              <Download className="w-3 h-3" /> Download Print Layout
+                            </button>
+                          )}
                         </div>
                         <div className="text-right text-xs">
                           <p className="font-bold text-zinc-900 dark:text-zinc-100">₹{item.price * item.quantity}</p>

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Star, Heart, ShoppingBag, Check, Plus, Minus, ArrowLeft, ArrowRight, ShieldCheck, HelpCircle, RefreshCw, Upload, X, Trash2, User, Camera, RotateCw } from 'lucide-react';
+import { Star, Heart, ShoppingBag, Check, Plus, Minus, ArrowLeft, ArrowRight, ShieldCheck, HelpCircle, RefreshCw, Upload, X, Trash2, User, Camera, RotateCw, Sparkles } from 'lucide-react';
 import { ShopContext } from '../context/ShopContext';
 import { useGetProductDetailsQuery, useGetProductsQuery, useGetProductReviewsQuery, useAddReviewMutation, useDeleteReviewMutation, useUploadReviewImagesMutation } from '../services/productApi';
 import ProductCard from '../components/ProductCard';

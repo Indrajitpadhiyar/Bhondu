@@ -113,7 +113,9 @@ export const AdminProvider = ({ children }) => {
         name: newProduct.name,
         price: Number(newProduct.price),
         salePrice: newProduct.salePrice ? Number(newProduct.salePrice) : null,
-        images: newProduct.images || ["https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop"],
+        images: (newProduct.images && newProduct.images.length > 0) 
+          ? newProduct.images 
+          : ["https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop"],
         gender: newProduct.gender,
         category: newProduct.category,
         subcategory: newProduct.subcategory || "New Category",
@@ -121,6 +123,7 @@ export const AdminProvider = ({ children }) => {
         colors: newProduct.colors || ["#111111"],
         description: newProduct.description,
         stock: Number(newProduct.stock || 20),
+        tags: newProduct.tags ? (typeof newProduct.tags === 'string' ? newProduct.tags.split(',').map(t => t.trim()).filter(Boolean) : newProduct.tags) : [],
         shippingCost: newProduct.shippingCost ? Number(newProduct.shippingCost) : 99
       };
       await createProduct(formatted).unwrap();

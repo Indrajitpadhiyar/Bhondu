@@ -28,6 +28,7 @@ export default function AdminProducts() {
   const navigate = useNavigate();
   const [uploadProductImages] = useUploadProductImagesMutation();
   const [isUploadingImages, setIsUploadingImages] = useState(false);
+  const [imageUrlInput, setImageUrlInput] = useState('');
 
   // Search & Filter state
   const [search, setSearch] = useState('');
@@ -47,7 +48,13 @@ export default function AdminProducts() {
   // Add Product Modal
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingProductId, setEditingProductId] = useState(null);
-  
+  const [deleteConfirm, setDeleteConfirm] = useState({
+    isOpen: false,
+    productId: null,
+    productName: '',
+    isBulk: false
+  });
+
   // Form State
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -164,8 +171,22 @@ export default function AdminProducts() {
 
   // Bulk Actions
   const handleBulkDelete = () => {
-    selectedIds.forEach(id => deleteProduct(id));
-    setSelectedIds([]);
+    setDeleteConfirm({
+      isOpen: true,
+      productId: null,
+      productName: `${selectedIds.length} selected products`,
+      isBulk: true
+    });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteConfirm.isBulk) {
+      selectedIds.forEach(id => deleteProduct(id));
+      setSelectedIds([]);
+    } else {
+      deleteProduct(deleteConfirm.productId);
+    }
+    setDeleteConfirm({ isOpen: false, productId: null, productName: '', isBulk: false });
   };
 
   // Handle Form Submission
@@ -176,9 +197,16 @@ export default function AdminProducts() {
       return;
     }
 
+    // Capture any pending URL in the input box
+    let currentImageUrls = [...newProduct.imageUrls];
+    const trimmedInput = imageUrlInput.trim();
+    if (trimmedInput) {
+      currentImageUrls.push(trimmedInput);
+    }
+
     // Default placeholder images if none specified
-    const images = newProduct.imageUrls.length > 0
-      ? newProduct.imageUrls
+    const images = currentImageUrls.length > 0
+      ? currentImageUrls
       : ["https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop"];
 
     const formattedProduct = {
@@ -220,6 +248,7 @@ export default function AdminProducts() {
       shippingCost: '99'
     });
 
+    setImageUrlInput('');
     setEditingProductId(null);
     setIsAddOpen(false);
   };
@@ -528,12 +557,19 @@ export default function AdminProducts() {
                             <Edit className="w-3.5 h-3.5" />
                           </button>
                           <button
-                            onClick={() => deleteProduct(product.id)}
-                            className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-red-50 dark:hover:bg-red-950/20 text-zinc-400 hover:text-red-600"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                             onClick={() => {
+                               setDeleteConfirm({
+                                 isOpen: true,
+                                 productId: product.id,
+                                 productName: product.name,
+                                 isBulk: false
+                               });
+                             }}
+                             className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-red-50 dark:hover:bg-red-950/20 text-zinc-400 hover:text-red-600"
+                             title="Delete"
+                           >
+                             <Trash2 className="w-3.5 h-3.5" />
+                           </button>
                         </div>
                       </td>
                     </motion.tr>
@@ -786,19 +822,20 @@ export default function AdminProducts() {
                     <div className="flex gap-2">
                       <input
                         type="text"
-                        id="paste-image-url-input"
                         placeholder="e.g. https://images.unsplash.com/photo-..."
                         className="flex-1 text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 outline-none focus:border-zinc-400"
+                        value={imageUrlInput}
+                        onChange={(e) => setImageUrlInput(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             e.preventDefault();
-                            const val = e.target.value.trim();
+                            const val = imageUrlInput.trim();
                             if (val) {
                               setNewProduct(prev => ({
                                 ...prev,
                                 imageUrls: [...prev.imageUrls, val]
                               }));
-                              e.target.value = '';
+                              setImageUrlInput('');
                             }
                           }
                         }}
@@ -806,13 +843,13 @@ export default function AdminProducts() {
                       <button
                         type="button"
                         onClick={() => {
-                          const input = document.getElementById('paste-image-url-input');
-                          if (input && input.value.trim()) {
+                          const val = imageUrlInput.trim();
+                          if (val) {
                             setNewProduct(prev => ({
                               ...prev,
-                              imageUrls: [...prev.imageUrls, input.value.trim()]
+                              imageUrls: [...prev.imageUrls, val]
                             }));
-                            input.value = '';
+                            setImageUrlInput('');
                           }
                         }}
                         className="px-4 py-2.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 rounded-lg text-xs font-bold hover:bg-zinc-850 dark:hover:bg-zinc-100 transition-colors border-0 cursor-pointer"
@@ -908,6 +945,59 @@ export default function AdminProducts() {
               </form>
             </motion.div>
           </>
+        )}
+      </AnimatePresence>
+
+      {/* Custom Confirmation Modal */}
+      <AnimatePresence>
+        {deleteConfirm.isOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-[100]">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setDeleteConfirm(prev => ({ ...prev, isOpen: false }))}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+              className="relative bg-[#F8F7F4] dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl text-center space-y-4 z-10"
+            >
+              <div className="mx-auto w-12 h-12 rounded-full bg-red-50 dark:bg-red-950/20 flex items-center justify-center">
+                <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+              </div>
+              
+              <div className="space-y-1">
+                <h3 className="text-base font-bold font-luxury-serif text-zinc-900 dark:text-zinc-100">
+                  Confirm Deletion
+                </h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                  Are you sure you want to permanently delete <strong className="text-zinc-850 dark:text-zinc-200">"{deleteConfirm.productName}"</strong>? This action is irreversible.
+                </p>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setDeleteConfirm(prev => ({ ...prev, isOpen: false }))}
+                  className="flex-1 py-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs font-semibold hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmDelete}
+                  className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold shadow transition-colors"
+                >
+                  Confirm Delete
+                </button>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 

@@ -12,6 +12,7 @@ import {
   Globe,
   Settings,
   ShieldCheck,
+  Image,
   ChevronRight,
   ChevronDown,
   Menu,
@@ -187,6 +188,11 @@ export default function AdminLayout() {
         { name: 'Testimonials', path: '/admin/cms?tab=testimonials' },
         { name: 'Lookbook Gallery', path: '/admin/cms?tab=lookbook' }
       ]
+    },
+    {
+      name: 'Media Manager',
+      icon: Image,
+      path: '/admin/media'
     },
     {
       name: 'Users',
@@ -662,6 +668,7 @@ export default function AdminLayout() {
                   { label: "View Orders", path: "/admin/orders" },
                   { label: "View Customer list", path: "/admin/customers" },
                   { label: "Coupons & Marketing", path: "/admin/marketing" },
+                  { label: "Media Manager & Optimization", path: "/admin/media" },
                   { label: "General Settings", path: "/admin/settings" }
                 ].filter(cmd => cmd.label.toLowerCase().includes(searchQuery.toLowerCase())).map((cmd, idx) => (
                   <button

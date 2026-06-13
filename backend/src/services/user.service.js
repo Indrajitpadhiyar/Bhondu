@@ -20,7 +20,7 @@ class UserService {
     // Handle avatar upload if a new file is provided
     if (avatarFile) {
       // Upload new avatar buffer
-      const uploadResult = await UploadService.uploadImageBuffer(avatarFile.buffer, 'avatars');
+      const uploadResult = await UploadService.uploadImageBuffer(avatarFile.buffer, 'avatars', avatarFile.originalname, userId);
       
       // Delete old avatar from Cloudinary if it exists and isn't the default
       if (user.avatar && user.avatar.publicId) {

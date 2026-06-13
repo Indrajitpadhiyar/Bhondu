@@ -132,7 +132,7 @@ const Navbar = () => {
       navigate('/login', { state: { from: location } });
       return;
     }
-    
+
     setIsCartOpen(false);
     setIsCheckoutOpen(true);
     setAppliedCoupon(null);
@@ -199,7 +199,8 @@ const Navbar = () => {
                 quantity: item.quantity,
                 size: item.size,
                 color: item.color,
-                image: item.image
+                image: item.image,
+                designId: item.designId || null
               })),
               shippingAddress: {
                 name: selectedAddress.name,
@@ -215,7 +216,7 @@ const Navbar = () => {
               paymentStatus: 'Paid',
               paymentMethod: 'Online'
             };
-            
+
             await createOrder(orderData).unwrap();
             clearCart();
             setIsCheckoutOpen(false);
@@ -255,7 +256,8 @@ const Navbar = () => {
             quantity: item.quantity,
             size: item.size,
             color: item.color,
-            image: item.image
+            image: item.image,
+            designId: item.designId || null
           })),
           shippingAddress: {
             name: selectedAddress.name,
@@ -317,12 +319,12 @@ const Navbar = () => {
   const shippingPrice = selectedShippingMethod
     ? selectedShippingMethod.price
     : (displayCartItems.length > 0
-        ? displayCartItems.reduce((max, item) => {
-            const product = products.find(p => p.id === item.id);
-            const itemShipping = product?.shippingCost ?? 99;
-            return Math.max(max, itemShipping);
-          }, 0)
-        : 0);
+      ? displayCartItems.reduce((max, item) => {
+        const product = products.find(p => p.id === item.id);
+        const itemShipping = product?.shippingCost ?? 99;
+        return Math.max(max, itemShipping);
+      }, 0)
+      : 0);
 
   const discountAmount = appliedCoupon
     ? appliedCoupon.type === 'Percentage'
@@ -411,6 +413,7 @@ const Navbar = () => {
                 >
                   Shoes
                 </button>
+ 
               </div>
             </div>
 
@@ -559,6 +562,7 @@ const Navbar = () => {
                 <button onClick={() => handleCategoryNav('T-Shirts')} className="text-left hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800 cursor-pointer">T-Shirts</button>
                 <button onClick={() => handleCategoryNav('Shirts')} className="text-left hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800 cursor-pointer">Shirts</button>
                 <button onClick={() => handleCategoryNav('Shoes')} className="text-left hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800 cursor-pointer">Shoes</button>
+                <Link to="/designer/6a2d7df6446e872af60b38df" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800">Customize</Link>
               </div>
 
               {/* Mobile Drawer Actions (Wishlist, Dark Mode, Profile) */}
@@ -938,7 +942,7 @@ const Navbar = () => {
 
               {/* Main Content Area split into 2 columns */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 flex-1 overflow-hidden">
-                
+
                 {/* Left Column: Forms and selection */}
                 <div className="lg:col-span-7 p-6 sm:p-8 overflow-y-auto space-y-6">
                   {isAddingNewAddress ? (
@@ -1102,11 +1106,10 @@ const Navbar = () => {
                           {savedAddresses.map((addr) => (
                             <label
                               key={addr._id}
-                              className={`p-3 border rounded-sm flex items-start gap-3 cursor-pointer transition-all ${
-                                selectedAddressId === addr._id
+                              className={`p-3 border rounded-sm flex items-start gap-3 cursor-pointer transition-all ${selectedAddressId === addr._id
                                   ? 'border-accent bg-accent/[0.02] shadow-sm'
                                   : 'border-secondary dark:border-zinc-800 hover:border-accent/40 bg-zinc-50/50 dark:bg-zinc-950/10'
-                              }`}
+                                }`}
                             >
                               <input
                                 type="radio"
@@ -1142,27 +1145,24 @@ const Navbar = () => {
                                 type="button"
                                 onClick={() => setSelectedShippingMethodId(sm.id)}
                                 disabled={isProcessing}
-                                className={`w-full p-3 border rounded-sm flex items-center justify-between transition-all cursor-pointer bg-transparent text-left ${
-                                  (selectedShippingMethodId === sm.id || (!selectedShippingMethodId && activeShippingMethods[0].id === sm.id))
+                                className={`w-full p-3 border rounded-sm flex items-center justify-between transition-all cursor-pointer bg-transparent text-left ${(selectedShippingMethodId === sm.id || (!selectedShippingMethodId && activeShippingMethods[0].id === sm.id))
                                     ? 'border-accent bg-accent/[0.02]'
                                     : 'border-secondary dark:border-zinc-800 text-zinc-400 hover:border-accent/40'
-                                }`}
+                                  }`}
                               >
                                 <div className="flex items-center gap-2.5">
-                                  <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${
-                                    (selectedShippingMethodId === sm.id || (!selectedShippingMethodId && activeShippingMethods[0].id === sm.id))
+                                  <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${(selectedShippingMethodId === sm.id || (!selectedShippingMethodId && activeShippingMethods[0].id === sm.id))
                                       ? 'border-accent'
                                       : 'border-zinc-400'
-                                  }`}>
+                                    }`}>
                                     {(selectedShippingMethodId === sm.id || (!selectedShippingMethodId && activeShippingMethods[0].id === sm.id)) && (
                                       <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                                     )}
                                   </div>
-                                  <span className={`font-bold uppercase tracking-wider text-[9px] ${
-                                    (selectedShippingMethodId === sm.id || (!selectedShippingMethodId && activeShippingMethods[0].id === sm.id))
+                                  <span className={`font-bold uppercase tracking-wider text-[9px] ${(selectedShippingMethodId === sm.id || (!selectedShippingMethodId && activeShippingMethods[0].id === sm.id))
                                       ? 'text-zinc-850 dark:text-zinc-150'
                                       : 'text-zinc-550 dark:text-zinc-450'
-                                  }`}>{sm.name}</span>
+                                    }`}>{sm.name}</span>
                                 </div>
                                 <span className="font-bold text-xs text-accent">₹{sm.price.toFixed(2)}</span>
                               </button>
@@ -1180,11 +1180,10 @@ const Navbar = () => {
                           <button
                             onClick={() => setPaymentMethod('Razorpay')}
                             disabled={isProcessing}
-                            className={`p-4 border rounded-sm flex flex-col items-center justify-center gap-2 transition-all cursor-pointer bg-transparent ${
-                              paymentMethod === 'Razorpay'
+                            className={`p-4 border rounded-sm flex flex-col items-center justify-center gap-2 transition-all cursor-pointer bg-transparent ${paymentMethod === 'Razorpay'
                                 ? 'border-accent text-accent bg-accent/[0.02]'
                                 : 'border-secondary dark:border-zinc-800 text-zinc-400 hover:border-accent/40 hover:text-zinc-650'
-                            }`}
+                              }`}
                           >
                             <CreditCard className="w-5 h-5" />
                             <span className="font-bold tracking-wider uppercase text-[9px]">Pay Online (Razorpay)</span>
@@ -1192,11 +1191,10 @@ const Navbar = () => {
                           <button
                             onClick={() => setPaymentMethod('COD')}
                             disabled={isProcessing}
-                            className={`p-4 border rounded-sm flex flex-col items-center justify-center gap-2 transition-all cursor-pointer bg-transparent ${
-                              paymentMethod === 'COD'
+                            className={`p-4 border rounded-sm flex flex-col items-center justify-center gap-2 transition-all cursor-pointer bg-transparent ${paymentMethod === 'COD'
                                 ? 'border-accent text-accent bg-accent/[0.02]'
                                 : 'border-secondary dark:border-zinc-800 text-zinc-400 hover:border-accent/40 hover:text-zinc-650'
-                            }`}
+                              }`}
                           >
                             <Truck className="w-5 h-5" />
                             <span className="font-bold tracking-wider uppercase text-[9px]">Cash on Delivery</span>

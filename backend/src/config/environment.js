@@ -37,6 +37,15 @@ const envSchema = z.object({
   // Admin Credentials
   ADMIN_EMAIL: z.string().email().default('idrtech23@gmail.com'),
   ADMIN_PASWORD: z.string().default('IDRtech@23'),
+  
+  // Supabase Configuration
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_ANON_KEY: z.string().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
+
+  // Stripe Configuration
+  STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+  STRIPE_SECRET_KEY: z.string().optional(),
 });
 
 const parseEnv = () => {

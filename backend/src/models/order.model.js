@@ -12,6 +12,11 @@ const orderItemSchema = new mongoose.Schema({
   size: String,
   color: String,
   image: String,
+  designId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'SavedDesign',
+    default: null,
+  },
 });
 
 const orderSchema = new mongoose.Schema({

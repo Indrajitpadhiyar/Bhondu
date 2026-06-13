@@ -2165,3 +2165,993 @@
 {"isOperational":true,"level":"error","message":"💥 Error: Invalid input data. Path `phone` is required.. Path `name` is required.. Path `phone` is required.. Path `name` is required.","stack":"Error: Invalid input data. Path `phone` is required.. Path `name` is required.. Path `phone` is required.. Path `name` is required.\n    at handleValidationErrorDB (file:///D:/MiniProjects/bhondu/backend/src/middlewares/error.middleware.js:22:10)\n    at errorHandler (file:///D:/MiniProjects/bhondu/backend/src/middlewares/error.middleware.js:66:49)\n    at Layer.handleError (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:116:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:340:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:688:15\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:276:14)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:688:15","status":"fail","statusCode":400,"timestamp":"2026-06-11 11:49:50"}
 {"level":"info","message":"PATCH /api/v1/user/profile - 400 (6096ms)","timestamp":"2026-06-11 11:49:50"}
 {"level":"info","message":"GET /api/v1/user/profile - 200 (109ms)","timestamp":"2026-06-11 11:49:51"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-11 11:51:46"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-11 11:51:46"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-11 11:51:47"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-11 11:51:47"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-11 11:51:49"}
+{"level":"info","message":"PATCH /api/v1/user/profile - 200 (5971ms)","timestamp":"2026-06-11 11:52:47"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (129ms)","timestamp":"2026-06-11 11:52:47"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-11 17:49:30"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-11 17:49:30"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-11 17:49:32"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-11 17:49:33"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-11 17:49:34"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 17:55:14"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-11 17:58:14"}
+{"level":"info","message":"GET /api/v1/orders - 401 (37ms)","timestamp":"2026-06-11 17:58:14"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 17:58:15"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 17:58:15"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (767ms)","timestamp":"2026-06-11 17:58:15"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 17:58:15"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 17:58:15"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1005ms)","timestamp":"2026-06-11 17:58:15"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 17:58:15"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 17:58:15"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (780ms)","timestamp":"2026-06-11 17:58:15"}
+{"level":"info","message":"GET /api/v1/products - 200 (3138ms)","timestamp":"2026-06-11 17:58:17"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 200 (1647ms)","timestamp":"2026-06-11 17:59:31"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 18:01:15"}
+{"level":"info","message":"GET /api/v1/products/6a2a3f11ba4725ce81fd19bc/reviews?page=1&limit=10 - 200 (856ms)","timestamp":"2026-06-11 18:03:26"}
+{"level":"info","message":"GET /api/v1/products/6a2a3f11ba4725ce81fd19bc - 200 (877ms)","timestamp":"2026-06-11 18:03:26"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=T-Shirts - 200 (599ms)","timestamp":"2026-06-11 18:03:27"}
+{"level":"info","message":"POST /api/v1/auth/login - 200 (319ms)","timestamp":"2026-06-11 18:03:44"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (125ms)","timestamp":"2026-06-11 18:03:44"}
+{"level":"info","message":"GET /api/v1/orders - 200 (858ms)","timestamp":"2026-06-11 18:03:45"}
+{"level":"info","message":"DELETE /api/v1/products/6a294b82716cdc4e032ce63c - 204 (1302ms)","timestamp":"2026-06-11 18:04:24"}
+{"level":"error","message":"💥 Error: No product found with that ID","stack":"Error: No product found with that ID\n    at file:///D:/MiniProjects/bhondu/backend/src/controllers/product.controller.js:116:17\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)","timestamp":"2026-06-11 18:04:24"}
+{"level":"info","message":"DELETE /api/v1/products/6a294b82716cdc4e032ce63c - 404 (119ms)","timestamp":"2026-06-11 18:04:24"}
+{"level":"info","message":"GET /api/v1/products - 200 (1688ms)","timestamp":"2026-06-11 18:04:25"}
+{"level":"info","message":"GET /api/v1/products - 304 (846ms)","timestamp":"2026-06-11 18:04:26"}
+{"level":"info","message":"DELETE /api/v1/products/6a294725c4373bf11104a01c - 204 (1043ms)","timestamp":"2026-06-11 18:04:27"}
+{"level":"info","message":"DELETE /api/v1/products/6a2a3f11ba4725ce81fd19bc - 204 (414ms)","timestamp":"2026-06-11 18:04:28"}
+{"level":"info","message":"GET /api/v1/products - 200 (1035ms)","timestamp":"2026-06-11 18:04:28"}
+{"level":"info","message":"GET /api/v1/products - 200 (790ms)","timestamp":"2026-06-11 18:04:29"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 18:07:16"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 18:13:28"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 18:19:39"}
+{"level":"error","message":"💥 Error: No product found with that ID","stack":"Error: No product found with that ID\n    at file:///D:/MiniProjects/bhondu/backend/src/controllers/product.controller.js:94:17\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)","timestamp":"2026-06-11 18:21:30"}
+{"level":"info","message":"GET /api/v1/products/6a2a3f11ba4725ce81fd19bc - 404 (643ms)","timestamp":"2026-06-11 18:21:30"}
+{"level":"info","message":"GET /api/v1/products/6a2a3f11ba4725ce81fd19bc/reviews?page=1&limit=10 - 304 (1136ms)","timestamp":"2026-06-11 18:21:31"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 200 (1108ms)","timestamp":"2026-06-11 18:21:34"}
+{"level":"error","message":"💥 Error: No product found with that ID","stack":"Error: No product found with that ID\n    at file:///D:/MiniProjects/bhondu/backend/src/controllers/product.controller.js:94:17\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)","timestamp":"2026-06-11 18:21:39"}
+{"level":"info","message":"GET /api/v1/products/6a2a3f11ba4725ce81fd19bc - 404 (65ms)","timestamp":"2026-06-11 18:21:39"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 200 (121ms)","timestamp":"2026-06-11 18:21:41"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 200 (972ms)","timestamp":"2026-06-11 18:21:42"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 200 (750ms)","timestamp":"2026-06-11 18:21:43"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 18:25:40"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 18:31:31"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 18:37:22"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-11 18:40:20"}
+{"level":"info","message":"GET /api/v1/orders - 401 (7ms)","timestamp":"2026-06-11 18:40:20"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (623ms)","timestamp":"2026-06-11 18:40:21"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 18:40:21"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 18:40:21"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (854ms)","timestamp":"2026-06-11 18:40:21"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (132ms)","timestamp":"2026-06-11 18:40:21"}
+{"level":"error","message":"💥 Error: No matching document found for id \"6a245f00aa98a351b633491a\" version 135 modifiedPaths \"refreshTokens\"","stack":"VersionError: No matching document found for id \"6a245f00aa98a351b633491a\" version 135 modifiedPaths \"refreshTokens\"\n    at generateVersionError (D:\\MiniProjects\\bhondu\\backend\\node_modules\\mongoose\\lib\\model.js:590:10)\n    at model.save (D:\\MiniProjects\\bhondu\\backend\\node_modules\\mongoose\\lib\\model.js:652:30)\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:149:18)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 18:40:21"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 500 (935ms)","timestamp":"2026-06-11 18:40:21"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (126ms)","timestamp":"2026-06-11 18:40:21"}
+{"level":"info","message":"GET /api/v1/products - 304 (1449ms)","timestamp":"2026-06-11 18:40:22"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1544ms)","timestamp":"2026-06-11 18:40:23"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (857ms)","timestamp":"2026-06-11 18:40:24"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 18:41:55"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 18:41:55"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (106ms)","timestamp":"2026-06-11 18:41:55"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 18:41:55"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 18:41:55"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (107ms)","timestamp":"2026-06-11 18:41:55"}
+{"level":"info","message":"GET /api/v1/orders - 304 (856ms)","timestamp":"2026-06-11 18:41:56"}
+{"level":"info","message":"GET /api/v1/products - 304 (1124ms)","timestamp":"2026-06-11 18:41:56"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (1161ms)","timestamp":"2026-06-11 18:41:57"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1284ms)","timestamp":"2026-06-11 18:41:57"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 18:43:24"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 18:44:12"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 18:44:12"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (452ms)","timestamp":"2026-06-11 18:44:12"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 18:44:12"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 18:44:12"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (445ms)","timestamp":"2026-06-11 18:44:12"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (176ms)","timestamp":"2026-06-11 18:44:12"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (908ms)","timestamp":"2026-06-11 18:44:13"}
+{"level":"info","message":"GET /api/v1/orders - 200 (1633ms)","timestamp":"2026-06-11 18:44:13"}
+{"level":"info","message":"GET /api/v1/products - 200 (2164ms)","timestamp":"2026-06-11 18:44:14"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (1228ms)","timestamp":"2026-06-11 18:44:15"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 18:49:15"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 18:55:06"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 19:01:07"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-11 19:06:26"}
+{"level":"info","message":"GET /api/v1/orders - 401 (3ms)","timestamp":"2026-06-11 19:06:26"}
+{"level":"info","message":"GET /api/v1/products - 304 (4006ms)","timestamp":"2026-06-11 19:06:30"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 19:06:30"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 19:06:30"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (4008ms)","timestamp":"2026-06-11 19:06:30"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 19:06:30"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 19:06:30"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (4297ms)","timestamp":"2026-06-11 19:06:30"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-11 19:06:31"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-11 19:06:31"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (4463ms)","timestamp":"2026-06-11 19:06:31"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (90ms)","timestamp":"2026-06-11 19:06:31"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (836ms)","timestamp":"2026-06-11 19:06:32"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (976ms)","timestamp":"2026-06-11 19:06:34"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 19:06:59"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 19:13:00"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 19:18:51"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 19:24:42"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (2848ms)","timestamp":"2026-06-11 19:29:59"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 19:30:33"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 19:36:24"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 19:42:15"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 19:48:07"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 19:53:58"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 19:59:49"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 20:07:49"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 20:13:31"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 20:19:22"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 20:25:13"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 20:31:04"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-11 20:36:56"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-12 15:09:36"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-12 15:09:36"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-12 15:09:38"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-12 15:09:38"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-12 15:09:39"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 15:15:19"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 15:21:10"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 15:27:01"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 15:58:12"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-12 16:00:18"}
+{"level":"info","message":"GET /api/v1/orders - 401 (27ms)","timestamp":"2026-06-12 16:00:18"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-12 16:00:19"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-12 16:00:19"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (778ms)","timestamp":"2026-06-12 16:00:19"}
+{"level":"error","message":"💥 Error: No matching document found for id \"6a245f00aa98a351b633491a\" version 141 modifiedPaths \"refreshTokens\"","stack":"VersionError: No matching document found for id \"6a245f00aa98a351b633491a\" version 141 modifiedPaths \"refreshTokens\"\n    at generateVersionError (D:\\MiniProjects\\bhondu\\backend\\node_modules\\mongoose\\lib\\model.js:590:10)\n    at model.save (D:\\MiniProjects\\bhondu\\backend\\node_modules\\mongoose\\lib\\model.js:652:30)\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:149:18)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-12 16:00:19"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 500 (815ms)","timestamp":"2026-06-12 16:00:19"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-12 16:00:19"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-12 16:00:19"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (738ms)","timestamp":"2026-06-12 16:00:19"}
+{"level":"info","message":"GET /api/v1/products - 200 (2356ms)","timestamp":"2026-06-12 16:00:20"}
+{"level":"info","message":"GET /api/v1/products?gender=women - 200 (44ms)","timestamp":"2026-06-12 16:01:14"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 200 (1102ms)","timestamp":"2026-06-12 16:01:21"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 200 (65ms)","timestamp":"2026-06-12 16:01:30"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 200 (126ms)","timestamp":"2026-06-12 16:01:30"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 200 (1114ms)","timestamp":"2026-06-12 16:01:31"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 16:03:55"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 16:09:56"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 16:15:47"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (1147ms)","timestamp":"2026-06-12 16:17:42"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1728ms)","timestamp":"2026-06-12 16:17:43"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (767ms)","timestamp":"2026-06-12 16:17:44"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (54ms)","timestamp":"2026-06-12 16:18:16"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (134ms)","timestamp":"2026-06-12 16:18:17"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 16:21:38"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (865ms)","timestamp":"2026-06-12 16:24:03"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1371ms)","timestamp":"2026-06-12 16:24:04"}
+{"level":"info","message":"POST /api/v1/auth/login - 200 (326ms)","timestamp":"2026-06-12 16:24:44"}
+{"level":"info","message":"GET /api/v1/user/profile - 200 (151ms)","timestamp":"2026-06-12 16:24:44"}
+{"level":"info","message":"GET /api/v1/orders - 304 (643ms)","timestamp":"2026-06-12 16:24:45"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 200 (6840ms)","timestamp":"2026-06-12 16:25:19"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 200 (6783ms)","timestamp":"2026-06-12 16:26:37"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 16:27:20"}
+{"level":"info","message":"PATCH /api/v1/products/6a2b93451d98390fc30cba56 - 200 (681ms)","timestamp":"2026-06-12 16:29:13"}
+{"level":"info","message":"GET /api/v1/products - 200 (1164ms)","timestamp":"2026-06-12 16:29:14"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (631ms)","timestamp":"2026-06-12 16:29:24"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1013ms)","timestamp":"2026-06-12 16:29:25"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 200 (683ms)","timestamp":"2026-06-12 16:29:25"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 200 (58ms)","timestamp":"2026-06-12 16:29:26"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (121ms)","timestamp":"2026-06-12 16:29:26"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 16:33:11"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (958ms)","timestamp":"2026-06-12 16:34:48"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1812ms)","timestamp":"2026-06-12 16:34:49"}
+{"level":"info","message":"PATCH /api/v1/products/6a2b93451d98390fc30cba56 - 200 (134ms)","timestamp":"2026-06-12 16:38:25"}
+{"level":"info","message":"GET /api/v1/products - 200 (1105ms)","timestamp":"2026-06-12 16:38:26"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 16:39:02"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 16:44:43"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 16:50:34"}
+{"level":"error","message":"💥 Error: Invalid or expired token. Please log in again.","stack":"Error: Invalid or expired token. Please log in again.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:26:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)","timestamp":"2026-06-12 16:51:14"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 401 (16ms)","timestamp":"2026-06-12 16:51:14"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (532ms)","timestamp":"2026-06-12 16:51:15"}
+{"level":"info","message":"POST /api/v1/upload/multiple - 200 (6808ms)","timestamp":"2026-06-12 16:51:22"}
+{"level":"info","message":"PATCH /api/v1/products/6a2b93451d98390fc30cba56 - 200 (160ms)","timestamp":"2026-06-12 16:51:30"}
+{"level":"info","message":"GET /api/v1/products - 200 (1395ms)","timestamp":"2026-06-12 16:51:32"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (654ms)","timestamp":"2026-06-12 16:52:19"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (956ms)","timestamp":"2026-06-12 16:52:19"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 200 (677ms)","timestamp":"2026-06-12 16:52:20"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 200 (63ms)","timestamp":"2026-06-12 16:53:28"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (103ms)","timestamp":"2026-06-12 16:53:28"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (109ms)","timestamp":"2026-06-12 16:54:31"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1014ms)","timestamp":"2026-06-12 16:54:32"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 16:56:25"}
+{"level":"info","message":"POST /api/v1/products - 201 (613ms)","timestamp":"2026-06-12 16:58:31"}
+{"level":"info","message":"GET /api/v1/products - 200 (1483ms)","timestamp":"2026-06-12 16:58:32"}
+{"level":"info","message":"DELETE /api/v1/products/6a2bed5fd8a2bc54dd2ef12c - 204 (107ms)","timestamp":"2026-06-12 16:58:49"}
+{"level":"info","message":"GET /api/v1/products - 200 (1336ms)","timestamp":"2026-06-12 16:58:50"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-12 17:02:06"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 09:10:51"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 09:10:51"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 09:10:56"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 09:10:56"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-13 09:10:58"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 09:11:49"}
+{"level":"info","message":"GET /api/v1/orders - 401 (55ms)","timestamp":"2026-06-13 09:11:49"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 09:11:49"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 09:11:49"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (570ms)","timestamp":"2026-06-13 09:11:49"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 09:11:49"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 09:11:49"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (495ms)","timestamp":"2026-06-13 09:11:49"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 09:11:50"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 09:11:50"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (841ms)","timestamp":"2026-06-13 09:11:50"}
+{"level":"info","message":"GET /api/v1/products - 304 (1822ms)","timestamp":"2026-06-13 09:11:50"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 09:16:39"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 09:22:29"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 09:35:41"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 09:50:33"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 09:56:18"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 14:23:32"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 14:23:32"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 14:23:35"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 14:23:35"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-13 14:23:37"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 14:27:30"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 14:27:30"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (135ms)","timestamp":"2026-06-13 14:27:30"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 14:27:30"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 14:27:30"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (205ms)","timestamp":"2026-06-13 14:27:30"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 14:29:27"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 14:35:08"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 14:41:00"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 14:46:51"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 14:52:42"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 14:58:33"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 15:04:25"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 15:10:16"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:15:16"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:15:16"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:15:17"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:15:17"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:15:19"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:15:19"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:15:19"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:15:19"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:15:20"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:15:27"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:15:27"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:15:28"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:15:28"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:15:30"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:15:35"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:15:35"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:15:35"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:15:35"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:15:36"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 200 (2247ms)","timestamp":"2026-06-13 16:15:46"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:15:48"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:15:48"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:15:49"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:15:49"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:15:50"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 200 (2081ms)","timestamp":"2026-06-13 16:15:51"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 200 (3382ms)","timestamp":"2026-06-13 16:15:52"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:15:54"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:15:54"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:15:54"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:15:54"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:15:56"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 200 (3513ms)","timestamp":"2026-06-13 16:15:57"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:16:02"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:16:02"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:16:02"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:16:02"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:16:03"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:16:07"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:16:07"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:16:07"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:16:07"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:16:09"}
+{"level":"info","message":"GET /api/v1/products?gender=women - 200 (2378ms)","timestamp":"2026-06-13 16:16:09"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:16:17"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:16:17"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:16:17"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:16:17"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:16:18"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:16:21"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:16:21"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:16:21"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:16:21"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:16:24"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:16:27"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:16:27"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:16:28"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:16:28"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:16:31"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:16:33"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:16:33"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:16:33"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:16:34"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:16:35"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:16:39"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:16:39"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:16:39"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:16:39"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:16:41"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:16:44"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:16:44"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:16:44"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:16:44"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:16:45"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:16:49"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:16:49"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:16:49"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:16:49"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:16:51"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (185ms)","timestamp":"2026-06-13 16:17:25"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1167ms)","timestamp":"2026-06-13 16:17:26"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (908ms)","timestamp":"2026-06-13 16:17:27"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 16:19:13"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 16:19:13"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 16:19:13"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 16:19:13"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-13 16:19:17"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (376ms)","timestamp":"2026-06-13 16:21:34"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (905ms)","timestamp":"2026-06-13 16:21:34"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (1668ms)","timestamp":"2026-06-13 16:21:36"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 16:22:07"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 16:22:07"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 16:22:07"}
+{"level":"info","message":"GET /api/v1/orders - 401 (26ms)","timestamp":"2026-06-13 16:22:07"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 16:22:07"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 16:22:07"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (333ms)","timestamp":"2026-06-13 16:22:07"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 16:22:07"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 16:22:07"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (352ms)","timestamp":"2026-06-13 16:22:07"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 16:22:07"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 16:22:07"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (187ms)","timestamp":"2026-06-13 16:22:07"}
+{"level":"info","message":"GET /api/v1/products - 200 (1959ms)","timestamp":"2026-06-13 16:22:09"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (2138ms)","timestamp":"2026-06-13 16:22:09"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (84ms)","timestamp":"2026-06-13 16:22:12"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (157ms)","timestamp":"2026-06-13 16:22:12"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (1459ms)","timestamp":"2026-06-13 16:22:13"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (102ms)","timestamp":"2026-06-13 16:22:14"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (107ms)","timestamp":"2026-06-13 16:22:14"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 200 (98ms)","timestamp":"2026-06-13 16:22:14"}
+{"level":"info","message":"GET /api/v1/fonts - 200 (79ms)","timestamp":"2026-06-13 16:22:14"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (83ms)","timestamp":"2026-06-13 16:22:15"}
+{"level":"info","message":"GET /api/v1/graphics - 200 (60ms)","timestamp":"2026-06-13 16:22:15"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (65ms)","timestamp":"2026-06-13 16:22:15"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 200 (69ms)","timestamp":"2026-06-13 16:22:15"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (77ms)","timestamp":"2026-06-13 16:22:15"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (99ms)","timestamp":"2026-06-13 16:22:15"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 16:25:07"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 16:30:48"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 16:36:40"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 16:42:41"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 16:48:32"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 16:54:23"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 17:00:14"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 17:43:11"}
+{"level":"info","message":"GET /api/v1/orders - 401 (7ms)","timestamp":"2026-06-13 17:43:11"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 17:43:12"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 17:43:12"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (729ms)","timestamp":"2026-06-13 17:43:12"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 17:43:12"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 17:43:12"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1101ms)","timestamp":"2026-06-13 17:43:12"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 17:43:12"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 17:43:12"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1093ms)","timestamp":"2026-06-13 17:43:12"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (74ms)","timestamp":"2026-06-13 17:43:13"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (78ms)","timestamp":"2026-06-13 17:43:13"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (81ms)","timestamp":"2026-06-13 17:43:13"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (54ms)","timestamp":"2026-06-13 17:43:13"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (89ms)","timestamp":"2026-06-13 17:43:13"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (69ms)","timestamp":"2026-06-13 17:43:13"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (82ms)","timestamp":"2026-06-13 17:43:13"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (53ms)","timestamp":"2026-06-13 17:43:13"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (64ms)","timestamp":"2026-06-13 17:43:13"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (91ms)","timestamp":"2026-06-13 17:43:13"}
+{"level":"info","message":"GET /api/v1/products - 304 (1936ms)","timestamp":"2026-06-13 17:43:13"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 18:11:37"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 18:11:37"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 18:11:38"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 18:11:38"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-13 18:11:39"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 18:11:56"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 18:11:56"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 18:11:57"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 18:11:57"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-13 18:11:58"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 18:12:02"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 18:12:02"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 18:12:02"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 18:12:02"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-13 18:12:03"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 18:12:16"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 18:12:16"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 18:12:17"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 18:12:17"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-13 18:12:18"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 18:12:21"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 18:12:21"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 18:12:21"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-13 18:12:21"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 18:12:21"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-13 18:12:22"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 18:12:30"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 18:12:30"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 18:12:30"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-13 18:12:30"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 18:12:30"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-13 18:12:31"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 18:12:34"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 18:12:34"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 18:12:35"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-13 18:12:35"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 18:12:35"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-13 18:12:36"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:12:41"}
+{"level":"info","message":"GET /api/v1/orders - 401 (13ms)","timestamp":"2026-06-13 18:12:41"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:12:42"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:12:42"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (398ms)","timestamp":"2026-06-13 18:12:42"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:12:42"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:12:42"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (435ms)","timestamp":"2026-06-13 18:12:42"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (297ms)","timestamp":"2026-06-13 18:12:42"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (347ms)","timestamp":"2026-06-13 18:12:43"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (339ms)","timestamp":"2026-06-13 18:12:43"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (88ms)","timestamp":"2026-06-13 18:12:43"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (75ms)","timestamp":"2026-06-13 18:12:43"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (65ms)","timestamp":"2026-06-13 18:12:43"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (94ms)","timestamp":"2026-06-13 18:12:43"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (66ms)","timestamp":"2026-06-13 18:12:43"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (70ms)","timestamp":"2026-06-13 18:12:43"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (73ms)","timestamp":"2026-06-13 18:12:43"}
+{"level":"info","message":"GET /api/v1/products - 304 (1697ms)","timestamp":"2026-06-13 18:12:43"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:12:56"}
+{"level":"info","message":"GET /api/v1/orders - 401 (5ms)","timestamp":"2026-06-13 18:12:56"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:12:57"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:12:57"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (162ms)","timestamp":"2026-06-13 18:12:57"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:12:57"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:12:57"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (242ms)","timestamp":"2026-06-13 18:12:57"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (111ms)","timestamp":"2026-06-13 18:12:57"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (49ms)","timestamp":"2026-06-13 18:12:57"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (85ms)","timestamp":"2026-06-13 18:12:57"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (68ms)","timestamp":"2026-06-13 18:12:57"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (105ms)","timestamp":"2026-06-13 18:12:57"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (83ms)","timestamp":"2026-06-13 18:12:58"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (70ms)","timestamp":"2026-06-13 18:12:58"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (55ms)","timestamp":"2026-06-13 18:12:58"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (84ms)","timestamp":"2026-06-13 18:12:58"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (76ms)","timestamp":"2026-06-13 18:12:58"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:14:19"}
+{"level":"info","message":"GET /api/v1/orders - 401 (23ms)","timestamp":"2026-06-13 18:14:19"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:14:19"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:14:19"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (166ms)","timestamp":"2026-06-13 18:14:19"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:14:19"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:14:19"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (225ms)","timestamp":"2026-06-13 18:14:19"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (72ms)","timestamp":"2026-06-13 18:14:19"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:14:19"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:14:19"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (209ms)","timestamp":"2026-06-13 18:14:19"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (107ms)","timestamp":"2026-06-13 18:14:19"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (118ms)","timestamp":"2026-06-13 18:14:19"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (55ms)","timestamp":"2026-06-13 18:14:19"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (84ms)","timestamp":"2026-06-13 18:14:19"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (44ms)","timestamp":"2026-06-13 18:14:19"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (70ms)","timestamp":"2026-06-13 18:14:20"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (72ms)","timestamp":"2026-06-13 18:14:20"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (65ms)","timestamp":"2026-06-13 18:14:20"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (83ms)","timestamp":"2026-06-13 18:14:20"}
+{"level":"info","message":"GET /api/v1/products - 304 (1578ms)","timestamp":"2026-06-13 18:14:20"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (65ms)","timestamp":"2026-06-13 18:14:24"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (160ms)","timestamp":"2026-06-13 18:14:24"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (1089ms)","timestamp":"2026-06-13 18:14:25"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (71ms)","timestamp":"2026-06-13 18:14:30"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (54ms)","timestamp":"2026-06-13 18:14:30"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (60ms)","timestamp":"2026-06-13 18:14:30"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (59ms)","timestamp":"2026-06-13 18:14:30"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (76ms)","timestamp":"2026-06-13 18:14:30"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (66ms)","timestamp":"2026-06-13 18:14:30"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (74ms)","timestamp":"2026-06-13 18:14:30"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (61ms)","timestamp":"2026-06-13 18:14:31"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (62ms)","timestamp":"2026-06-13 18:14:31"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (61ms)","timestamp":"2026-06-13 18:14:31"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (827ms)","timestamp":"2026-06-13 18:20:50"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (1370ms)","timestamp":"2026-06-13 18:20:50"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (1904ms)","timestamp":"2026-06-13 18:20:52"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:20:56"}
+{"level":"info","message":"GET /api/v1/orders - 401 (36ms)","timestamp":"2026-06-13 18:20:56"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:20:56"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:20:56"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (281ms)","timestamp":"2026-06-13 18:20:56"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:20:56"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:20:56"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (321ms)","timestamp":"2026-06-13 18:20:56"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (131ms)","timestamp":"2026-06-13 18:20:57"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:20:57"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:20:57"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (862ms)","timestamp":"2026-06-13 18:20:57"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (706ms)","timestamp":"2026-06-13 18:20:57"}
+{"level":"info","message":"GET /api/v1/products - 200 (1767ms)","timestamp":"2026-06-13 18:20:58"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (1819ms)","timestamp":"2026-06-13 18:20:58"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (62ms)","timestamp":"2026-06-13 18:21:02"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (85ms)","timestamp":"2026-06-13 18:21:02"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (84ms)","timestamp":"2026-06-13 18:21:02"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (53ms)","timestamp":"2026-06-13 18:21:03"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (69ms)","timestamp":"2026-06-13 18:21:03"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (91ms)","timestamp":"2026-06-13 18:21:03"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (90ms)","timestamp":"2026-06-13 18:21:03"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (110ms)","timestamp":"2026-06-13 18:21:03"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (99ms)","timestamp":"2026-06-13 18:21:03"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (64ms)","timestamp":"2026-06-13 18:21:03"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (88ms)","timestamp":"2026-06-13 18:22:12"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (166ms)","timestamp":"2026-06-13 18:22:12"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (1231ms)","timestamp":"2026-06-13 18:22:14"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (1320ms)","timestamp":"2026-06-13 18:22:27"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (160ms)","timestamp":"2026-06-13 18:22:29"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1168ms)","timestamp":"2026-06-13 18:22:30"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1053ms)","timestamp":"2026-06-13 18:22:33"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2a43179a7aac22eb601ee7 - 200 (109ms)","timestamp":"2026-06-13 18:22:33"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (74ms)","timestamp":"2026-06-13 18:22:33"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (63ms)","timestamp":"2026-06-13 18:22:33"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (157ms)","timestamp":"2026-06-13 18:22:33"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (640ms)","timestamp":"2026-06-13 18:22:34"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2a43179a7aac22eb601ee7 - 304 (71ms)","timestamp":"2026-06-13 18:22:34"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (69ms)","timestamp":"2026-06-13 18:22:34"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (53ms)","timestamp":"2026-06-13 18:22:34"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (68ms)","timestamp":"2026-06-13 18:22:34"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 18:25:02"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 18:25:02"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 18:25:02"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-13 18:25:02"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 18:25:03"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-13 18:25:04"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 18:25:16"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 18:25:16"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 18:25:17"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-13 18:25:17"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 18:25:17"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-13 18:25:18"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:26:14"}
+{"level":"info","message":"GET /api/v1/orders - 401 (173ms)","timestamp":"2026-06-13 18:26:14"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:26:14"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:26:14"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (370ms)","timestamp":"2026-06-13 18:26:14"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:26:14"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:26:14"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (378ms)","timestamp":"2026-06-13 18:26:14"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:26:15"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:26:15"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (208ms)","timestamp":"2026-06-13 18:26:15"}
+{"level":"info","message":"GET /api/v1/products - 304 (1713ms)","timestamp":"2026-06-13 18:26:16"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (2391ms)","timestamp":"2026-06-13 18:26:17"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1447ms)","timestamp":"2026-06-13 18:26:18"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2a43179a7aac22eb601ee7 - 200 (4334ms)","timestamp":"2026-06-13 18:26:21"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2a43179a7aac22eb601ee7 - 304 (3902ms)","timestamp":"2026-06-13 18:26:25"}
+{"level":"info","message":"GET /api/v1/templates/6a2d5341b7d0895fe7dc30e8 - 200 (6158ms)","timestamp":"2026-06-13 18:26:28"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (193ms)","timestamp":"2026-06-13 18:26:28"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (262ms)","timestamp":"2026-06-13 18:26:28"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (214ms)","timestamp":"2026-06-13 18:26:28"}
+{"level":"info","message":"GET /api/v1/templates/6a2d5341b7d0895fe7dc30e8 - 304 (2862ms)","timestamp":"2026-06-13 18:26:30"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (54ms)","timestamp":"2026-06-13 18:26:30"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (90ms)","timestamp":"2026-06-13 18:26:30"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (60ms)","timestamp":"2026-06-13 18:26:31"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:26:37"}
+{"level":"info","message":"GET /api/v1/orders - 401 (51ms)","timestamp":"2026-06-13 18:26:37"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:26:37"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:26:37"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (237ms)","timestamp":"2026-06-13 18:26:37"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:26:37"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:26:37"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (322ms)","timestamp":"2026-06-13 18:26:37"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:26:37"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:26:37"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (172ms)","timestamp":"2026-06-13 18:26:37"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (1104ms)","timestamp":"2026-06-13 18:26:39"}
+{"level":"info","message":"GET /api/v1/products - 304 (1743ms)","timestamp":"2026-06-13 18:26:39"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (68ms)","timestamp":"2026-06-13 18:26:40"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (144ms)","timestamp":"2026-06-13 18:26:40"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (943ms)","timestamp":"2026-06-13 18:26:41"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (70ms)","timestamp":"2026-06-13 18:26:42"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (86ms)","timestamp":"2026-06-13 18:26:42"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 200 (101ms)","timestamp":"2026-06-13 18:26:42"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (67ms)","timestamp":"2026-06-13 18:26:43"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 200 (151ms)","timestamp":"2026-06-13 18:26:43"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (59ms)","timestamp":"2026-06-13 18:26:43"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (132ms)","timestamp":"2026-06-13 18:26:43"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (69ms)","timestamp":"2026-06-13 18:26:43"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (75ms)","timestamp":"2026-06-13 18:26:43"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (68ms)","timestamp":"2026-06-13 18:26:43"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (57ms)","timestamp":"2026-06-13 18:26:43"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (69ms)","timestamp":"2026-06-13 18:26:43"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:26:56"}
+{"level":"info","message":"GET /api/v1/orders - 401 (37ms)","timestamp":"2026-06-13 18:26:56"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:26:56"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:26:56"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (182ms)","timestamp":"2026-06-13 18:26:56"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:26:56"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:26:56"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (297ms)","timestamp":"2026-06-13 18:26:56"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:26:56"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:26:56"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (347ms)","timestamp":"2026-06-13 18:26:56"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (1072ms)","timestamp":"2026-06-13 18:26:57"}
+{"level":"info","message":"GET /api/v1/products - 304 (1486ms)","timestamp":"2026-06-13 18:26:57"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7/reviews?page=1&limit=10 - 304 (226ms)","timestamp":"2026-06-13 18:27:13"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1459ms)","timestamp":"2026-06-13 18:27:15"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (1063ms)","timestamp":"2026-06-13 18:27:16"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (1289ms)","timestamp":"2026-06-13 18:27:27"}
+{"level":"info","message":"GET /api/v1/products/6a2a43179a7aac22eb601ee7 - 304 (732ms)","timestamp":"2026-06-13 18:27:27"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2a43179a7aac22eb601ee7 - 304 (2634ms)","timestamp":"2026-06-13 18:27:29"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2a43179a7aac22eb601ee7 - 304 (2399ms)","timestamp":"2026-06-13 18:27:32"}
+{"level":"info","message":"GET /api/v1/templates/6a2d5341b7d0895fe7dc30e8 - 304 (3961ms)","timestamp":"2026-06-13 18:27:33"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (184ms)","timestamp":"2026-06-13 18:27:34"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (148ms)","timestamp":"2026-06-13 18:27:34"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (213ms)","timestamp":"2026-06-13 18:27:34"}
+{"level":"info","message":"GET /api/v1/templates/6a2d5341b7d0895fe7dc30e8 - 304 (2268ms)","timestamp":"2026-06-13 18:27:36"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (75ms)","timestamp":"2026-06-13 18:27:36"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (62ms)","timestamp":"2026-06-13 18:27:36"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (65ms)","timestamp":"2026-06-13 18:27:36"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:27:57"}
+{"level":"info","message":"GET /api/v1/orders - 401 (119ms)","timestamp":"2026-06-13 18:27:57"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:27:57"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:27:57"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (252ms)","timestamp":"2026-06-13 18:27:57"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:27:57"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:27:57"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (302ms)","timestamp":"2026-06-13 18:27:57"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:27:57"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:27:57"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (263ms)","timestamp":"2026-06-13 18:27:57"}
+{"level":"info","message":"GET /api/v1/products - 304 (1650ms)","timestamp":"2026-06-13 18:27:58"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (2024ms)","timestamp":"2026-06-13 18:27:59"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (963ms)","timestamp":"2026-06-13 18:36:56"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (1455ms)","timestamp":"2026-06-13 18:36:56"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (2153ms)","timestamp":"2026-06-13 18:36:58"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (84ms)","timestamp":"2026-06-13 18:36:58"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (74ms)","timestamp":"2026-06-13 18:36:58"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (74ms)","timestamp":"2026-06-13 18:36:58"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (78ms)","timestamp":"2026-06-13 18:36:58"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (149ms)","timestamp":"2026-06-13 18:36:58"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (60ms)","timestamp":"2026-06-13 18:36:58"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (116ms)","timestamp":"2026-06-13 18:36:58"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (62ms)","timestamp":"2026-06-13 18:36:58"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (53ms)","timestamp":"2026-06-13 18:36:58"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (60ms)","timestamp":"2026-06-13 18:36:59"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (67ms)","timestamp":"2026-06-13 18:36:59"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (58ms)","timestamp":"2026-06-13 18:36:59"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:37:24"}
+{"level":"info","message":"GET /api/v1/orders - 401 (40ms)","timestamp":"2026-06-13 18:37:24"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:37:25"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:37:25"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (296ms)","timestamp":"2026-06-13 18:37:25"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:37:25"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:37:25"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (298ms)","timestamp":"2026-06-13 18:37:25"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:37:25"}
+{"level":"info","message":"GET /api/v1/orders - 401 (30ms)","timestamp":"2026-06-13 18:37:25"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:37:25"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:37:25"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (277ms)","timestamp":"2026-06-13 18:37:25"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:37:25"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:37:25"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (313ms)","timestamp":"2026-06-13 18:37:26"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:37:26"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:37:26"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1090ms)","timestamp":"2026-06-13 18:37:26"}
+{"level":"info","message":"GET /api/v1/products - 304 (1444ms)","timestamp":"2026-06-13 18:37:27"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (831ms)","timestamp":"2026-06-13 18:37:28"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (83ms)","timestamp":"2026-06-13 18:37:29"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (193ms)","timestamp":"2026-06-13 18:37:30"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (1592ms)","timestamp":"2026-06-13 18:37:31"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (102ms)","timestamp":"2026-06-13 18:37:31"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (108ms)","timestamp":"2026-06-13 18:37:31"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (100ms)","timestamp":"2026-06-13 18:37:31"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (78ms)","timestamp":"2026-06-13 18:37:32"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (165ms)","timestamp":"2026-06-13 18:37:32"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (74ms)","timestamp":"2026-06-13 18:37:32"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (165ms)","timestamp":"2026-06-13 18:37:32"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (66ms)","timestamp":"2026-06-13 18:37:32"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (59ms)","timestamp":"2026-06-13 18:37:32"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (70ms)","timestamp":"2026-06-13 18:37:32"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (63ms)","timestamp":"2026-06-13 18:37:32"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (65ms)","timestamp":"2026-06-13 18:37:32"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 18:56:13"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 18:56:13"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 18:56:14"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-13 18:56:15"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 18:56:15"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-13 18:56:17"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:56:54"}
+{"level":"info","message":"GET /api/v1/orders - 401 (40ms)","timestamp":"2026-06-13 18:56:54"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:56:55"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:56:55"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (437ms)","timestamp":"2026-06-13 18:56:55"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:56:55"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:56:55"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (413ms)","timestamp":"2026-06-13 18:56:55"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:56:55"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:56:55"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (188ms)","timestamp":"2026-06-13 18:56:55"}
+{"level":"info","message":"GET /api/v1/products - 304 (1266ms)","timestamp":"2026-06-13 18:56:56"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (1267ms)","timestamp":"2026-06-13 18:57:03"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (665ms)","timestamp":"2026-06-13 18:57:07"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (809ms)","timestamp":"2026-06-13 18:57:07"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (146ms)","timestamp":"2026-06-13 18:57:10"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (58ms)","timestamp":"2026-06-13 18:57:10"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (184ms)","timestamp":"2026-06-13 18:57:10"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (104ms)","timestamp":"2026-06-13 18:57:10"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (275ms)","timestamp":"2026-06-13 18:57:10"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (78ms)","timestamp":"2026-06-13 18:57:10"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (190ms)","timestamp":"2026-06-13 18:57:10"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (118ms)","timestamp":"2026-06-13 18:57:10"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (148ms)","timestamp":"2026-06-13 18:57:11"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (145ms)","timestamp":"2026-06-13 18:57:11"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (84ms)","timestamp":"2026-06-13 18:57:11"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (143ms)","timestamp":"2026-06-13 18:57:11"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (5552ms)","timestamp":"2026-06-13 18:57:13"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:57:13"}
+{"level":"info","message":"GET /api/v1/orders - 401 (202ms)","timestamp":"2026-06-13 18:57:13"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:57:13"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:57:13"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (257ms)","timestamp":"2026-06-13 18:57:13"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:57:13"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:57:13"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (331ms)","timestamp":"2026-06-13 18:57:13"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 18:57:14"}
+{"level":"info","message":"GET /api/v1/orders - 401 (13ms)","timestamp":"2026-06-13 18:57:14"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:57:14"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:57:14"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (174ms)","timestamp":"2026-06-13 18:57:14"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:57:14"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:57:14"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (258ms)","timestamp":"2026-06-13 18:57:14"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 18:57:14"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 18:57:14"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (233ms)","timestamp":"2026-06-13 18:57:14"}
+{"level":"info","message":"GET /api/v1/products - 304 (5374ms)","timestamp":"2026-06-13 18:57:19"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (1808ms)","timestamp":"2026-06-13 18:57:21"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (87ms)","timestamp":"2026-06-13 18:57:22"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (215ms)","timestamp":"2026-06-13 18:57:22"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (1457ms)","timestamp":"2026-06-13 18:57:24"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (94ms)","timestamp":"2026-06-13 18:57:26"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (83ms)","timestamp":"2026-06-13 18:57:26"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (108ms)","timestamp":"2026-06-13 18:57:26"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (94ms)","timestamp":"2026-06-13 18:57:26"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (172ms)","timestamp":"2026-06-13 18:57:26"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (81ms)","timestamp":"2026-06-13 18:57:26"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (152ms)","timestamp":"2026-06-13 18:57:26"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (106ms)","timestamp":"2026-06-13 18:57:27"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (69ms)","timestamp":"2026-06-13 18:57:27"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (82ms)","timestamp":"2026-06-13 18:57:27"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (78ms)","timestamp":"2026-06-13 18:57:27"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (66ms)","timestamp":"2026-06-13 18:57:27"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 19:01:58"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 19:13:54"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 19:19:45"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 19:25:36"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 19:31:28"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 21:03:08"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 21:03:08"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 21:03:11"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-13 21:03:12"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 21:03:12"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-13 21:03:18"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 21:04:28"}
+{"level":"info","message":"GET /api/v1/orders - 401 (100ms)","timestamp":"2026-06-13 21:04:28"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:04:30"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:04:30"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1510ms)","timestamp":"2026-06-13 21:04:30"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:04:30"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:04:30"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1526ms)","timestamp":"2026-06-13 21:04:30"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:04:30"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:04:30"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (2022ms)","timestamp":"2026-06-13 21:04:30"}
+{"level":"info","message":"GET /api/v1/products - 304 (3866ms)","timestamp":"2026-06-13 21:04:32"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (1864ms)","timestamp":"2026-06-13 21:04:36"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (291ms)","timestamp":"2026-06-13 21:04:37"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (612ms)","timestamp":"2026-06-13 21:04:37"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (200ms)","timestamp":"2026-06-13 21:04:39"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (2162ms)","timestamp":"2026-06-13 21:04:39"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (331ms)","timestamp":"2026-06-13 21:04:39"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (349ms)","timestamp":"2026-06-13 21:04:39"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (221ms)","timestamp":"2026-06-13 21:04:39"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (539ms)","timestamp":"2026-06-13 21:04:40"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (139ms)","timestamp":"2026-06-13 21:04:40"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (443ms)","timestamp":"2026-06-13 21:04:40"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (285ms)","timestamp":"2026-06-13 21:04:40"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (468ms)","timestamp":"2026-06-13 21:04:41"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (482ms)","timestamp":"2026-06-13 21:04:41"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (493ms)","timestamp":"2026-06-13 21:04:41"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (668ms)","timestamp":"2026-06-13 21:04:42"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 21:04:59"}
+{"level":"info","message":"GET /api/v1/orders - 401 (38ms)","timestamp":"2026-06-13 21:04:59"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:05:01"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:05:01"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1393ms)","timestamp":"2026-06-13 21:05:01"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:05:01"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:05:01"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1392ms)","timestamp":"2026-06-13 21:05:01"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:05:01"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:05:01"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1320ms)","timestamp":"2026-06-13 21:05:01"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (969ms)","timestamp":"2026-06-13 21:05:02"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (1295ms)","timestamp":"2026-06-13 21:05:02"}
+{"level":"info","message":"GET /api/v1/products - 304 (3279ms)","timestamp":"2026-06-13 21:05:02"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (1686ms)","timestamp":"2026-06-13 21:05:04"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 21:05:41"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 21:05:41"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 21:05:42"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-13 21:05:42"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 21:05:42"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-13 21:05:45"}
+{"level":"info","message":"GET /api/v1/products - 200 (10339ms)","timestamp":"2026-06-13 21:07:23"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 21:08:05"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 21:08:05"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 21:08:05"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-13 21:08:06"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 21:08:06"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-13 21:08:07"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (59ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (38ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (67ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (67ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (95ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (87ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (304ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (39ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (39ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (48ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (39ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (41ms)","timestamp":"2026-06-13 21:09:39"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 21:10:01"}
+{"level":"info","message":"GET /api/v1/orders - 401 (5ms)","timestamp":"2026-06-13 21:10:01"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:10:01"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:10:01"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (732ms)","timestamp":"2026-06-13 21:10:01"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:10:01"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:10:01"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (702ms)","timestamp":"2026-06-13 21:10:01"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (103ms)","timestamp":"2026-06-13 21:10:01"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (71ms)","timestamp":"2026-06-13 21:10:01"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (64ms)","timestamp":"2026-06-13 21:10:01"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (102ms)","timestamp":"2026-06-13 21:10:02"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (252ms)","timestamp":"2026-06-13 21:10:02"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (108ms)","timestamp":"2026-06-13 21:10:02"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (117ms)","timestamp":"2026-06-13 21:10:02"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (257ms)","timestamp":"2026-06-13 21:10:02"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (31ms)","timestamp":"2026-06-13 21:10:02"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (37ms)","timestamp":"2026-06-13 21:10:02"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (45ms)","timestamp":"2026-06-13 21:10:02"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (38ms)","timestamp":"2026-06-13 21:10:02"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (54ms)","timestamp":"2026-06-13 21:10:50"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (62ms)","timestamp":"2026-06-13 21:10:50"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (139ms)","timestamp":"2026-06-13 21:10:50"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (58ms)","timestamp":"2026-06-13 21:10:50"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (31ms)","timestamp":"2026-06-13 21:10:50"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (61ms)","timestamp":"2026-06-13 21:10:50"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 21:11:51"}
+{"level":"info","message":"GET /api/v1/orders - 401 (28ms)","timestamp":"2026-06-13 21:11:51"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 21:11:51"}
+{"level":"info","message":"GET /api/v1/orders - 401 (7ms)","timestamp":"2026-06-13 21:11:51"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:11:52"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:11:52"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1439ms)","timestamp":"2026-06-13 21:11:52"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:11:52"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:11:52"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1634ms)","timestamp":"2026-06-13 21:11:52"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:11:52"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:11:52"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (974ms)","timestamp":"2026-06-13 21:11:52"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:11:52"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:11:52"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (987ms)","timestamp":"2026-06-13 21:11:52"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:11:55"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:11:55"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (3474ms)","timestamp":"2026-06-13 21:11:55"}
+{"level":"info","message":"GET /api/v1/products - 304 (5270ms)","timestamp":"2026-06-13 21:11:56"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (5020ms)","timestamp":"2026-06-13 21:12:12"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (355ms)","timestamp":"2026-06-13 21:12:14"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (668ms)","timestamp":"2026-06-13 21:12:14"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (3998ms)","timestamp":"2026-06-13 21:12:18"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 21:17:16"}
+{"level":"info","message":"GET /api/v1/orders - 401 (3ms)","timestamp":"2026-06-13 21:17:16"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:17:17"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:17:17"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1349ms)","timestamp":"2026-06-13 21:17:17"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:17:17"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:17:17"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1468ms)","timestamp":"2026-06-13 21:17:17"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 200 (562ms)","timestamp":"2026-06-13 21:17:18"}
+{"level":"info","message":"GET /api/v1/products - 200 (2610ms)","timestamp":"2026-06-13 21:17:18"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:17:20"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:17:20"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (4325ms)","timestamp":"2026-06-13 21:17:20"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 200 (3114ms)","timestamp":"2026-06-13 21:17:20"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 200 (3435ms)","timestamp":"2026-06-13 21:17:21"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 200 (454ms)","timestamp":"2026-06-13 21:17:27"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 200 (469ms)","timestamp":"2026-06-13 21:17:27"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 200 (1090ms)","timestamp":"2026-06-13 21:17:28"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 200 (1278ms)","timestamp":"2026-06-13 21:17:28"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 200 (703ms)","timestamp":"2026-06-13 21:17:28"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 200 (742ms)","timestamp":"2026-06-13 21:17:29"}
+{"level":"info","message":"GET /api/v1/fonts - 200 (372ms)","timestamp":"2026-06-13 21:17:29"}
+{"level":"info","message":"GET /api/v1/fonts - 200 (177ms)","timestamp":"2026-06-13 21:17:29"}
+{"level":"info","message":"GET /api/v1/graphics - 200 (164ms)","timestamp":"2026-06-13 21:17:29"}
+{"level":"info","message":"GET /api/v1/graphics - 200 (180ms)","timestamp":"2026-06-13 21:17:29"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 200 (101ms)","timestamp":"2026-06-13 21:17:29"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 200 (115ms)","timestamp":"2026-06-13 21:17:29"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 21:23:24"}
+{"level":"info","message":"GET /api/v1/orders - 401 (13ms)","timestamp":"2026-06-13 21:23:24"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:23:25"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:23:25"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1316ms)","timestamp":"2026-06-13 21:23:25"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-13 21:23:31"}
+{"level":"info","message":"GET /api/v1/products - 304 (8407ms)","timestamp":"2026-06-13 21:23:32"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:23:37"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:23:37"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (12986ms)","timestamp":"2026-06-13 21:23:37"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (355ms)","timestamp":"2026-06-13 21:23:37"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56/reviews?page=1&limit=10 - 304 (1597ms)","timestamp":"2026-06-13 21:23:38"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:23:40"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:23:40"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (16854ms)","timestamp":"2026-06-13 21:23:40"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (309ms)","timestamp":"2026-06-13 21:23:41"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 304 (251ms)","timestamp":"2026-06-13 21:23:41"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (252ms)","timestamp":"2026-06-13 21:23:41"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (516ms)","timestamp":"2026-06-13 21:23:42"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (1092ms)","timestamp":"2026-06-13 21:23:43"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (242ms)","timestamp":"2026-06-13 21:23:43"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (580ms)","timestamp":"2026-06-13 21:23:43"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (309ms)","timestamp":"2026-06-13 21:23:43"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (304ms)","timestamp":"2026-06-13 21:23:44"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (304ms)","timestamp":"2026-06-13 21:23:44"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (166ms)","timestamp":"2026-06-13 21:23:44"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 304 (6716ms)","timestamp":"2026-06-13 21:23:44"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (132ms)","timestamp":"2026-06-13 21:23:44"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-13 21:23:48"}
+{"level":"info","message":"GET /api/v1/orders - 401 (3ms)","timestamp":"2026-06-13 21:23:48"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:23:48"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:23:48"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (364ms)","timestamp":"2026-06-13 21:23:48"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:23:48"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:23:48"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (391ms)","timestamp":"2026-06-13 21:23:48"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 200 (283ms)","timestamp":"2026-06-13 21:23:49"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 200 (289ms)","timestamp":"2026-06-13 21:23:49"}
+{"level":"warn","message":"🛑 Token reuse detected for User: 6a245f00aa98a351b633491a. All sessions revoked.","timestamp":"2026-06-13 21:23:49"}
+{"level":"error","message":"💥 Error: Security breach suspected. All sessions cleared. Please log in again.","stack":"Error: Security breach suspected. All sessions cleared. Please log in again.\n    at AuthService.refreshToken (file:///D:/MiniProjects/bhondu/backend/src/services/auth.service.js:151:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/MiniProjects/bhondu/backend/src/controllers/auth.controller.js:102:58","timestamp":"2026-06-13 21:23:49"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 403 (1404ms)","timestamp":"2026-06-13 21:23:49"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 200 (483ms)","timestamp":"2026-06-13 21:23:49"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (246ms)","timestamp":"2026-06-13 21:23:50"}
+{"level":"info","message":"GET /api/v1/products/6a2b93451d98390fc30cba56 - 200 (1376ms)","timestamp":"2026-06-13 21:23:50"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (229ms)","timestamp":"2026-06-13 21:23:50"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 304 (232ms)","timestamp":"2026-06-13 21:23:50"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (283ms)","timestamp":"2026-06-13 21:23:50"}
+{"level":"info","message":"GET /api/v1/templates/6a2d535ab7d0895fe7dc30f3 - 304 (611ms)","timestamp":"2026-06-13 21:23:51"}
+{"level":"info","message":"GET /api/v1/fonts - 304 (737ms)","timestamp":"2026-06-13 21:23:51"}
+{"level":"info","message":"GET /api/v1/graphics - 304 (733ms)","timestamp":"2026-06-13 21:23:52"}
+{"level":"info","message":"GET /api/v1/graphics/categories - 304 (640ms)","timestamp":"2026-06-13 21:23:53"}
+{"level":"info","message":"GET /api/v1/products - 200 (5894ms)","timestamp":"2026-06-13 21:23:54"}
+{"level":"info","message":"GET /api/v1/products - 200 (9059ms)","timestamp":"2026-06-13 21:24:43"}
+{"level":"info","message":"GET /api/v1/products - 200 (4837ms)","timestamp":"2026-06-13 21:25:14"}
+{"level":"error","message":"💥 Error: Can't find /api/v1/templates on this server!","stack":"Error: Can't find /api/v1/templates on this server!\n    at file:///D:/MiniProjects/bhondu/backend/src/app.js:81:8\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:295:15\n    at param (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:600:14)\n    at param (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:610:14)\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:664:3)","timestamp":"2026-06-13 21:25:30"}
+{"level":"info","message":"GET /api/v1/templates - 404 (4ms)","timestamp":"2026-06-13 21:25:30"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-13 21:26:19"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-13 21:26:19"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-13 21:26:19"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-13 21:26:20"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-13 21:26:20"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-13 21:26:21"}
+{"level":"info","message":"GET /api/v1/templates/product/6a2b93451d98390fc30cba56 - 200 (138ms)","timestamp":"2026-06-13 21:26:32"}

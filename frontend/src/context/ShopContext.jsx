@@ -55,8 +55,8 @@ export const ShopProvider = ({ children }) => {
   }, [isDarkMode]);
 
   // Cart operations
-  const addToCart = (product, size, color, quantity = 1) => {
-    const key = `${product.id}-${size}-${color}`;
+  const addToCart = (product, size, color, quantity = 1, designId = null, customPrice = null, customImage = null) => {
+    const key = designId ? `${product.id || product._id}-${size}-${color}-design-${designId}` : `${product.id || product._id}-${size}-${color}`;
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.key === key);
       if (existingItem) {
@@ -68,13 +68,14 @@ export const ShopProvider = ({ children }) => {
           ...prevItems,
           {
             key,
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.images[0],
+            id: product.id || product._id,
+            name: designId ? `${product.name} (Custom)` : product.name,
+            price: customPrice || product.price,
+            image: customImage || product.images[0],
             size,
             color,
-            quantity
+            quantity,
+            designId
           }
         ];
       }

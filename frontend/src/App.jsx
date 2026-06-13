@@ -26,8 +26,10 @@ import AdminMarketing from './pages/admin/AdminMarketing';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
 import AdminCMS from './pages/admin/AdminCMS';
 import AdminSettings from './pages/admin/AdminSettings';
+import AdminMedia from './pages/admin/AdminMedia';
 import AdminAuth from './pages/admin/AdminAuth';
 import Profile from './pages/Profile';
+import CustomDesigner from './pages/CustomDesigner';
 import Contact from './pages/Contact';
 import Shipping from './pages/Shipping';
 import Returns from './pages/Returns';
@@ -50,7 +52,7 @@ function App() {
   const isHome = location.pathname === '/';
   const isAdmin = location.pathname.startsWith('/admin');
   const isAuth = location.pathname === '/login';
-  const isHideGlobalUI = isAdmin || isAuth;
+  const isHideGlobalUI = isAdmin || isAuth || location.pathname.startsWith('/designer');
 
   return (
     <AdminProvider>
@@ -84,6 +86,7 @@ function App() {
                 <Route path="/women" element={<Women />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/designer/:productId" element={<CustomDesigner />} />
                 <Route path="/login" element={<AdminAuth />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/shipping" element={<Shipping />} />
@@ -119,6 +122,7 @@ function App() {
                   <Route path="analytics" element={<AdminAnalytics />} />
                   <Route path="cms" element={<AdminCMS />} />
                   <Route path="settings" element={<AdminSettings />} />
+                  <Route path="media" element={<AdminMedia />} />
                 </Route>
               </Route>
             </Routes>
