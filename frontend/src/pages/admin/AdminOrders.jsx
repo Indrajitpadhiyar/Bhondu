@@ -410,6 +410,21 @@ export default function AdminOrders() {
                             Size: <span className="font-semibold text-zinc-700 dark:text-zinc-200">{item.size}</span> | 
                             Color: <span className="inline-block w-2.5 h-2.5 rounded-full border align-middle ml-1" style={{ backgroundColor: item.color }} />
                           </p>
+                          {(item.teamName || item.backsidePlayerName || item.playerNumber || item.chestLogo) && (
+                            <div className="mt-1.5 p-1.5 border border-zinc-200 dark:border-zinc-800 rounded bg-zinc-50/50 dark:bg-zinc-900/10 text-[9px] uppercase tracking-wider text-zinc-500 space-y-0.5 leading-normal">
+                              {item.teamName && <div>Team: <span className="font-bold text-zinc-800 dark:text-zinc-200">{item.teamName}</span></div>}
+                              {item.backsidePlayerName && <div>Player: <span className="font-bold text-zinc-800 dark:text-zinc-200">{item.backsidePlayerName} {item.playerNumber ? `#${item.playerNumber}` : ''}</span></div>}
+                              {!item.backsidePlayerName && item.playerNumber && <div>Number: <span className="font-bold text-zinc-800 dark:text-zinc-200">#{item.playerNumber}</span></div>}
+                              {item.chestLogo && (
+                                <div className="flex items-center gap-1 mt-0.5">
+                                  <span>Logo:</span>
+                                  <a href={item.chestLogo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-indigo-600 dark:text-indigo-400 hover:underline font-bold">
+                                    View Logo
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                          )}
                           {item.designId && (
                             <button
                               onClick={async (e) => {

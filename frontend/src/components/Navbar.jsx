@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Search, Heart, ShoppingBag, User, Menu, X,
   Trash2, Plus, Minus, Moon, Sun, ArrowRight, ShoppingCart,
-  CreditCard, Truck, RotateCw, MapPin, Shield, Tag
+  CreditCard, Truck, RotateCw, MapPin, Shield, Tag, ChevronDown
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useLogoutMutation } from '../services/authApi';
@@ -200,7 +200,11 @@ const Navbar = () => {
                 size: item.size,
                 color: item.color,
                 image: item.image,
-                designId: item.designId || null
+                designId: item.designId || null,
+                teamName: item.teamName || null,
+                chestLogo: item.chestLogo || null,
+                backsidePlayerName: item.backsidePlayerName || null,
+                playerNumber: item.playerNumber || null
               })),
               shippingAddress: {
                 name: selectedAddress.name,
@@ -257,7 +261,11 @@ const Navbar = () => {
             size: item.size,
             color: item.color,
             image: item.image,
-            designId: item.designId || null
+            designId: item.designId || null,
+            teamName: item.teamName || null,
+            chestLogo: item.chestLogo || null,
+            backsidePlayerName: item.backsidePlayerName || null,
+            playerNumber: item.playerNumber || null
           })),
           shippingAddress: {
             name: selectedAddress.name,
@@ -299,11 +307,196 @@ const Navbar = () => {
 
   // Profile dropdown open state
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMegaOpen, setIsMegaOpen] = useState(false);
+  const [isMobileCollectionsOpen, setIsMobileCollectionsOpen] = useState(false);
+  const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
+
+  const womenMegaMenuData = {
+    'Full Outfit Dress': ['Midi Dresses', 'Maxi Dresses', 'Party Dresses', 'Casual Dresses'],
+    'Sari': ['Silk Saris', 'Cotton Saris', 'Designer Saris', 'Georgette Saris'],
+    'Kurti': ['Anarkali Kurtis', 'Straight Kurtis', 'A-line Kurtis', 'Printed Kurtis'],
+    'T-Shirts': ['Oversized Tees', 'Crop Tops', 'Printed Tees'],
+    'Shirts': ['Formal Shirts', 'Casual Shirts', 'Oversized Shirts'],
+    'Shoes': ['Heels', 'Sneakers', 'Flats'],
+  };
+
+  const manMegaMenuData = {
+    'Tournament Wear': ['Tournament T-Shirts', 'Gaming Jerseys', 'Esports Jerseys', 'Custom Tournament Wear'],
+    'T-Shirts': ['Oversized', 'Printed', 'Plain'],
+    'Shirts': ['Casual Shirts', 'Formal Shirts', 'Linen Shirts'],
+    'Shoes': ['Sneakers', 'Sports Shoes', 'Casual Shoes'],
+  };
 
   // Quick helper to determine active link
   const isActive = (path) => location.pathname === path;
 
-  const currentGender = location.pathname.includes('women') ? 'women' : location.pathname.includes('man') ? 'man' : null;
+  let currentGender = location.pathname.includes('women') ? 'women' : location.pathname.includes('man') ? 'man' : null;
+  if (!currentGender && location.pathname.startsWith('/product/')) {
+    const prodId = location.pathname.split('/product/')[1];
+    const activeProduct = products.find(p => p.id === prodId);
+    if (activeProduct) {
+      currentGender = activeProduct.gender;
+    }
+  }
+
+  const handleMegaLinkClick = (gender, category, subcategory = null) => {
+    setIsMegaOpen(false);
+    let url = `/${gender}?category=${encodeURIComponent(category)}`;
+    if (subcategory) {
+      url += `&subcategory=${encodeURIComponent(subcategory)}`;
+    }
+    navigate(url);
+  };
+
+  const renderMegaMenu = () => {
+    const isWomen = currentGender === 'women';
+    const isMan = currentGender === 'man';
+    const hasGender = isWomen || isMan;
+
+    const promoImage = isWomen
+      ? 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=600&auto=format&fit=crop'
+      : 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=600&auto=format&fit=crop';
+
+    const promoTitle = isWomen ? 'Atelier Summer Edit' : 'Icon Modern Edit';
+    const promoSubtitle = isWomen ? 'Fine silks & drape silhouettes' : 'Premium gaming jerseys & shirts';
+    const promoLink = isWomen ? '/women' : '/man';
+
+    if (hasGender) {
+      const activeData = isWomen ? womenMegaMenuData : manMegaMenuData;
+      const categoriesKeys = Object.keys(activeData);
+
+      return (
+        <div className="max-w-7xl mx-auto px-8 py-10 grid grid-cols-5 gap-8 text-left normal-case tracking-normal">
+          {/* Promo Card (Left 2 cols) */}
+          <div className="col-span-2 relative overflow-hidden rounded-xs h-64 group border border-secondary dark:border-zinc-850">
+            <img src={promoImage} alt="Promo" className="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-6 text-white">
+              <span className="text-[9px] font-bold text-accent tracking-[0.3em] uppercase mb-1 font-luxury-sans">SEASON SPECIAL</span>
+              <h4 className="font-luxury-serif text-xl font-bold tracking-wider uppercase mb-1">{promoTitle}</h4>
+              <p className="text-[10px] text-zinc-300 font-luxury-sans uppercase tracking-widest mb-4">{promoSubtitle}</p>
+              <Link to={promoLink} onClick={() => setIsMegaOpen(false)} className="text-[9px] font-bold tracking-[0.2em] uppercase text-accent hover:underline flex items-center gap-1.5 font-luxury-sans">
+                <span>Explore Catalog</span>
+                <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Grid of Categories (Remaining 3 cols) */}
+          <div className="col-span-3 grid grid-cols-3 gap-6">
+            {categoriesKeys.map((catName) => (
+              <div key={catName} className="space-y-3">
+                <button
+                  onClick={() => handleMegaLinkClick(currentGender, catName)}
+                  className="font-luxury-serif text-xs font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-widest hover:text-accent transition-colors border-0 bg-transparent p-0 block text-left cursor-pointer"
+                >
+                  {catName}
+                </button>
+                <ul className="space-y-1.5 text-[10px] tracking-wider uppercase text-zinc-500 dark:text-zinc-400">
+                  {activeData[catName].map((subName) => (
+                    <li key={subName}>
+                      <button
+                        onClick={() => handleMegaLinkClick(currentGender, catName, subName)}
+                        className="hover:text-accent text-zinc-500 dark:text-zinc-400 border-0 bg-transparent p-0 transition-colors block text-left font-semibold cursor-pointer"
+                      >
+                        {subName}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    } else {
+      // General landing mega menu (Both genders)
+      return (
+        <div className="max-w-7xl mx-auto px-8 py-10 grid grid-cols-5 gap-8 text-left normal-case tracking-normal">
+          {/* Promo Left */}
+          <div className="col-span-2 relative overflow-hidden rounded-xs h-64 group border border-secondary dark:border-zinc-850">
+            <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=600&auto=format&fit=crop" alt="Promo" className="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-6 text-white">
+              <span className="text-[9px] font-bold text-accent tracking-[0.3em] uppercase mb-1 font-luxury-sans">BHONDU ATELIER</span>
+              <h4 className="font-luxury-serif text-xl font-bold tracking-wider uppercase mb-1">Luxury Collections</h4>
+              <p className="text-[10px] text-zinc-300 font-luxury-sans uppercase tracking-widest mb-4">Discover gender focused collections</p>
+              <div className="flex gap-4">
+                <Link to="/women" onClick={() => setIsMegaOpen(false)} className="text-[9px] font-bold tracking-[0.2em] uppercase text-accent hover:underline flex items-center gap-1 font-luxury-sans">
+                  <span>Women</span>
+                </Link>
+                <span className="text-zinc-650">|</span>
+                <Link to="/man" onClick={() => setIsMegaOpen(false)} className="text-[9px] font-bold tracking-[0.2em] uppercase text-accent hover:underline flex items-center gap-1 font-luxury-sans">
+                  <span>Men</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Women Collections Column */}
+          <div className="space-y-4">
+            <Link
+              to="/women"
+              onClick={() => setIsMegaOpen(false)}
+              className="font-luxury-serif text-sm font-bold text-accent uppercase tracking-widest hover:underline block"
+            >
+              Women's Section
+            </Link>
+            <ul className="space-y-2 text-[10px] tracking-wider uppercase text-zinc-550 dark:text-zinc-400 font-semibold">
+              {Object.keys(womenMegaMenuData).map((catName) => (
+                <li key={catName}>
+                  <button
+                    onClick={() => handleMegaLinkClick('women', catName)}
+                    className="hover:text-accent text-zinc-500 dark:text-zinc-400 border-0 bg-transparent p-0 transition-colors block text-left cursor-pointer"
+                  >
+                    {catName}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Men Collections Column */}
+          <div className="space-y-4">
+            <Link
+              to="/man"
+              onClick={() => setIsMegaOpen(false)}
+              className="font-luxury-serif text-sm font-bold text-accent uppercase tracking-widest hover:underline block"
+            >
+              Men's Section
+            </Link>
+            <ul className="space-y-2 text-[10px] tracking-wider uppercase text-zinc-550 dark:text-zinc-400 font-semibold">
+              {Object.keys(manMegaMenuData).map((catName) => (
+                <li key={catName}>
+                  <button
+                    onClick={() => handleMegaLinkClick('man', catName)}
+                    className="hover:text-accent text-zinc-500 dark:text-zinc-400 border-0 bg-transparent p-0 transition-colors block text-left cursor-pointer"
+                  >
+                    {catName}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Customize & Studio Column */}
+          <div className="space-y-4 border-l border-secondary dark:border-zinc-800/80 pl-6">
+            <h4 className="font-luxury-serif text-xs font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-widest">
+              Jersey Studio
+            </h4>
+            <p className="text-[10px] text-zinc-400 uppercase tracking-wider leading-relaxed">
+              Design and order team jerseys with personalized chest logos, player names, and numbers.
+            </p>
+            <Link
+              to="/designer/6a2d7df6446e872af60b38df"
+              onClick={() => setIsMegaOpen(false)}
+              className="inline-block px-4 py-2 border border-primary dark:border-accent text-[9px] font-bold tracking-[0.25em] text-primary dark:text-accent uppercase hover:bg-primary hover:text-white dark:hover:bg-accent dark:hover:text-primary transition-all"
+            >
+              Customize Now
+            </Link>
+          </div>
+        </div>
+      );
+    }
+  };
 
   // Filter cart items by active section gender
   const displayCartItems = cartItems.filter(item => {
@@ -344,9 +537,12 @@ const Navbar = () => {
   const searchResults = searchQuery.trim() === ''
     ? []
     : products.filter(p => {
+      const categoryMatches = Array.isArray(p.category)
+        ? p.category.some(c => c.toLowerCase().includes(searchQuery.toLowerCase()))
+        : p.category?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesQuery = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.subcategory.toLowerCase().includes(searchQuery.toLowerCase());
+        categoryMatches ||
+        p.subcategory?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesGender = currentGender ? p.gender === currentGender : true;
       return matchesQuery && matchesGender;
     }).slice(0, 5);
@@ -372,48 +568,58 @@ const Navbar = () => {
           <div className="flex justify-between items-center h-20 relative">
 
             {/* Left Section: Mobile Menu Trigger & Main Links */}
-            <div className="flex items-center">
+            <div className="flex items-center h-full">
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden p-2 text-primary dark:text-zinc-100 hover:text-accent transition-colors"
+                className="xl:hidden p-2 text-primary dark:text-zinc-100 hover:text-accent transition-colors"
                 aria-label="Open menu"
               >
                 <Menu className="w-6 h-6" />
               </button>
 
-              {/* Desktop Menu Navigation Links (Hiding Men/Women links since departments are isolated) */}
-              <div className="hidden lg:flex lg:space-x-8 xl:space-x-10 text-xs font-semibold tracking-widest uppercase">
+              {/* Desktop Menu Navigation Links (Redesigned with collections hover mega menu) */}
+              <div className="hidden xl:flex xl:space-x-6 2xl:space-x-8 text-[11px] 2xl:text-xs font-semibold tracking-widest uppercase items-center h-full">
                 <Link
                   to="/"
                   className={`hover:text-accent transition-colors py-2 ${isActive('/') ? 'text-accent border-b border-accent' : 'text-primary dark:text-zinc-100'}`}
                 >
                   Home
                 </Link>
-                <button
-                  onClick={() => handleCategoryNav('Tournament Wear')}
-                  className="hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 cursor-pointer"
+
+                {/* Collections Megamenu Wrapper */}
+                <div
+                  onMouseEnter={() => setIsMegaOpen(true)}
+                  onMouseLeave={() => setIsMegaOpen(false)}
+                  className="h-full flex items-center"
                 >
-                  Tournament Wear
-                </button>
-                <button
-                  onClick={() => handleCategoryNav('T-Shirts')}
-                  className="hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 cursor-pointer"
+                  <button
+                    className={`hover:text-accent transition-colors py-2 flex items-center gap-1.5 cursor-pointer h-full ${isMegaOpen ? 'text-accent' : 'text-primary dark:text-zinc-100'}`}
+                  >
+                    <span>Collections</span>
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isMegaOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  <AnimatePresence>
+                    {isMegaOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.25, ease: 'easeOut' }}
+                        className="fixed top-20 left-0 w-screen bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl border-b border-secondary/65 dark:border-zinc-800/80 shadow-2xl z-[49]"
+                      >
+                        {renderMegaMenu()}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                <Link
+                  to="/designer/6a2d7df6446e872af60b38df"
+                  className={`hover:text-accent transition-colors py-2 ${location.pathname.startsWith('/designer') ? 'text-accent border-b border-accent' : 'text-primary dark:text-zinc-100'}`}
                 >
-                  T-Shirts
-                </button>
-                <button
-                  onClick={() => handleCategoryNav('Shirts')}
-                  className="hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 cursor-pointer"
-                >
-                  Shirts
-                </button>
-                <button
-                  onClick={() => handleCategoryNav('Shoes')}
-                  className="hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 cursor-pointer"
-                >
-                  Shoes
-                </button>
- 
+                  Customize
+                </Link>
               </div>
             </div>
 
@@ -555,13 +761,133 @@ const Navbar = () => {
                   <X className="w-6 h-6" />
                 </button>
               </div>
-              <div className="flex flex-col space-y-6 text-sm font-semibold tracking-widest uppercase">
+              <div className="flex flex-col space-y-5 text-sm font-semibold tracking-widest uppercase">
                 <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800">Home</Link>
-                <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800">About</Link>
-                <button onClick={() => handleCategoryNav('Tournament Wear')} className="text-left hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800 cursor-pointer">Tournament Wear</button>
-                <button onClick={() => handleCategoryNav('T-Shirts')} className="text-left hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800 cursor-pointer">T-Shirts</button>
-                <button onClick={() => handleCategoryNav('Shirts')} className="text-left hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800 cursor-pointer">Shirts</button>
-                <button onClick={() => handleCategoryNav('Shoes')} className="text-left hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800 cursor-pointer">Shoes</button>
+                
+                {/* Collapsible Mobile Collections Accordion */}
+                <div className="border-b border-secondary dark:border-zinc-800 py-2">
+                  <button
+                    onClick={() => setIsMobileCollectionsOpen(!isMobileCollectionsOpen)}
+                    className="w-full flex justify-between items-center text-left hover:text-accent transition-colors text-primary dark:text-zinc-100 font-semibold cursor-pointer py-1"
+                  >
+                    <span>Collections</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${isMobileCollectionsOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  <AnimatePresence>
+                    {isMobileCollectionsOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden pl-4 space-y-4 pt-3 pb-2 text-xs"
+                      >
+                        {currentGender === 'women' ? (
+                          Object.keys(womenMegaMenuData).map((catName) => {
+                            const isCatExpanded = expandedMobileCategory === catName;
+                            return (
+                              <div key={catName} className="space-y-2">
+                                <button
+                                  onClick={() => setExpandedMobileCategory(isCatExpanded ? null : catName)}
+                                  className="w-full flex justify-between items-center text-zinc-650 dark:text-zinc-350 hover:text-accent transition-colors font-bold uppercase tracking-wider cursor-pointer"
+                                >
+                                  <span>{catName}</span>
+                                  <Plus className={`w-3 h-3 transition-transform ${isCatExpanded ? 'rotate-45' : ''}`} />
+                                </button>
+                                {isCatExpanded && (
+                                  <div className="pl-3 py-1 space-y-2 flex flex-col items-start border-l border-secondary dark:border-zinc-800">
+                                    <button
+                                      onClick={() => { setIsMobileMenuOpen(false); handleMegaLinkClick('women', catName); }}
+                                      className="text-accent font-bold hover:underline text-[9px] tracking-widest text-left"
+                                    >
+                                      VIEW ALL {catName.toUpperCase()}
+                                    </button>
+                                    {womenMegaMenuData[catName].map((subName) => (
+                                      <button
+                                        key={subName}
+                                        onClick={() => { setIsMobileMenuOpen(false); handleMegaLinkClick('women', catName, subName); }}
+                                        className="text-zinc-500 hover:text-accent transition-colors text-[9px] tracking-widest font-semibold text-left cursor-pointer"
+                                      >
+                                        {subName}
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })
+                        ) : currentGender === 'man' ? (
+                          Object.keys(manMegaMenuData).map((catName) => {
+                            const isCatExpanded = expandedMobileCategory === catName;
+                            return (
+                              <div key={catName} className="space-y-2">
+                                <button
+                                  onClick={() => setExpandedMobileCategory(isCatExpanded ? null : catName)}
+                                  className="w-full flex justify-between items-center text-zinc-650 dark:text-zinc-350 hover:text-accent transition-colors font-bold uppercase tracking-wider cursor-pointer"
+                                >
+                                  <span>{catName}</span>
+                                  <Plus className={`w-3 h-3 transition-transform ${isCatExpanded ? 'rotate-45' : ''}`} />
+                                </button>
+                                {isCatExpanded && (
+                                  <div className="pl-3 py-1 space-y-2 flex flex-col items-start border-l border-secondary dark:border-zinc-800">
+                                    <button
+                                      onClick={() => { setIsMobileMenuOpen(false); handleMegaLinkClick('man', catName); }}
+                                      className="text-accent font-bold hover:underline text-[9px] tracking-widest text-left"
+                                    >
+                                      VIEW ALL {catName.toUpperCase()}
+                                    </button>
+                                    {manMegaMenuData[catName].map((subName) => (
+                                      <button
+                                        key={subName}
+                                        onClick={() => { setIsMobileMenuOpen(false); handleMegaLinkClick('man', catName, subName); }}
+                                        className="text-zinc-500 hover:text-accent transition-colors text-[9px] tracking-widest font-semibold text-left cursor-pointer"
+                                      >
+                                        {subName}
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <div className="space-y-4 text-left">
+                            <div className="space-y-2">
+                              <p className="font-bold text-accent tracking-widest text-[9px]">WOMEN'S COLLECTION</p>
+                              <div className="pl-2.5 flex flex-col items-start gap-2.5 border-l border-secondary dark:border-zinc-800">
+                                {Object.keys(womenMegaMenuData).map(catName => (
+                                  <button
+                                    key={catName}
+                                    onClick={() => { setIsMobileMenuOpen(false); handleMegaLinkClick('women', catName); }}
+                                    className="text-zinc-500 hover:text-accent text-[9px] tracking-wider font-bold"
+                                  >
+                                    {catName}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="space-y-2 pt-2">
+                              <p className="font-bold text-accent tracking-widest text-[9px]">MEN'S COLLECTION</p>
+                              <div className="pl-2.5 flex flex-col items-start gap-2.5 border-l border-secondary dark:border-zinc-800">
+                                {Object.keys(manMegaMenuData).map(catName => (
+                                  <button
+                                    key={catName}
+                                    onClick={() => { setIsMobileMenuOpen(false); handleMegaLinkClick('man', catName); }}
+                                    className="text-zinc-500 hover:text-accent text-[9px] tracking-wider font-bold"
+                                  >
+                                    {catName}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-805">About</Link>
                 <Link to="/designer/6a2d7df6446e872af60b38df" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors py-2 text-primary dark:text-zinc-100 border-b border-secondary dark:border-zinc-800">Customize</Link>
               </div>
 
@@ -666,7 +992,7 @@ const Navbar = () => {
                             <img src={p.images[0]} alt={p.name} className="w-12 h-14 object-cover grayscale group-hover:grayscale-0 transition-all rounded-xs" />
                             <div>
                               <p className="text-xs font-bold tracking-wider text-primary dark:text-zinc-100 group-hover:text-accent transition-colors">{p.name.toUpperCase()}</p>
-                              <p className="text-[10px] text-zinc-400 tracking-widest uppercase">{p.category} | {p.subcategory}</p>
+                              <p className="text-[10px] text-zinc-400 tracking-widest uppercase">{Array.isArray(p.category) ? p.category.join(', ') : p.category} | {p.subcategory}</p>
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
@@ -750,6 +1076,19 @@ const Navbar = () => {
                             </button>
                           </div>
                           <p className="text-[10px] text-zinc-400 tracking-wider uppercase mt-1">SIZE: {item.size} | COLOR: {item.color}</p>
+                           {(item.teamName || item.backsidePlayerName || item.playerNumber || item.chestLogo) && (
+                             <div className="mt-1.5 p-1.5 border border-secondary/35 dark:border-zinc-800 rounded-sm bg-secondary/5 dark:bg-zinc-900/10 text-[9px] uppercase tracking-wider text-zinc-500 space-y-0.5">
+                               {item.teamName && <div>TEAM: <span className="font-bold text-primary dark:text-zinc-300">{item.teamName}</span></div>}
+                               {item.backsidePlayerName && <div>PLAYER: <span className="font-bold text-primary dark:text-zinc-300">{item.backsidePlayerName} {item.playerNumber ? `#${item.playerNumber}` : ''}</span></div>}
+                               {!item.backsidePlayerName && item.playerNumber && <div>NUMBER: <span className="font-bold text-primary dark:text-zinc-300">#{item.playerNumber}</span></div>}
+                               {item.chestLogo && (
+                                 <div className="flex items-center gap-1 mt-0.5">
+                                   <span>LOGO:</span>
+                                   <img src={item.chestLogo} alt="Logo" className="w-5 h-5 object-contain border border-secondary dark:border-zinc-800 rounded-xs" />
+                                 </div>
+                               )}
+                             </div>
+                           )}
                         </div>
                         <div className="flex justify-between items-center mt-4">
                           <div className="flex items-center border border-secondary dark:border-zinc-800">

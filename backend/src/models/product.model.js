@@ -23,9 +23,9 @@ const productSchema = new mongoose.Schema({
     trim: true,
   },
   category: {
-    type: String,
+    type: [String],
     required: true,
-    default: 'Tournament Wear',
+    default: ['Tournament Wear'],
   },
   subcategory: {
     type: String,

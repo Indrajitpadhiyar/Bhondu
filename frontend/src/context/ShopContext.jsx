@@ -55,8 +55,12 @@ export const ShopProvider = ({ children }) => {
   }, [isDarkMode]);
 
   // Cart operations
-  const addToCart = (product, size, color, quantity = 1, designId = null, customPrice = null, customImage = null) => {
-    const key = designId ? `${product.id || product._id}-${size}-${color}-design-${designId}` : `${product.id || product._id}-${size}-${color}`;
+  const addToCart = (product, size, color, quantity = 1, designId = null, customPrice = null, customImage = null, customization = null) => {
+    let key = designId ? `${product.id || product._id}-${size}-${color}-design-${designId}` : `${product.id || product._id}-${size}-${color}`;
+    if (customization) {
+      const customStr = JSON.stringify(customization);
+      key += `-custom-${customStr}`;
+    }
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.key === key);
       if (existingItem) {
@@ -75,7 +79,11 @@ export const ShopProvider = ({ children }) => {
             size,
             color,
             quantity,
-            designId
+            designId,
+            teamName: customization?.teamName || null,
+            chestLogo: customization?.chestLogo || null,
+            backsidePlayerName: customization?.backsidePlayerName || null,
+            playerNumber: customization?.playerNumber || null
           }
         ];
       }

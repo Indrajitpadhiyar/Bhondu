@@ -48,13 +48,15 @@ export default function AdminInventory() {
     return matchesSearch;
   });
 
-  // Calculate stock by category for bar chart
-  const categoryStockData = [
-    { name: 'Tournament', stock: products.filter(p => p.category === 'Tournament Wear').reduce((sum, p) => sum + (p.stock ?? 15), 0), color: '#111111' },
-    { name: 'T-Shirts', stock: products.filter(p => p.category === 'T-Shirts').reduce((sum, p) => sum + (p.stock ?? 15), 0), color: '#C9A87C' },
-    { name: 'Shirts', stock: products.filter(p => p.category === 'Shirts').reduce((sum, p) => sum + (p.stock ?? 15), 0), color: '#8E8E8E' },
-    { name: 'Shoes', stock: products.filter(p => p.category === 'Shoes').reduce((sum, p) => sum + (p.stock ?? 15), 0), color: '#E4E4E7' }
-  ];
+  // Calculate stock by category for bar chart dynamically
+  const chartColors = ['#111111', '#C9A87C', '#8E8E8E', '#E4E4E7', '#A3A3A3', '#D4D4D8', '#F4F4F5'];
+  const uniqueCategories = Array.from(new Set(products.flatMap(p => p.category).filter(Boolean)));
+  const categoryStockData = uniqueCategories.map((cat, idx) => ({
+    name: cat === 'Tournament Wear' ? 'Tournament' : cat,
+    stock: products.filter(p => Array.isArray(p.category) ? p.category.includes(cat) : p.category === cat).reduce((sum, p) => sum + (p.stock ?? 15), 0),
+    color: chartColors[idx % chartColors.length]
+  }));
+
 
   const handleUpdateStock = (productId, type = 'add') => {
     const quantity = parseInt(adjustAmount, 10);
@@ -239,7 +241,7 @@ export default function AdminInventory() {
                   <tr key={product.id} className="border-b border-zinc-100 dark:border-zinc-800 last:border-0 hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30">
                     <td className="py-3.5 px-6 font-semibold font-mono text-zinc-400">{product.id}</td>
                     <td className="py-3.5 px-4 font-semibold text-zinc-900 dark:text-zinc-100">{product.name}</td>
-                    <td className="py-3.5 px-4 text-zinc-500 dark:text-zinc-400">{product.category}</td>
+                    <td className="py-3.5 px-4 text-zinc-500 dark:text-zinc-400">{Array.isArray(product.category) ? product.category.join(', ') : product.category}</td>
                     <td className="py-3.5 px-4 font-bold font-mono">{stock} units</td>
                     <td className="py-3.5 px-4">
                       <span className={`px-2 py-0.5 rounded text-[8px] font-bold ${

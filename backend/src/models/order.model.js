@@ -17,6 +17,10 @@ const orderItemSchema = new mongoose.Schema({
     ref: 'SavedDesign',
     default: null,
   },
+  teamName: { type: String, default: null },
+  chestLogo: { type: String, default: null },
+  backsidePlayerName: { type: String, default: null },
+  playerNumber: { type: String, default: null },
 });
 
 const orderSchema = new mongoose.Schema({

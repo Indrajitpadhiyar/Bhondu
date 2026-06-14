@@ -436,7 +436,7 @@ export default function AdminDashboard() {
                     {product.name}
                   </p>
                   <p className="text-[10px] text-zinc-400 uppercase tracking-wide">
-                    {product.category}
+                    {Array.isArray(product.category) ? product.category.join(', ') : product.category}
                   </p>
                 </div>
                 <div className="text-right">

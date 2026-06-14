@@ -15,7 +15,7 @@
 @theme {
   --color-primary: #111111;
   --color-secondary: #f4f4f5;
-  --color-accent: #e8fc08;
+  --color-accent: #829004;
   --color-luxury-text: #222222;
   --color-luxury-bg: #FFFFFF;
   
@@ -34,6 +34,10 @@
 
 :root {
   color-scheme: light dark;
+}
+
+.dark {
+  --color-accent: #e8fc08;
 }
 
 /* Custom Base resets */
@@ -63,6 +67,9 @@ body {
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
+  background: #829004;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
   background: #c8da07;
 }
 

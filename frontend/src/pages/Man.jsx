@@ -26,45 +26,74 @@ const Man = () => {
   const [sortBy, setSortBy] = useState('DEFAULT');
   const [filteredProducts, setFilteredProducts] = useState([]);
 
-  // Mock Men's categories list
+  // Default Men's categories list
+  const defaultManCategories = ['Tournament Wear', 'T-Shirts', 'Shirts', 'Shoes'];
+
+  // Extract other categories present in men's products, excluding women-only default categories to keep them separated
+  const dbCategories = Array.from(new Set(
+    products
+      .flatMap(p => p.category)
+      .filter(cat => cat && !['Full Outfit Dress', 'Sari', 'Kurti'].includes(cat))
+  ));
+
+  const uniqueCategories = Array.from(new Set([
+    ...defaultManCategories,
+    ...dbCategories
+  ]));
+
   const categoriesList = [
     { name: 'ALL', count: products.length },
-    { name: 'Tournament Wear', count: products.filter(p => p.category === 'Tournament Wear').length },
-    { name: 'T-Shirts', count: products.filter(p => p.category === 'T-Shirts').length },
-    { name: 'Shirts', count: products.filter(p => p.category === 'Shirts').length },
-    { name: 'Shoes', count: products.filter(p => p.category === 'Shoes').length },
+    ...uniqueCategories.map(cat => ({
+      name: cat,
+      count: products.filter(p => Array.isArray(p.category) ? p.category.includes(cat) : p.category === cat).length
+    }))
   ];
 
   // Subcategories mapping
   const subcategoriesMap = {
-    'ALL': [],
     'Tournament Wear': ['Tournament T-Shirts', 'Gaming Jerseys', 'Esports Jerseys', 'Custom Tournament Wear'],
     'T-Shirts': ['Oversized', 'Printed', 'Plain'],
     'Shirts': ['Casual Shirts', 'Formal Shirts', 'Linen Shirts'],
     'Shoes': ['Sneakers', 'Sports Shoes', 'Casual Shoes'],
   };
 
-  // Sync category from search parameters (if any)
+  // Get dynamic subcategories for a given category (merging hardcoded defaults with actual database product values)
+  const getSubcategories = (categoryName) => {
+    if (categoryName === 'ALL') return [];
+    const hardcoded = subcategoriesMap[categoryName] || [];
+    const fromProducts = products
+      .filter(p => (Array.isArray(p.category) ? p.category.includes(categoryName) : p.category === categoryName) && p.subcategory)
+      .map(p => p.subcategory);
+    return Array.from(new Set([...hardcoded, ...fromProducts]));
+  };
+
+  // Sync category and subcategory from search parameters (if any)
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const catParam = params.get('category');
+    const subcatParam = params.get('subcategory');
     if (catParam) {
       const match = categoriesList.find(c => c.name.toLowerCase() === catParam.toLowerCase());
-      if (match && match.name !== selectedCategory) {
+      if (match) {
         setSelectedCategory(match.name);
+        if (subcatParam) {
+          setSelectedSubcategory(subcatParam);
+        } else {
+          setSelectedSubcategory('ALL');
+        }
         setTimeout(() => {
           productsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
+        }, 150);
       }
     }
-  }, [location.search, products, selectedCategory]);
+  }, [location.search, products]);
 
   // Filter effect
   useEffect(() => {
     let result = [...products];
 
     if (selectedCategory !== 'ALL') {
-      result = result.filter(p => p.category === selectedCategory);
+      result = result.filter(p => Array.isArray(p.category) ? p.category.includes(selectedCategory) : p.category === selectedCategory);
       
       if (selectedSubcategory !== 'ALL') {
         result = result.filter(p => p.subcategory === selectedSubcategory);
@@ -194,7 +223,7 @@ const Man = () => {
         </div>
 
         {/* Subcategories (Dynamic display) */}
-        {selectedCategory !== 'ALL' && subcategoriesMap[selectedCategory] && (
+        {selectedCategory !== 'ALL' && getSubcategories(selectedCategory).length > 0 && (
           <div className="flex flex-wrap justify-center gap-2 mb-12 border-t border-secondary dark:border-zinc-800 pt-6">
             <button
               onClick={() => setSelectedSubcategory('ALL')}
@@ -202,7 +231,7 @@ const Man = () => {
             >
               ALL SUB-CATEGORIES
             </button>
-            {subcategoriesMap[selectedCategory].map((sub) => (
+            {getSubcategories(selectedCategory).map((sub) => (
               <button
                 key={sub}
                 onClick={() => setSelectedSubcategory(sub)}

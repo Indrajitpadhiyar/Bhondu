@@ -913,6 +913,27 @@ export default function Profile() {
                                         style={{ backgroundColor: item.color }}
                                       />
                                     </div>
+                                    {item.teamName && (
+                                      <p className="text-[10px] text-zinc-450 dark:text-zinc-450 mt-0.5">
+                                        Team: <span className="font-bold text-zinc-800 dark:text-zinc-200 uppercase">{item.teamName}</span>
+                                      </p>
+                                    )}
+                                    {item.backsidePlayerName && (
+                                      <p className="text-[10px] text-zinc-450 dark:text-zinc-450 mt-0.5">
+                                        Player: <span className="font-bold text-zinc-800 dark:text-zinc-200 uppercase">{item.backsidePlayerName} {item.playerNumber ? `#${item.playerNumber}` : ''}</span>
+                                      </p>
+                                    )}
+                                    {!item.backsidePlayerName && item.playerNumber && (
+                                      <p className="text-[10px] text-zinc-450 dark:text-zinc-450 mt-0.5">
+                                        Number: <span className="font-bold text-zinc-800 dark:text-zinc-200">#{item.playerNumber}</span>
+                                      </p>
+                                    )}
+                                    {item.chestLogo && (
+                                      <div className="flex items-center gap-1.5 mt-1 text-[10px] text-zinc-450 dark:text-zinc-450">
+                                        <span>Logo:</span>
+                                        <img src={item.chestLogo} alt="Logo" className="w-6 h-6 object-contain border border-secondary dark:border-zinc-800 rounded-sm" />
+                                      </div>
+                                    )}
                                   </div>
                                   <div className="text-right font-bold text-zinc-900 dark:text-zinc-100">
                                     ₹{(item.price * item.quantity).toFixed(2)}

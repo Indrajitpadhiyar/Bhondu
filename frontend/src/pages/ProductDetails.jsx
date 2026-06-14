@@ -44,7 +44,7 @@ const ProductDetails = () => {
 
   // Find the current product
   const { data: product, isLoading: isProductLoading } = useGetProductDetailsQuery(id);
-  const { data: allProducts = [] } = useGetProductsQuery({ gender: product?.gender, category: product?.category }, { skip: !product });
+  const { data: allProducts = [] } = useGetProductsQuery({ gender: product?.gender, category: Array.isArray(product?.category) ? product?.category[0] : product?.category }, { skip: !product });
 
   // States
   const [selectedSize, setSelectedSize] = useState('');
@@ -54,6 +54,55 @@ const ProductDetails = () => {
   const [activeTab, setActiveTab] = useState('details');
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [sizeUnit, setSizeUnit] = useState('IN');
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+
+  // Personalization States
+  const [teamName, setTeamName] = useState('');
+  const [chestLogo, setChestLogo] = useState('');
+  const [backsidePlayerName, setBacksidePlayerName] = useState('');
+  const [playerNumber, setPlayerNumber] = useState('');
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+
+  const hasCategory = (catName) => {
+    if (!product?.category) return false;
+    if (Array.isArray(product.category)) {
+      return product.category.some(c => c.toLowerCase() === catName.toLowerCase());
+    }
+    return product.category.toLowerCase() === catName.toLowerCase();
+  };
+
+  const isCustomizable = hasCategory('tournament wear') || product?.subcategory?.toLowerCase().includes('jersey') || product?.name?.toLowerCase().includes('jersey');
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be less than 5MB.');
+      return;
+    }
+
+    setUploadingLogo(true);
+    const formData = new FormData();
+    formData.append('images', file);
+
+    try {
+      const urls = await uploadReviewImages(formData).unwrap();
+      if (urls && urls.length > 0) {
+        setChestLogo(urls[0]);
+        toast.success('Chest logo uploaded successfully!');
+      } else {
+        toast.error('Failed to upload logo.');
+      }
+    } catch (err) {
+      toast.error(err.data?.message || 'Error uploading logo.');
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
 
   // Review states
   const [reviewRating, setReviewRating] = useState(0);
@@ -152,7 +201,6 @@ const ProductDetails = () => {
     }
   };
 
-  // Scroll to top and reset configuration when product ID changes or product finishes loading
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (product) {
@@ -160,6 +208,10 @@ const ProductDetails = () => {
       setSelectedColor(product.colors[0] || '');
       setActiveImageIdx(0);
       setQuantity(1);
+      setTeamName('');
+      setChestLogo('');
+      setBacksidePlayerName('');
+      setPlayerNumber('');
     }
   }, [id, product]);
 
@@ -194,7 +246,13 @@ const ProductDetails = () => {
       navigate('/login', { state: { from: location } });
       return;
     }
-    addToCart(product, selectedSize, selectedColor, quantity);
+    const customization = isCustomizable ? {
+      teamName: teamName.trim() || null,
+      chestLogo: chestLogo || null,
+      backsidePlayerName: backsidePlayerName.trim() || null,
+      playerNumber: playerNumber.trim() || null
+    } : null;
+    addToCart(product, selectedSize, selectedColor, quantity, null, null, null, customization);
   };
 
   const handleBuyNow = () => {
@@ -203,7 +261,13 @@ const ProductDetails = () => {
       navigate('/login', { state: { from: location } });
       return;
     }
-    addToCart(product, selectedSize, selectedColor, quantity);
+    const customization = isCustomizable ? {
+      teamName: teamName.trim() || null,
+      chestLogo: chestLogo || null,
+      backsidePlayerName: backsidePlayerName.trim() || null,
+      playerNumber: playerNumber.trim() || null
+    } : null;
+    addToCart(product, selectedSize, selectedColor, quantity, null, null, null, customization);
     setIsCartOpen(true);
   };
 
@@ -214,7 +278,7 @@ const ProductDetails = () => {
 
   return (
     <div className="w-full bg-white dark:bg-zinc-950 transition-colors duration-300">
-      
+
       {/* ==================== BREADCRUMBS & BACK BUTTON ==================== */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-secondary dark:border-zinc-800 pb-4">
@@ -226,7 +290,7 @@ const ProductDetails = () => {
             <ArrowLeft className="w-4 h-4" />
             <span>Go Back</span>
           </button>
-          
+
           {/* Path Links */}
           <div className="text-[10px] font-semibold tracking-widest uppercase text-zinc-400 flex items-center space-x-2.5">
             <Link to="/" className="hover:text-accent transition-colors">HOME</Link>
@@ -241,7 +305,7 @@ const ProductDetails = () => {
       {/* ==================== PRODUCT DISPLAY SPLIT LAYOUT ==================== */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-          
+
           {/* Left Side: Dynamic Gallery */}
           <div className="space-y-6">
             <div className="aspect-[3/4] w-full overflow-hidden relative rounded-sm bg-secondary/15 dark:bg-zinc-900 border border-secondary dark:border-zinc-800 flex items-center justify-center">
@@ -251,7 +315,7 @@ const ProductDetails = () => {
                   -{product.discount}% OFF
                 </span>
               )}
-              
+
               {/* Wishlist Floating Button */}
               <button
                 onClick={() => {
@@ -301,9 +365,9 @@ const ProductDetails = () => {
             <div className="space-y-6">
               {/* Category Subtext */}
               <div className="text-[10px] font-bold text-accent uppercase tracking-[0.25em]">
-                {product.category} | {product.subcategory}
+                {Array.isArray(product.category) ? product.category.join(', ') : product.category} | {product.subcategory}
               </div>
-              
+
               {/* Title */}
               <h1 className="font-luxury-serif text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-wider text-primary dark:text-zinc-100 leading-tight m-0">
                 {product.name}
@@ -328,9 +392,21 @@ const ProductDetails = () => {
               </div>
 
               {/* Short Description */}
-              <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed uppercase tracking-widest font-light">
-                {product.description}
-              </p>              {/* Sizing options */}
+              <div className="space-y-2">
+                <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed uppercase tracking-widest font-light">
+                  {product.description && product.description.length > 220 && !isDescriptionExpanded
+                    ? `${product.description.slice(0, 220)}...`
+                    : product.description}
+                </p>
+                {product.description && product.description.length > 220 && (
+                  <button
+                    onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                    className="text-[10px] font-bold text-accent hover:underline uppercase tracking-widest cursor-pointer bg-transparent border-0 p-0"
+                  >
+                    {isDescriptionExpanded ? 'SHOW LESS INFORMATION' : 'SHOW MORE INFORMATION'}
+                  </button>
+                )}
+              </div>              {/* Sizing options */}
               <div className="space-y-3 pt-2">
                 <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-zinc-400">
                   <span>SELECT SIZE</span>
@@ -366,7 +442,7 @@ const ProductDetails = () => {
                     >
                       <div className="flex justify-between items-center text-[9px] tracking-widest uppercase font-semibold text-zinc-400">
                         <span className="font-bold text-accent">
-                          {product.category?.toLowerCase() === 'shoes' ? 'SHOE SIZING' : `${product.gender.toUpperCase()} APPAREL SIZING`}
+                          {hasCategory('shoes') ? 'SHOE SIZING' : `${product.gender.toUpperCase()} APPAREL SIZING`}
                         </span>
                         {/* Unit Switcher */}
                         <div className="flex bg-secondary/55 dark:bg-zinc-900/55 p-0.5 rounded-sm border border-secondary dark:border-zinc-800">
@@ -387,7 +463,7 @@ const ProductDetails = () => {
                         </div>
                       </div>
 
-                      {product.category?.toLowerCase() === 'shoes' ? (
+                      {hasCategory('shoes') ? (
                         <table className="w-full text-[9px] tracking-wider uppercase border-collapse text-left">
                           <thead>
                             <tr className="border-b border-secondary dark:border-zinc-800 text-zinc-455 font-bold">
@@ -456,6 +532,100 @@ const ProductDetails = () => {
                   ))}
                 </div>
               </div>
+
+              {/* Jersey Personalization Form */}
+              {isCustomizable && (
+                <div className="space-y-4 pt-4 pb-2 border-t border-secondary dark:border-zinc-800">
+                  <div className="flex items-center space-x-2 text-accent">
+                    <Sparkles className="w-4 h-4 text-accent" />
+                    <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-accent">Personalise Your Jersey</h4>
+                  </div>
+                  <p className="text-[10px] text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-semibold">
+                    Customize team details, player name, number, and upload chest logo.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                    {/* Team Name Input */}
+                    <div className="space-y-1.5 text-left">
+                      <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">Team Name</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. STRIKE CC"
+                        value={teamName}
+                        onChange={(e) => setTeamName(e.target.value)}
+                        className="w-full text-xs p-2.5 border border-secondary dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 uppercase tracking-widest font-semibold"
+                      />
+                    </div>
+
+                    {/* Chest Logo Upload */}
+                    <div className="space-y-1.5 text-left">
+                      <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">Chest Logo (Optional)</label>
+                      {chestLogo ? (
+                        <div className="flex items-center gap-2.5 p-1 border border-secondary dark:border-zinc-800 rounded-sm bg-secondary/10 dark:bg-zinc-900/10">
+                          <img src={chestLogo} alt="Uploaded logo" className="w-10 h-10 object-contain rounded-xs border border-secondary dark:border-zinc-850" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[9px] text-emerald-500 font-bold uppercase tracking-wider">Logo Attached</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setChestLogo('')}
+                            className="p-1.5 text-zinc-400 hover:text-red-500 transition-colors"
+                            aria-label="Remove logo"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <label className={`flex items-center justify-center gap-2 w-full py-2.5 border border-dashed border-secondary/60 dark:border-zinc-800 rounded-sm cursor-pointer hover:border-accent transition-colors bg-white dark:bg-zinc-950 ${uploadingLogo ? 'pointer-events-none opacity-60' : ''}`}>
+                          {uploadingLogo ? (
+                            <>
+                              <RotateCw className="w-3.5 h-3.5 text-accent animate-spin" />
+                              <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-wider">Uploading...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-3.5 h-3.5 text-accent" />
+                              <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider">Upload PNG/JPG</span>
+                            </>
+                          )}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleLogoUpload}
+                            className="hidden"
+                            disabled={uploadingLogo}
+                          />
+                        </label>
+                      )}
+                    </div>
+
+                    {/* Player Name Input */}
+                    <div className="space-y-1.5 text-left">
+                      <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">Player Name</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. INDRAJIT"
+                        value={backsidePlayerName}
+                        onChange={(e) => setBacksidePlayerName(e.target.value)}
+                        className="w-full text-xs p-2.5 border border-secondary dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 uppercase tracking-widest font-semibold"
+                      />
+                    </div>
+
+                    {/* Player Number Input */}
+                    <div className="space-y-1.5 text-left">
+                      <label className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">Player Number</label>
+                      <input
+                        type="text"
+                        maxLength="3"
+                        placeholder="e.g. 10"
+                        value={playerNumber}
+                        onChange={(e) => setPlayerNumber(e.target.value)}
+                        className="w-full text-xs p-2.5 border border-secondary dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 focus:outline-none focus:border-accent text-zinc-850 dark:text-zinc-150 uppercase tracking-widest font-semibold"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Stepper Quantity & CTA Actions */}
@@ -591,7 +761,7 @@ const ProductDetails = () => {
                         <div className="flex flex-col items-center gap-1 min-w-[100px]">
                           <span className="text-5xl font-bold text-primary dark:text-zinc-100 font-luxury-serif">{product.rating || 0}</span>
                           <div className="flex gap-0.5">
-                            {[1,2,3,4,5].map(s => (
+                            {[1, 2, 3, 4, 5].map(s => (
                               <Star key={s} className={`w-4 h-4 ${s <= Math.round(product.rating || 0) ? 'fill-accent text-accent' : 'text-zinc-300 dark:text-zinc-700'}`} />
                             ))}
                           </div>
@@ -600,7 +770,7 @@ const ProductDetails = () => {
 
                         {/* Star distribution bars */}
                         <div className="flex-1 space-y-1.5 w-full">
-                          {[5,4,3,2,1].map(star => {
+                          {[5, 4, 3, 2, 1].map(star => {
                             const count = starCounts[star] || 0;
                             const pct = reviewTotal > 0 ? (count / reviewTotal) * 100 : 0;
                             return (
@@ -631,7 +801,7 @@ const ProductDetails = () => {
                           <div className="space-y-1.5">
                             <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold block">Your Rating</label>
                             <div className="flex gap-1">
-                              {[1,2,3,4,5].map(s => (
+                              {[1, 2, 3, 4, 5].map(s => (
                                 <button
                                   key={s}
                                   type="button"
@@ -751,7 +921,7 @@ const ProductDetails = () => {
                                 <div className="flex items-center gap-2">
                                   {/* Stars */}
                                   <div className="flex gap-0.5">
-                                    {[1,2,3,4,5].map(s => (
+                                    {[1, 2, 3, 4, 5].map(s => (
                                       <Star key={s} className={`w-3.5 h-3.5 ${s <= rev.rating ? 'fill-accent text-accent' : 'text-zinc-300 dark:text-zinc-700'}`} />
                                     ))}
                                   </div>

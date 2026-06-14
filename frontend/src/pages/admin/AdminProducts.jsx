@@ -48,6 +48,7 @@ export default function AdminProducts() {
   // Add Product Modal
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingProductId, setEditingProductId] = useState(null);
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState({
     isOpen: false,
     productId: null,
@@ -61,7 +62,7 @@ export default function AdminProducts() {
     description: '',
     price: '',
     salePrice: '',
-    category: 'Tournament Wear',
+    category: ['Tournament Wear'],
     subcategory: '',
     gender: 'man',
     stock: '25',
@@ -104,7 +105,10 @@ export default function AdminProducts() {
     'Tournament Wear',
     'T-Shirts',
     'Shirts',
-    'Shoes'
+    'Shoes',
+    'Full Outfit Dress',
+    'Sari',
+    'Kurti'
   ];
 
   const handleSelectAll = (e) => {
@@ -135,9 +139,15 @@ export default function AdminProducts() {
   // Filter & Sort Logic
   const filteredProducts = products
     .filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase()) || 
-                            product.category.toLowerCase().includes(search.toLowerCase());
-      const matchesCategory = categoryFilter ? product.category === categoryFilter : true;
+      const categorySearchMatches = Array.isArray(product.category)
+        ? product.category.some(c => c.toLowerCase().includes(search.toLowerCase()))
+        : product.category?.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase()) || categorySearchMatches;
+      const matchesCategory = categoryFilter ? (
+        Array.isArray(product.category)
+          ? product.category.includes(categoryFilter)
+          : product.category === categoryFilter
+      ) : true;
       const matchesGender = genderFilter ? product.gender === genderFilter : true;
       
       const stockLevel = product.stock ?? 15; // fallback
@@ -237,7 +247,7 @@ export default function AdminProducts() {
       description: '',
       price: '',
       salePrice: '',
-      category: 'Tournament Wear',
+      category: ['Tournament Wear'],
       subcategory: '',
       gender: 'man',
       stock: '25',
@@ -254,12 +264,18 @@ export default function AdminProducts() {
   };
 
   const handleEditClick = (product) => {
+    let catArray = [];
+    if (product.category) {
+      catArray = Array.isArray(product.category) ? product.category : [product.category];
+    } else {
+      catArray = ['T-Shirts'];
+    }
     setNewProduct({
       name: product.name || '',
       description: product.description || '',
       price: product.price || '',
       salePrice: product.salePrice || '',
-      category: product.category || 'Tournament Wear',
+      category: catArray,
       subcategory: product.subcategory || '',
       gender: product.gender || 'man',
       stock: product.stock !== undefined ? String(product.stock) : '25',
@@ -279,7 +295,7 @@ export default function AdminProducts() {
       description: '',
       price: '',
       salePrice: '',
-      category: 'Tournament Wear',
+      category: ['T-Shirts'],
       subcategory: '',
       gender: 'man',
       stock: '25',
@@ -308,6 +324,16 @@ export default function AdminProducts() {
         ? prev.colors.filter(c => c !== colorHex)
         : [...prev.colors, colorHex];
       return { ...prev, colors };
+    });
+  };
+
+  const toggleCategory = (cat) => {
+    setNewProduct(prev => {
+      const current = prev.category || [];
+      const category = current.includes(cat)
+        ? current.filter(c => c !== cat)
+        : [...current, cat];
+      return { ...prev, category };
     });
   };
 
@@ -376,7 +402,10 @@ export default function AdminProducts() {
             className="text-xs px-3 py-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50/50 dark:bg-zinc-950/20 focus:outline-none"
           >
             <option value="">All Categories</option>
-            {categoriesList.map(cat => (
+            {Array.from(new Set([
+              ...categoriesList,
+              ...products.flatMap(p => p.category).filter(Boolean)
+            ])).map(cat => (
               <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
@@ -500,7 +529,7 @@ export default function AdminProducts() {
 
                       {/* Category */}
                       <td className="py-3 px-4 text-zinc-500 dark:text-zinc-400">
-                        {product.category}
+                        {Array.isArray(product.category) ? product.category.join(', ') : product.category}
                       </td>
 
                       {/* Price (Sale Price vs Original Price) */}
@@ -702,31 +731,83 @@ export default function AdminProducts() {
                   </div>
                 </div>
 
-                {/* Category & Gender */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Category</label>
-                    <select
-                      value={newProduct.category}
-                      onChange={(e) => setNewProduct(prev => ({ ...prev, category: e.target.value }))}
-                      className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
-                    >
-                      {categoriesList.map(cat => (
-                        <option key={cat} value={cat}>{cat}</option>
-                      ))}
-                    </select>
+                {/* Gender Focus */}
+                <div className="space-y-1">
+                  <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Gender Focus</label>
+                  <select
+                    value={newProduct.gender}
+                    onChange={(e) => setNewProduct(prev => ({ ...prev, gender: e.target.value }))}
+                    className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
+                  >
+                    <option value="man">Men</option>
+                    <option value="women">Women</option>
+                    <option value="unisex">Unisex</option>
+                  </select>
+                </div>
+
+                {/* Categories Selection with Checkboxes */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Categories (Select Multiple)</label>
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Gender Focus</label>
-                    <select
-                      value={newProduct.gender}
-                      onChange={(e) => setNewProduct(prev => ({ ...prev, gender: e.target.value }))}
-                      className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
+                  
+                  <div className="grid grid-cols-2 gap-2.5 p-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg max-h-48 overflow-y-auto scrollbar-thin">
+                    {Array.from(new Set([
+                      ...categoriesList,
+                      ...(Array.isArray(newProduct.category) ? newProduct.category : [newProduct.category].filter(Boolean))
+                    ])).map((cat) => {
+                      const isChecked = Array.isArray(newProduct.category) 
+                        ? newProduct.category.includes(cat)
+                        : newProduct.category === cat;
+                      return (
+                        <label
+                          key={cat}
+                          className="flex items-center gap-2 px-2.5 py-1.5 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-md cursor-pointer select-none"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleCategory(cat)}
+                            className="rounded border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white focus:ring-zinc-900 dark:focus:ring-white w-4 h-4"
+                          />
+                          <span className="text-xs text-zinc-700 dark:text-zinc-300 font-medium truncate">{cat}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+
+                  {/* Add Custom Category Box */}
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      id="custom-category-input"
+                      placeholder="Add custom category..."
+                      className="flex-1 text-xs p-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 outline-none focus:border-zinc-400"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          const val = e.target.value.trim();
+                          if (val) {
+                            toggleCategory(val);
+                            e.target.value = '';
+                          }
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const input = document.getElementById('custom-category-input');
+                        const val = input?.value.trim();
+                        if (val) {
+                          toggleCategory(val);
+                          input.value = '';
+                        }
+                      }}
+                      className="px-3.5 py-2 bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 rounded-lg text-xs font-bold hover:bg-zinc-850 dark:hover:bg-zinc-100 transition-colors border-0 cursor-pointer"
                     >
-                      <option value="man">Men</option>
-                      <option value="women">Women</option>
-                      <option value="unisex">Unisex</option>
-                    </select>
+                      Add Custom
+                    </button>
                   </div>
                 </div>
 
