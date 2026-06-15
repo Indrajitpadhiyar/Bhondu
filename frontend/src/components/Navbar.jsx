@@ -996,7 +996,14 @@ const Navbar = () => {
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <span className="text-xs font-bold text-accent">₹{p.price}</span>
+                            {p.salePrice ? (
+                              <>
+                                <span className="text-xs font-bold text-accent">₹{p.salePrice}</span>
+                                <span className="text-[10px] text-zinc-400 line-through">₹{p.price}</span>
+                              </>
+                            ) : (
+                              <span className="text-xs font-bold text-accent">₹{p.price}</span>
+                            )}
                             <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 text-accent transform translate-x-[-10px] group-hover:translate-x-0 transition-all" />
                           </div>
                         </div>

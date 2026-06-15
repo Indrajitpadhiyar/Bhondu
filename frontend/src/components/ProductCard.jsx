@@ -26,6 +26,7 @@ const ProductCard = ({ product }) => {
     // Quick add default first size and color
     addToCart(product, product.sizes[0], product.colors[0]);
   };
+  const displayDiscount = product.discount || (product.salePrice ? Math.round(((product.price - product.salePrice) / product.price) * 100) : 0);
 
   return (
     <div 
@@ -40,9 +41,9 @@ const ProductCard = ({ product }) => {
         className="relative aspect-[3/4] bg-secondary/20 dark:bg-zinc-850 overflow-hidden cursor-pointer"
       >
         {/* Discount Badge */}
-        {product.discount > 0 && (
+        {displayDiscount > 0 && (
           <span className="absolute top-4 left-4 z-10 bg-accent text-primary dark:text-zinc-950 text-[10px] font-bold px-2.5 py-1 tracking-widest uppercase">
-            -{product.discount}% OFF
+            -{displayDiscount}% OFF
           </span>
         )}
 
@@ -107,9 +108,13 @@ const ProductCard = ({ product }) => {
           {product.subcategory}
         </p>
         <div className="mt-auto flex items-center space-x-2.5">
-          <span className="text-xs font-bold text-accent">₹{product.price}</span>
-          {product.discount > 0 && (
-            <span className="text-[10px] text-zinc-400 line-through">₹{product.originalPrice}</span>
+          {product.salePrice ? (
+            <>
+              <span className="text-xs font-bold text-accent">₹{product.salePrice}</span>
+              <span className="text-[10px] text-zinc-400 line-through">₹{product.price}</span>
+            </>
+          ) : (
+            <span className="text-xs font-bold text-accent">₹{product.price}</span>
           )}
         </div>
       </div>

@@ -2,49 +2,7 @@ import Product from '../models/product.model.js';
 import Review from '../models/review.model.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import AppError from '../utils/appError.js';
-// Local self-contained product seed data
-const seedData = [
-  {
-    name: "Aether Pro Esports Jersey",
-    price: 89,
-    originalPrice: 119,
-    discount: 25,
-    rating: 4.8,
-    reviewsCount: 42,
-    images: [
-      "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop"
-    ],
-    gender: "man",
-    category: "Tournament Wear",
-    subcategory: "Esports Jerseys",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#111111", "#C9A87C"],
-    isNewArrival: true,
-    isBestSeller: true,
-    isTrending: true,
-    description: "Engineered for elite performance. The Aether Pro Esports Jersey blends ultra-breathable moisture-wicking technology."
-  },
-  {
-    name: "Aegis Pro Women Jersey",
-    price: 89,
-    originalPrice: 119,
-    discount: 25,
-    rating: 4.8,
-    reviewsCount: 31,
-    images: [
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=800&auto=format&fit=crop"
-    ],
-    gender: "women",
-    category: "Tournament Wear",
-    subcategory: "Women Gaming Jerseys",
-    sizes: ["XS", "S", "M", "L"],
-    colors: ["#111111", "#C9A87C"],
-    isNewArrival: true,
-    isBestSeller: true,
-    isTrending: true,
-    description: "High-performance women's fit gaming jersey featuring a tapered waistline and gold foil logo print accents."
-  }
-];
+
 
 export const seedProducts = asyncHandler(async (req, res, next) => {
   await Product.deleteMany({});
@@ -101,6 +59,11 @@ export const getProductDetails = asyncHandler(async (req, res, next) => {
 });
 
 export const createProduct = asyncHandler(async (req, res, next) => {
+  if (req.body.price && req.body.salePrice) {
+    req.body.discount = Math.round(((req.body.price - req.body.salePrice) / req.body.price) * 100);
+  } else {
+    req.body.discount = 0;
+  }
   const product = await Product.create(req.body);
 
   res.status(201).json({
@@ -123,6 +86,18 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
 });
 
 export const updateProduct = asyncHandler(async (req, res, next) => {
+  if (req.body.price !== undefined || req.body.salePrice !== undefined) {
+    const existing = await Product.findById(req.params.id);
+    if (existing) {
+      const price = req.body.price !== undefined ? Number(req.body.price) : existing.price;
+      const salePrice = req.body.salePrice !== undefined ? (req.body.salePrice === null ? null : Number(req.body.salePrice)) : existing.salePrice;
+      if (price && salePrice) {
+        req.body.discount = Math.round(((price - salePrice) / price) * 100);
+      } else {
+        req.body.discount = 0;
+      }
+    }
+  }
   const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,

@@ -62,6 +62,7 @@ export default function AdminProducts() {
     description: '',
     price: '',
     salePrice: '',
+    discount: '',
     category: ['Tournament Wear'],
     subcategory: '',
     gender: 'man',
@@ -224,6 +225,7 @@ export default function AdminProducts() {
       description: newProduct.description,
       price: Number(newProduct.price),
       salePrice: newProduct.salePrice ? Number(newProduct.salePrice) : null,
+      discount: newProduct.discount ? Number(newProduct.discount) : 0,
       category: newProduct.category,
       subcategory: newProduct.subcategory,
       gender: newProduct.gender,
@@ -247,6 +249,7 @@ export default function AdminProducts() {
       description: '',
       price: '',
       salePrice: '',
+      discount: '',
       category: ['Tournament Wear'],
       subcategory: '',
       gender: 'man',
@@ -275,6 +278,7 @@ export default function AdminProducts() {
       description: product.description || '',
       price: product.price || '',
       salePrice: product.salePrice || '',
+      discount: product.discount || (product.salePrice ? Math.round(((product.price - product.salePrice) / product.price) * 100) : ''),
       category: catArray,
       subcategory: product.subcategory || '',
       gender: product.gender || 'man',
@@ -295,6 +299,7 @@ export default function AdminProducts() {
       description: '',
       price: '',
       salePrice: '',
+      discount: '',
       category: ['T-Shirts'],
       subcategory: '',
       gender: 'man',
@@ -307,6 +312,56 @@ export default function AdminProducts() {
     });
     setEditingProductId(null);
     setIsAddOpen(true);
+  };
+
+  const handlePriceChange = (val) => {
+    setNewProduct(prev => {
+      const price = val === '' ? '' : Number(val);
+      const discount = prev.discount === '' ? '' : Number(prev.discount);
+      const salePrice = prev.salePrice === '' ? '' : Number(prev.salePrice);
+      
+      let newSalePrice = prev.salePrice;
+      let newDiscount = prev.discount;
+
+      if (price !== '' && price > 0) {
+        if (discount !== '' && discount > 0) {
+          newSalePrice = String(Math.round(price * (1 - discount / 100)));
+        } else if (salePrice !== '' && salePrice > 0) {
+          newDiscount = String(Math.round(((price - salePrice) / price) * 100));
+        }
+      }
+      return { ...prev, price: val, salePrice: newSalePrice, discount: newDiscount };
+    });
+  };
+
+  const handleDiscountChange = (val) => {
+    setNewProduct(prev => {
+      const discount = val === '' ? '' : Number(val);
+      const price = prev.price === '' ? '' : Number(prev.price);
+      
+      let newSalePrice = prev.salePrice;
+      if (price !== '' && price > 0 && val !== '') {
+        newSalePrice = String(Math.round(price * (1 - discount / 100)));
+      } else if (val === '') {
+        newSalePrice = '';
+      }
+      return { ...prev, discount: val, salePrice: newSalePrice };
+    });
+  };
+
+  const handleSalePriceChange = (val) => {
+    setNewProduct(prev => {
+      const salePrice = val === '' ? '' : Number(val);
+      const price = prev.price === '' ? '' : Number(prev.price);
+      
+      let newDiscount = prev.discount;
+      if (price !== '' && price > 0 && val !== '') {
+        newDiscount = String(Math.round(((price - salePrice) / price) * 100));
+      } else if (val === '') {
+        newDiscount = '';
+      }
+      return { ...prev, salePrice: val, discount: newDiscount };
+    });
   };
 
   const toggleSize = (size) => {
@@ -534,10 +589,10 @@ export default function AdminProducts() {
 
                       {/* Price (Sale Price vs Original Price) */}
                       <td className="py-3 px-4 font-medium">
-                        {product.discount > 0 ? (
+                        {product.salePrice ? (
                           <div className="flex flex-col">
-                            <span className="text-zinc-900 dark:text-zinc-100 font-semibold">₹{product.price}</span>
-                            <span className="text-[10px] text-zinc-400 line-through">₹{product.originalPrice}</span>
+                            <span className="text-zinc-900 dark:text-zinc-100 font-semibold">₹{product.salePrice}</span>
+                            <span className="text-[10px] text-zinc-400 line-through">₹{product.price}</span>
                             <span className="text-[9px] text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mt-0.5">Ship: ₹{product.shippingCost ?? 99}</span>
                           </div>
                         ) : (
@@ -706,16 +761,28 @@ export default function AdminProducts() {
                   />
                 </div>
 
-                {/* Price & Sale Price */}
-                <div className="grid grid-cols-2 gap-4">
+                {/* Price, Discount & Sale Price */}
+                <div className="grid grid-cols-3 gap-3">
                   <div className="space-y-1">
-                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Price (₹)</label>
+                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Price (MRP) (₹)</label>
                     <input
                       type="number"
                       required
                       value={newProduct.price}
-                      onChange={(e) => setNewProduct(prev => ({ ...prev, price: e.target.value }))}
+                      onChange={(e) => handlePriceChange(e.target.value)}
                       placeholder="8900"
+                      className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Discount (%)</label>
+                    <input
+                      type="number"
+                      value={newProduct.discount}
+                      onChange={(e) => handleDiscountChange(e.target.value)}
+                      placeholder="e.g. 15"
+                      min="0"
+                      max="100"
                       className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
                     />
                   </div>
@@ -724,8 +791,8 @@ export default function AdminProducts() {
                     <input
                       type="number"
                       value={newProduct.salePrice}
-                      onChange={(e) => setNewProduct(prev => ({ ...prev, salePrice: e.target.value }))}
-                      placeholder="Leave empty if regular price"
+                      onChange={(e) => handleSalePriceChange(e.target.value)}
+                      placeholder="Discounted"
                       className="w-full text-xs p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950"
                     />
                   </div>

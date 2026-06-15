@@ -239,6 +239,7 @@ const ProductDetails = () => {
   }
 
   const favorited = isInWishlist(product.id);
+  const displayDiscount = product.discount || (product.salePrice ? Math.round(((product.price - product.salePrice) / product.price) * 100) : 0);
 
   const handleAddToBag = () => {
     if (!isAuthenticated) {
@@ -310,9 +311,9 @@ const ProductDetails = () => {
           <div className="space-y-6">
             <div className="aspect-[3/4] w-full overflow-hidden relative rounded-sm bg-secondary/15 dark:bg-zinc-900 border border-secondary dark:border-zinc-800 flex items-center justify-center">
               {/* Promo Discount Badge */}
-              {product.discount > 0 && (
+              {displayDiscount > 0 && (
                 <span className="absolute top-6 left-6 z-10 bg-accent text-primary dark:text-zinc-950 text-[10px] font-bold px-3 py-1.5 tracking-widest uppercase">
-                  -{product.discount}% OFF
+                  -{displayDiscount}% OFF
                 </span>
               )}
 
@@ -385,9 +386,13 @@ const ProductDetails = () => {
 
               {/* Pricing */}
               <div className="flex items-center space-x-4">
-                <span className="text-2xl font-bold text-accent">₹{product.price}</span>
-                {product.discount > 0 && (
-                  <span className="text-sm text-zinc-400 line-through">₹{product.originalPrice}</span>
+                {product.salePrice ? (
+                  <>
+                    <span className="text-2xl font-bold text-accent">₹{product.salePrice}</span>
+                    <span className="text-sm text-zinc-400 line-through">₹{product.price}</span>
+                  </>
+                ) : (
+                  <span className="text-2xl font-bold text-accent">₹{product.price}</span>
                 )}
               </div>
 

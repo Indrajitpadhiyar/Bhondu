@@ -441,7 +441,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
-                    ₹{product.price}
+                    ₹{product.salePrice || product.price}
                   </p>
                   <p className="text-[10px] text-zinc-400">
                     {product.reviewsCount || 24} sold

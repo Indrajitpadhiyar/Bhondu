@@ -74,7 +74,7 @@ export const ShopProvider = ({ children }) => {
             key,
             id: product.id || product._id,
             name: designId ? `${product.name} (Custom)` : product.name,
-            price: customPrice || product.price,
+            price: customPrice || product.salePrice || product.price,
             image: customImage || product.images[0],
             size,
             color,

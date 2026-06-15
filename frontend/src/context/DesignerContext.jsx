@@ -47,7 +47,7 @@ export const DesignerProvider = ({ children, productId }) => {
         const prod = prodRes.data.data.product;
         setProduct(prod);
         setBaseColor(prod.colors && prod.colors.length > 0 ? prod.colors[0] : '#ffffff');
-        setEstimatedPrice(prod.price);
+        setEstimatedPrice(prod.salePrice || prod.price);
 
         // 2. Fetch Blank Templates
         const tempRes = await axios.get(`${API_URL}/templates/product/${productId}`);

@@ -17,7 +17,7 @@ const EMPTY_ARRAY = [];
 
 export const AdminProvider = ({ children }) => {
   const { data: dbProductsData } = useGetProductsQuery();
-  const dbProducts = dbProductsData || EMPTY_ARRAY;
+  const products = dbProductsData || EMPTY_ARRAY;
   
   const { data: dbOrdersData } = useGetOrdersQuery();
   const dbOrders = dbOrdersData || EMPTY_ARRAY;
@@ -26,8 +26,6 @@ export const AdminProvider = ({ children }) => {
   const [mutateUpdateProduct] = useUpdateProductMutation();
   const [mutateDeleteProduct] = useDeleteProductMutation();
   const [mutateUpdateOrderStatus] = useUpdateOrderStatusMutation();
-
-  const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [coupons, setCoupons] = useState(() => {
@@ -49,11 +47,7 @@ export const AdminProvider = ({ children }) => {
     testimonials: []
   });
 
-  useEffect(() => {
-    if (dbProductsData && dbProductsData !== products) {
-      setProducts(dbProductsData);
-    }
-  }, [dbProductsData, products]);
+
 
   useEffect(() => {
     if (dbOrdersData) {
