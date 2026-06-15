@@ -2,6 +2,7 @@ import Product from '../models/product.model.js';
 import Review from '../models/review.model.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import AppError from '../utils/appError.js';
+import seedData from '../data/products.js';
 
 
 export const seedProducts = asyncHandler(async (req, res, next) => {

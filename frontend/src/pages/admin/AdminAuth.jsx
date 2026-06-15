@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectIsAuthenticated, selectCurrentUser } from '../../features/auth/authSlice.js';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,40 +11,24 @@ import {
   User,
   Eye,
   EyeOff,
-  Sparkles,
   ArrowRight,
-  ShieldCheck,
   CheckCircle,
-  RotateCw
+  RotateCw,
+  ShieldAlert,
+  Sparkles
 } from 'lucide-react';
 
-export default function AdminAuth() {
+export default function UserAuth() {
   const navigate = useNavigate();
   const location = useLocation();
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const user = useSelector(selectCurrentUser);
 
   const [isLogin, setIsLogin] = useState(true);
-  const [isAdminRole, setIsAdminRole] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
-
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      const userIsAdmin = user.role === 'Admin' || user.role === 'Super Admin';
-      const from = location.state?.from?.pathname || (userIsAdmin ? '/admin' : '/');
-      navigate(from, { replace: true });
-    }
-  }, [isAuthenticated, user, navigate, location]);
-
+  const [showRegPwd, setShowRegPwd] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
-  const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
-
-  const loading = isLoginLoading || isRegisterLoading;
-
-  // Form states
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({
     name: '',
@@ -53,83 +37,80 @@ export default function AdminAuth() {
     confirmPassword: ''
   });
 
-  const checkPasswordStrength = (pwd) => {
-    if (!pwd) return { score: 0, checks: { length: false, lowercase: false, uppercase: false, number: false, special: false } };
-    
+  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+  const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
+  const loading = isLoginLoading || isRegisterLoading;
+
+  const googleBtnRef = useRef(null);
+  const [googleLogin] = useGoogleLoginMutation();
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const isAdmin = user.role === 'Admin' || user.role === 'Super Admin';
+      const from = location.state?.from?.pathname || (isAdmin ? '/admin' : '/');
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, user, navigate, location]);
+
+  // Password strength
+  const checkStrength = (pwd) => {
+    if (!pwd) return { score: 0, checks: {} };
     const checks = {
       length: pwd.length >= 8,
       lowercase: /[a-z]/.test(pwd),
       uppercase: /[A-Z]/.test(pwd),
       number: /[0-9]/.test(pwd),
-      special: /[^A-Za-z0-9]/.test(pwd)
+      special: /[^A-Za-z0-9]/.test(pwd),
     };
-
-    const score = Object.values(checks).filter(Boolean).length;
-    return { score, checks };
+    return { score: Object.values(checks).filter(Boolean).length, checks };
   };
 
-  const getStrengthLabel = (score) => {
-    if (score === 0) return { label: 'Empty', color: 'bg-zinc-200 dark:bg-zinc-850', textColor: 'text-zinc-400' };
-    if (score <= 2) return { label: 'Weak', color: 'bg-red-500', textColor: 'text-red-550 dark:text-red-400' };
-    if (score <= 4) return { label: 'Moderate', color: 'bg-amber-500', textColor: 'text-amber-550 dark:text-amber-400' };
-    return { label: 'Strong', color: 'bg-emerald-500', textColor: 'text-emerald-550 dark:text-emerald-400' };
-  };
+  const strength = checkStrength(registerForm.password);
+  const strengthColor = strength.score <= 2 ? 'bg-red-500' : strength.score <= 4 ? 'bg-amber-500' : 'bg-emerald-500';
+  const strengthLabel = strength.score <= 2 ? 'Weak' : strength.score <= 4 ? 'Moderate' : 'Strong';
+  const strengthText = strength.score <= 2 ? 'text-red-500' : strength.score <= 4 ? 'text-amber-500' : 'text-emerald-500';
 
-  const pwdStrength = checkPasswordStrength(registerForm.password);
-
-  const handleLoginSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!loginForm.email || !loginForm.password) {
-      toast.error("Please fill in all credentials.");
+      toast.error('Please fill in all fields.');
       return;
     }
-
     try {
-      const response = await login({ email: loginForm.email, password: loginForm.password }).unwrap();
-      toast.success("Logged in successfully!");
+      const response = await login(loginForm).unwrap();
+      toast.success('Welcome back!');
       setSuccess(true);
-      
-      const user = response.data.user;
-      const userIsAdmin = user.role === 'Admin' || user.role === 'Super Admin';
-      
+      const loggedUser = response.data.user;
+      const isAdmin = loggedUser.role === 'Admin' || loggedUser.role === 'Super Admin';
       setTimeout(() => {
         setSuccess(false);
-        const from = location.state?.from?.pathname || (userIsAdmin ? '/admin' : '/');
+        const from = location.state?.from?.pathname || (isAdmin ? '/admin' : '/');
         navigate(from);
       }, 1500);
     } catch (err) {
-      const msg = err.data?.message || '';
-      if (msg.includes('validation failed') || msg.includes('ValidationError') || msg.includes('User validation failed') || msg.includes('is required')) {
-        toast.error('Login failed. Please ensure your account profile details are valid.');
-      } else {
-        toast.error(msg || 'Login failed. Please check your credentials.');
-      }
+      toast.error(err.data?.message || 'Login failed. Please check your credentials.');
     }
   };
 
-  const handleRegisterSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     const { name, email, password, confirmPassword } = registerForm;
     if (!name || !email || !password || !confirmPassword) {
-      toast.error("Please fill in all registration fields.");
+      toast.error('Please fill in all fields.');
       return;
     }
-
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match.");
+      toast.error('Passwords do not match.');
       return;
     }
-
-    if (pwdStrength.score < 5) {
-      toast.error("Please ensure your password meets all strength criteria.");
+    if (strength.score < 3) {
+      toast.error('Please choose a stronger password.');
       return;
     }
-
     try {
       await register({ name, email, password }).unwrap();
-      toast.success("Registration successful! You can now log in.");
+      toast.success('Account created! Please sign in.');
       setSuccess(true);
-      
       setTimeout(() => {
         setSuccess(false);
         setIsLogin(true);
@@ -139,59 +120,47 @@ export default function AdminAuth() {
     }
   };
 
-  const googleBtnRef = useRef(null);
-  const [googleLogin, { isLoading: isGoogleLoading }] = useGoogleLoginMutation();
-
   const handleCredentialResponse = async (response) => {
     try {
       const result = await googleLogin({ idToken: response.credential }).unwrap();
-      toast.success("Logged in with Google successfully!");
+      toast.success('Signed in with Google!');
       setSuccess(true);
-      
-      const user = result.data.user;
-      const userIsAdmin = user.role === 'Admin' || user.role === 'Super Admin';
-      
+      const loggedUser = result.data.user;
+      const isAdmin = loggedUser.role === 'Admin' || loggedUser.role === 'Super Admin';
       setTimeout(() => {
         setSuccess(false);
-        const from = location.state?.from?.pathname || (userIsAdmin ? '/admin' : '/');
+        const from = location.state?.from?.pathname || (isAdmin ? '/admin' : '/');
         navigate(from);
       }, 1500);
     } catch (err) {
-      toast.error(err.data?.message || 'Google authentication failed.');
+      toast.error(err.data?.message || 'Google sign-in failed.');
     }
   };
 
   useEffect(() => {
     let script;
-    
-    const initializeGoogleSignIn = () => {
+    const init = () => {
       if (window.google && googleBtnRef.current) {
         try {
           window.google.accounts.id.initialize({
             client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
             callback: handleCredentialResponse,
           });
-
-          window.google.accounts.id.renderButton(
-            googleBtnRef.current,
-            {
-              theme: document.documentElement.classList.contains('dark') ? "filled_black" : "outline",
-              size: "large",
-              width: googleBtnRef.current.offsetWidth || 380,
-              text: "continue_with",
-              shape: "rectangular"
-            }
-          );
+          window.google.accounts.id.renderButton(googleBtnRef.current, {
+            theme: 'outline',
+            size: 'large',
+            width: googleBtnRef.current.offsetWidth || 380,
+            text: 'continue_with',
+            shape: 'rectangular',
+          });
         } catch (e) {
-          console.warn("Google Client Sign-In library error on init:", e);
+          console.warn('Google Sign-In init error:', e);
         }
       }
     };
-
     if (window.google) {
-      initializeGoogleSignIn();
+      init();
     } else {
-      // Avoid duplicate script insertion
       script = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
       if (!script) {
         script = document.createElement('script');
@@ -200,476 +169,406 @@ export default function AdminAuth() {
         script.defer = true;
         document.body.appendChild(script);
       }
-      script.addEventListener('load', initializeGoogleSignIn);
+      script.addEventListener('load', init);
     }
-
-    return () => {
-      if (script) {
-        script.removeEventListener('load', initializeGoogleSignIn);
-      }
-    };
+    return () => { if (script) script.removeEventListener('load', init); };
   }, []);
 
-
   return (
-    <div className="min-h-screen flex bg-[#F8F7F4] dark:bg-zinc-950 transition-colors duration-300 font-sans overflow-hidden">
-      
-      {/* Left visual half (Desktop/Laptop split view) */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-zinc-900 overflow-hidden select-none">
-        {/* Background lookbook cover image */}
+    <div className="min-h-screen flex bg-[#F8F7F4] dark:bg-zinc-950 transition-colors duration-300 overflow-hidden">
+
+      {/* ===== LEFT PANEL: Brand visual ===== */}
+      <div className="hidden lg:flex lg:w-[45%] relative bg-zinc-900 overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop"
-          alt="Bhondu Lookbook"
-          className="absolute inset-0 w-full h-full object-cover opacity-80 scale-105 hover:scale-100 transition-transform duration-10000 ease-out"
+          alt="BHONDU Collection"
+          className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105 hover:scale-100 transition-transform duration-[8000ms] ease-out"
         />
-        
-        {/* Glass overlay with luxury gold branding details */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-between p-12">
-          {/* Logo brand */}
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded bg-white text-zinc-900 flex items-center justify-center font-bold text-lg">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+
+        {/* Brand content */}
+        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3 group w-fit">
+            <div className="w-9 h-9 rounded-lg bg-white text-zinc-900 flex items-center justify-center font-bold text-lg">
               B
             </div>
-            <span className="font-bold text-xl uppercase tracking-widest text-white font-logo">
-              BHONDU
-            </span>
-          </div>
+            <span className="font-bold text-xl uppercase tracking-widest text-white">BHONDU</span>
+          </Link>
 
-          {/* Inspirational block quotes */}
-          <div className="space-y-4 max-w-lg text-left">
-            <span className="px-3 py-1 border border-[#C9A87C] rounded-full text-[9px] uppercase tracking-wider text-[#C9A87C] font-semibold">
-              Esports Atelier
+          {/* Quote */}
+          <div className="space-y-5">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 border border-[#C9A87C]/60 rounded-full text-[9px] uppercase tracking-widest text-[#C9A87C] font-semibold">
+              <Sparkles className="w-2.5 h-2.5" />
+              Premium Esports Apparel
             </span>
-            <h1 className="text-4xl xl:text-5xl font-bold font-luxury-serif text-white leading-tight">
-              Structured Street Armor & Gaming Performance.
+            <h1 className="text-4xl xl:text-5xl font-bold font-luxury-serif text-white leading-[1.15]">
+              Wear What<br />Champions Wear.
             </h1>
-            <p className="text-zinc-300 text-sm leading-relaxed">
-              Sign in to manage catalog curations, fulfillment logistics, and subscriber lists on the BHONDU core console.
+            <p className="text-zinc-400 text-sm leading-relaxed max-w-sm">
+              Join the BHONDU community. Get access to limited drops, exclusive member pricing, and order tracking.
             </p>
+
+            {/* Trust badges */}
+            <div className="flex flex-wrap gap-3 pt-2">
+              {['Free Returns', '100% Authentic', 'Secure Checkout', '24h Support'].map(badge => (
+                <span key={badge} className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-medium">
+                  <CheckCircle className="w-3 h-3 text-[#C9A87C]" />
+                  {badge}
+                </span>
+              ))}
+            </div>
           </div>
 
-          {/* Slogan */}
-          <p className="text-[10px] text-zinc-500 uppercase tracking-widest">
-            &copy; 2026 BHONDU Fashion Studio
-          </p>
+          <p className="text-[10px] text-zinc-700 uppercase tracking-widest">© 2026 BHONDU Fashion Studio</p>
         </div>
       </div>
 
-      {/* Right form half */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-12 relative">
-        <div className="w-full max-w-md space-y-8">
-          
-          {/* Success Overlay */}
-          <AnimatePresence>
-            {success && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="absolute inset-0 bg-[#F8F7F4]/90 dark:bg-zinc-950/95 flex flex-col items-center justify-center z-15 text-center p-6"
-              >
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', damping: 15 }}
-                >
-                  <CheckCircle className="w-16 h-16 text-[#C9A87C] mb-4" />
-                </motion.div>
-                <h3 className="text-xl font-bold font-luxury-serif">Access Granted</h3>
-                <p className="text-xs text-zinc-400 mt-1">
-                  {isLogin ? "Redirecting to your console session..." : "Account created! Loading login module..."}
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+      {/* ===== RIGHT PANEL: Auth Form ===== */}
+      <div className="flex-1 flex items-center justify-center p-6 md:p-12 relative">
 
-          {/* Mobile logo layout */}
-          <div className="lg:hidden flex justify-center mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 flex items-center justify-center font-bold text-sm">
-                B
-              </div>
-              <span className="font-bold text-lg uppercase tracking-widest font-logo">
-                BHONDU
-              </span>
-            </div>
+        {/* Success overlay */}
+        <AnimatePresence>
+          {success && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-[#F8F7F4]/95 dark:bg-zinc-950/95 flex flex-col items-center justify-center z-20 text-center p-6"
+            >
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: 'spring', damping: 12, stiffness: 200 }}
+              >
+                <CheckCircle className="w-16 h-16 text-[#C9A87C] mb-4" />
+              </motion.div>
+              <h3 className="text-xl font-bold font-luxury-serif">
+                {isLogin ? 'Welcome Back!' : 'Account Created!'}
+              </h3>
+              <p className="text-xs text-zinc-400 mt-1.5">
+                {isLogin ? 'Redirecting you now...' : 'Switching to sign in...'}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="w-full max-w-[400px] space-y-7">
+
+          {/* Mobile logo */}
+          <div className="lg:hidden flex items-center justify-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold">B</div>
+            <span className="font-bold text-lg uppercase tracking-widest font-logo">BHONDU</span>
           </div>
 
-          <div className="text-center md:text-left space-y-2">
-            <h2 className="text-2xl font-bold font-luxury-serif tracking-tight">
-              {isLogin ? "Consoles Sign In" : "Register Account"}
+          {/* Header text */}
+          <div>
+            <h2 className="text-2xl font-bold font-luxury-serif tracking-tight text-zinc-900 dark:text-white">
+              {isLogin ? 'Welcome back' : 'Create account'}
             </h2>
-            <p className="text-xs text-zinc-500">
-              {isLogin ? "Select your credentials role key to verify profile access." : "Fill in your personal coordinates to register."}
+            <p className="text-xs text-zinc-500 mt-1">
+              {isLogin
+                ? 'Sign in to track orders, save wishlist & more.'
+                : 'Join BHONDU and get exclusive member benefits.'}
             </p>
           </div>
 
-          {/* Mode Switcher slide tabs */}
-          <div className="bg-zinc-200/50 dark:bg-zinc-900 p-1 rounded-xl flex text-xs font-semibold relative">
+          {/* Tab switcher */}
+          <div className="relative bg-zinc-100 dark:bg-zinc-900 p-1 rounded-xl flex text-xs font-semibold">
             <div className="grid grid-cols-2 w-full relative z-10">
               <button
+                type="button"
                 onClick={() => setIsLogin(true)}
-                className={`py-2 rounded-lg transition-all ${
-                  isLogin ? 'text-zinc-950 dark:text-white' : 'text-zinc-400'
-                }`}
+                className={`py-2.5 rounded-lg transition-colors duration-200 ${isLogin ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 hover:text-zinc-600'}`}
               >
                 Sign In
               </button>
               <button
+                type="button"
                 onClick={() => setIsLogin(false)}
-                className={`py-2 rounded-lg transition-all ${
-                  !isLogin ? 'text-zinc-950 dark:text-white' : 'text-zinc-400'
-                }`}
+                className={`py-2.5 rounded-lg transition-colors duration-200 ${!isLogin ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 hover:text-zinc-600'}`}
               >
                 Register
               </button>
             </div>
-            
-            {/* Sliding backdrop */}
             <motion.div
-              layoutId="authTabSlider"
+              layoutId="tab-bg"
               animate={{ x: isLogin ? '2%' : '100%' }}
-              transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-              className="absolute top-1 bottom-1 left-1 w-[48%] bg-white dark:bg-zinc-800 rounded-lg shadow-sm"
+              transition={{ type: 'spring', damping: 22, stiffness: 220 }}
+              className="absolute top-1 bottom-1 left-1 w-[48%] bg-white dark:bg-zinc-800 rounded-lg shadow-sm pointer-events-none"
             />
           </div>
 
-          {/* Form panels with animation wrapper */}
+          {/* Form area */}
           <AnimatePresence mode="wait">
+
+            {/* ========== LOGIN FORM ========== */}
             {isLogin ? (
               <motion.form
-                key="login-form"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                onSubmit={handleLoginSubmit}
-                className="space-y-4 text-xs text-left"
+                key="login"
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 16 }}
+                transition={{ duration: 0.22 }}
+                onSubmit={handleLogin}
+                className="space-y-4"
               >
-                {/* Role selection tab pills */}
+                {/* Email */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold block">Select Access Key</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setIsAdminRole(true)}
-                      className={`py-2 border rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
-                        isAdminRole
-                          ? 'border-[#C9A87C] bg-white dark:bg-zinc-900 text-[#C9A87C] ring-1 ring-[#C9A87C]'
-                          : 'border-zinc-200 dark:border-zinc-800 bg-white/40 dark:bg-zinc-950/20 text-zinc-400'
-                      }`}
-                    >
-                      <ShieldCheck className="w-3.5 h-3.5" />
-                      Admin Console
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIsAdminRole(false)}
-                      className={`py-2 border rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
-                        !isAdminRole
-                          ? 'border-[#C9A87C] bg-white dark:bg-zinc-900 text-[#C9A87C] ring-1 ring-[#C9A87C]'
-                          : 'border-zinc-200 dark:border-zinc-800 bg-white/40 dark:bg-zinc-950/20 text-zinc-400'
-                      }`}
-                    >
-                      <User className="w-3.5 h-3.5" />
-                      Storefront Customer
-                    </button>
-                  </div>
-                </div>
-
-                {/* Email address */}
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold">Verify Email ID</label>
+                  <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Email address</label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-zinc-450 absolute left-3 top-3" />
+                    <Mail className="w-4 h-4 text-zinc-400 absolute left-3 top-3.5" />
                     <input
+                      id="login-email"
                       type="email"
                       required
-                      placeholder="admin@bhondu.com"
+                      placeholder="you@example.com"
                       value={loginForm.email}
-                      onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
-                      className="w-full text-xs pl-9 pr-4 py-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none"
+                      onChange={e => setLoginForm(p => ({ ...p, email: e.target.value }))}
+                      className="w-full text-sm pl-9 pr-4 py-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none focus:ring-2 focus:ring-zinc-900/20 dark:focus:ring-white/10 focus:border-zinc-400 dark:focus:border-zinc-600 transition-all"
                     />
                   </div>
                 </div>
 
-                {/* Password field */}
-                <div className="space-y-1">
+                {/* Password */}
+                <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
-                    <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold">Security Password</label>
-                    <button
-                      type="button"
-                      onClick={() => alert("Simulated: Forgot password flow.")}
-                      className="text-[10px] hover:underline text-[#C9A87C] font-semibold"
-                    >
+                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Password</label>
+                    <button type="button" className="text-[11px] text-[#C9A87C] hover:underline font-semibold">
                       Forgot?
                     </button>
                   </div>
                   <div className="relative">
-                    <Lock className="w-4 h-4 text-zinc-450 absolute left-3 top-3" />
+                    <Lock className="w-4 h-4 text-zinc-400 absolute left-3 top-3.5" />
                     <input
+                      id="login-password"
                       type={showPassword ? 'text' : 'password'}
                       required
                       placeholder="••••••••"
                       value={loginForm.password}
-                      onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
-                      className="w-full text-xs pl-9 pr-10 py-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none"
+                      onChange={e => setLoginForm(p => ({ ...p, password: e.target.value }))}
+                      className="w-full text-sm pl-9 pr-10 py-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none focus:ring-2 focus:ring-zinc-900/20 dark:focus:ring-white/10 focus:border-zinc-400 dark:focus:border-zinc-600 transition-all"
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3.5 text-zinc-400 hover:text-zinc-600"
+                      onClick={() => setShowPassword(v => !v)}
+                      className="absolute right-3 top-3.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>
 
-                {/* Remember me & Accept terms */}
-                <div className="flex items-center justify-between text-[11px] pt-1">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" className="rounded text-zinc-900 focus:ring-zinc-900 border-zinc-200 dark:border-zinc-800" />
-                    <span className="text-zinc-500 font-medium">Keep console signed in</span>
-                  </label>
-                </div>
+                {/* Remember me */}
+                <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-500 font-medium select-none">
+                  <input type="checkbox" className="rounded border-zinc-300 dark:border-zinc-700 text-zinc-900" />
+                  Keep me signed in
+                </label>
 
-                {/* Submit button */}
+                {/* Submit */}
                 <button
+                  id="login-submit"
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-lg text-xs font-semibold hover:bg-zinc-850 dark:hover:bg-zinc-100 flex items-center justify-center gap-1.5 transition-colors shadow-lg disabled:opacity-50"
+                  className="w-full py-3 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-xl text-sm font-semibold hover:bg-zinc-800 dark:hover:bg-zinc-100 flex items-center justify-center gap-2 transition-all shadow-lg disabled:opacity-50"
                 >
                   {loading ? (
-                    <>
-                      <RotateCw className="w-3.5 h-3.5 animate-spin" />
-                      Authenticating token key...
-                    </>
+                    <><RotateCw className="w-4 h-4 animate-spin" /> Signing in...</>
                   ) : (
-                    <>
-                      Enter Dashboard
-                      <ArrowRight className="w-4 h-4" />
-                    </>
+                    <>Sign In <ArrowRight className="w-4 h-4" /></>
                   )}
                 </button>
+
+                {/* Admin link */}
+                <div className="pt-1 text-center">
+                  <Link
+                    to="/admin/login"
+                    className="inline-flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors group"
+                  >
+                    <ShieldAlert className="w-3.5 h-3.5 text-zinc-400 group-hover:text-[#C9A87C] transition-colors" />
+                    Are you an admin?
+                    <span className="text-[#C9A87C] font-semibold underline underline-offset-2">Sign in to console →</span>
+                  </Link>
+                </div>
               </motion.form>
             ) : (
+
+              /* ========== REGISTER FORM ========== */
               <motion.form
-                key="register-form"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                onSubmit={handleRegisterSubmit}
-                className="space-y-4 text-xs text-left"
+                key="register"
+                initial={{ opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -16 }}
+                transition={{ duration: 0.22 }}
+                onSubmit={handleRegister}
+                className="space-y-4"
               >
-                {/* Full name */}
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold">Full Name</label>
+                {/* Full Name */}
+                <div className="space-y-1.5">
+                  <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Full Name</label>
                   <div className="relative">
-                    <User className="w-4 h-4 text-zinc-450 absolute left-3 top-3" />
+                    <User className="w-4 h-4 text-zinc-400 absolute left-3 top-3.5" />
                     <input
+                      id="reg-name"
                       type="text"
                       required
-                      placeholder="Indrajit Padhiyar"
+                      placeholder="Your full name"
                       value={registerForm.name}
-                      onChange={(e) => setRegisterForm(prev => ({ ...prev, name: e.target.value }))}
-                      className="w-full text-xs pl-9 pr-4 py-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none"
+                      onChange={e => setRegisterForm(p => ({ ...p, name: e.target.value }))}
+                      className="w-full text-sm pl-9 pr-4 py-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none focus:ring-2 focus:ring-zinc-900/20 dark:focus:ring-white/10 focus:border-zinc-400 dark:focus:border-zinc-600 transition-all"
                     />
                   </div>
                 </div>
 
-                {/* Email address */}
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold">Email ID</label>
+                {/* Email */}
+                <div className="space-y-1.5">
+                  <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Email address</label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-zinc-450 absolute left-3 top-3" />
+                    <Mail className="w-4 h-4 text-zinc-400 absolute left-3 top-3.5" />
                     <input
+                      id="reg-email"
                       type="email"
                       required
-                      placeholder="owner@bhondu.com"
+                      placeholder="you@example.com"
                       value={registerForm.email}
-                      onChange={(e) => setRegisterForm(prev => ({ ...prev, email: e.target.value }))}
-                      className="w-full text-xs pl-9 pr-4 py-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none"
+                      onChange={e => setRegisterForm(p => ({ ...p, email: e.target.value }))}
+                      className="w-full text-sm pl-9 pr-4 py-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none focus:ring-2 focus:ring-zinc-900/20 dark:focus:ring-white/10 focus:border-zinc-400 dark:focus:border-zinc-600 transition-all"
                     />
                   </div>
                 </div>
 
-                {/* Password field */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold block">Create Password</label>
+                {/* Password + Confirm */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Password</label>
                     <div className="relative">
                       <input
-                        type={showRegisterPassword ? 'text' : 'password'}
+                        id="reg-password"
+                        type={showRegPwd ? 'text' : 'password'}
                         required
                         placeholder="••••••••"
                         value={registerForm.password}
-                        onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
-                        className="w-full text-xs pl-3 pr-8 py-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none"
+                        onChange={e => setRegisterForm(p => ({ ...p, password: e.target.value }))}
+                        className="w-full text-sm pl-3 pr-8 py-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none focus:ring-2 focus:ring-zinc-900/20 dark:focus:ring-white/10 focus:border-zinc-400 dark:focus:border-zinc-600 transition-all"
                       />
                       <button
                         type="button"
-                        onClick={() => setShowRegisterPassword(!showRegisterPassword)}
-                        className="absolute right-2.5 top-3.5 text-zinc-455 hover:text-zinc-700 dark:hover:text-zinc-300"
+                        onClick={() => setShowRegPwd(v => !v)}
+                        className="absolute right-2.5 top-3.5 text-zinc-400 hover:text-zinc-600"
                       >
-                        {showRegisterPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        {showRegPwd ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold block">Confirm Password</label>
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">Confirm</label>
                     <div className="relative">
                       <input
-                        type={showRegisterPassword ? 'text' : 'password'}
+                        id="reg-confirm"
+                        type={showRegPwd ? 'text' : 'password'}
                         required
                         placeholder="••••••••"
                         value={registerForm.confirmPassword}
-                        onChange={(e) => setRegisterForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                        className="w-full text-xs pl-3 pr-8 py-2.5 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none"
+                        onChange={e => setRegisterForm(p => ({ ...p, confirmPassword: e.target.value }))}
+                        className="w-full text-sm pl-3 pr-4 py-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 focus:outline-none focus:ring-2 focus:ring-zinc-900/20 dark:focus:ring-white/10 focus:border-zinc-400 dark:focus:border-zinc-600 transition-all"
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowRegisterPassword(!showRegisterPassword)}
-                        className="absolute right-2.5 top-3.5 text-zinc-455 hover:text-zinc-700 dark:hover:text-zinc-300"
-                      >
-                        {showRegisterPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                      </button>
                     </div>
                   </div>
-
-                  {/* Password Strength Indicator */}
-                  <AnimatePresence>
-                    {registerForm.password && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="col-span-2 space-y-2 pt-1 overflow-hidden"
-                      >
-                        <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider">
-                          <span className="text-zinc-450 dark:text-zinc-500">Password Strength</span>
-                          <span className={getStrengthLabel(pwdStrength.score).textColor}>
-                            {getStrengthLabel(pwdStrength.score).label}
-                          </span>
-                        </div>
-                        
-                        <div className="grid grid-cols-5 gap-1.5">
-                          {[1, 2, 3, 4, 5].map((index) => (
-                            <div
-                              key={index}
-                              className={`h-1 rounded-full transition-all duration-300 ${
-                                index <= pwdStrength.score
-                                  ? getStrengthLabel(pwdStrength.score).color
-                                  : 'bg-zinc-250 dark:bg-zinc-850'
-                              }`}
-                            />
-                          ))}
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 pt-1 text-[11px]">
-                          <div className="flex items-center gap-1.5">
-                            {pwdStrength.checks.length ? (
-                              <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                            ) : (
-                              <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0 animate-pulse">1</div>
-                            )}
-                            <span className={pwdStrength.checks.length ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
-                              Min 8 characters
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            {pwdStrength.checks.uppercase ? (
-                              <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                            ) : (
-                              <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0 animate-pulse">2</div>
-                            )}
-                            <span className={pwdStrength.checks.uppercase ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
-                              At least one uppercase
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            {pwdStrength.checks.lowercase ? (
-                              <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                            ) : (
-                              <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0 animate-pulse">3</div>
-                            )}
-                            <span className={pwdStrength.checks.lowercase ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
-                              At least one lowercase
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            {pwdStrength.checks.number ? (
-                              <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                            ) : (
-                              <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0 animate-pulse">4</div>
-                            )}
-                            <span className={pwdStrength.checks.number ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
-                              At least one number
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1.5 sm:col-span-2">
-                            {pwdStrength.checks.special ? (
-                              <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                            ) : (
-                              <div className="w-3.5 h-3.5 rounded-full border border-zinc-350 dark:border-zinc-750 flex items-center justify-center text-[8px] font-bold text-zinc-400 dark:text-zinc-600 shrink-0 animate-pulse">5</div>
-                            )}
-                            <span className={pwdStrength.checks.special ? 'text-zinc-800 dark:text-zinc-200 transition-colors font-medium' : 'text-zinc-400'}>
-                              At least one symbol (!@#$%^& etc.)
-                            </span>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </div>
 
-                {/* Accept terms and privacy */}
-                <label className="flex items-start gap-2 cursor-pointer pt-1 text-[11px]">
-                  <input type="checkbox" required className="rounded text-zinc-900 focus:ring-zinc-900 mt-0.5 border-zinc-200 dark:border-zinc-800" />
-                  <span className="text-zinc-500 leading-normal font-medium">
-                    I accept the administrative console <span className="text-[#C9A87C] hover:underline">security terms</span> and privacy protocols.
-                  </span>
+                {/* Strength bar */}
+                {registerForm.password && (
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="space-y-1.5">
+                    <div className="flex justify-between text-[10px] font-semibold uppercase tracking-wider">
+                      <span className="text-zinc-400">Strength</span>
+                      <span className={strengthText}>{strengthLabel}</span>
+                    </div>
+                    <div className="grid grid-cols-5 gap-1">
+                      {[1, 2, 3, 4, 5].map(i => (
+                        <div
+                          key={i}
+                          className={`h-1 rounded-full transition-all duration-300 ${i <= strength.score ? strengthColor : 'bg-zinc-200 dark:bg-zinc-800'}`}
+                        />
+                      ))}
+                    </div>
+                    <div className="grid grid-cols-2 gap-1 text-[10px]">
+                      {[
+                        ['length', '8+ characters'],
+                        ['uppercase', 'Uppercase letter'],
+                        ['lowercase', 'Lowercase letter'],
+                        ['number', 'Number'],
+                        ['special', 'Special character'],
+                      ].map(([key, label]) => (
+                        <div key={key} className={`flex items-center gap-1 ${strength.checks[key] ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-400'}`}>
+                          <CheckCircle className={`w-3 h-3 ${strength.checks[key] ? 'opacity-100' : 'opacity-25'}`} />
+                          {label}
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Terms */}
+                <label className="flex items-start gap-2 cursor-pointer text-xs text-zinc-500 font-medium select-none">
+                  <input type="checkbox" required className="rounded border-zinc-300 dark:border-zinc-700 text-zinc-900 mt-0.5 shrink-0" />
+                  <span>I agree to BHONDU's <span className="text-[#C9A87C] hover:underline cursor-pointer">Terms of Service</span> and <span className="text-[#C9A87C] hover:underline cursor-pointer">Privacy Policy</span>.</span>
                 </label>
 
-                {/* Submit button */}
+                {/* Submit */}
                 <button
+                  id="register-submit"
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-lg text-xs font-semibold hover:bg-zinc-850 dark:hover:bg-zinc-100 flex items-center justify-center gap-1.5 transition-colors shadow-lg disabled:opacity-50"
+                  className="w-full py-3 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-xl text-sm font-semibold hover:bg-zinc-800 dark:hover:bg-zinc-100 flex items-center justify-center gap-2 transition-all shadow-lg disabled:opacity-50"
                 >
                   {loading ? (
-                    <>
-                      <RotateCw className="w-3.5 h-3.5 animate-spin" />
-                      Creating console token...
-                    </>
+                    <><RotateCw className="w-4 h-4 animate-spin" /> Creating account...</>
                   ) : (
-                    <>
-                      Register Account
-                      <ArrowRight className="w-4 h-4" />
-                    </>
+                    <>Create Account <ArrowRight className="w-4 h-4" /></>
                   )}
                 </button>
+
+                {/* Admin link */}
+                <div className="pt-1 text-center">
+                  <Link
+                    to="/admin/login"
+                    className="inline-flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors group"
+                  >
+                    <ShieldAlert className="w-3.5 h-3.5 text-zinc-400 group-hover:text-[#C9A87C] transition-colors" />
+                    Are you an admin?
+                    <span className="text-[#C9A87C] font-semibold underline underline-offset-2">Sign in to console →</span>
+                  </Link>
+                </div>
               </motion.form>
             )}
           </AnimatePresence>
 
-          {/* Social login separator */}
-          <div className="relative my-6">
+          {/* Google sign-in divider */}
+          <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-zinc-200 dark:border-zinc-850" />
+              <span className="w-full border-t border-zinc-200 dark:border-zinc-800" />
             </div>
-            <div className="relative flex justify-center text-[10px] uppercase font-semibold">
-              <span className="bg-[#F8F7F4] dark:bg-zinc-950 px-3 text-zinc-400">Or continue with</span>
+            <div className="relative flex justify-center">
+              <span className="bg-[#F8F7F4] dark:bg-zinc-950 px-3 text-[10px] uppercase tracking-widest text-zinc-400 font-semibold">
+                Or continue with
+              </span>
             </div>
           </div>
 
-          {/* Google Login Button Container */}
+          {/* Google button */}
           <div className="w-full flex justify-center">
-            <div ref={googleBtnRef} className="w-full min-h-[40px] flex justify-center"></div>
+            <div ref={googleBtnRef} className="w-full min-h-[42px] flex justify-center" />
           </div>
+
+          {/* Back to store */}
+          <p className="text-center text-[11px] text-zinc-400">
+            <Link to="/" className="hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors underline underline-offset-2">
+              ← Continue browsing without account
+            </Link>
+          </p>
 
         </div>
       </div>
-
     </div>
   );
 }

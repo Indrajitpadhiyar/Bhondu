@@ -3641,3 +3641,37 @@
 {"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-15 09:19:30"}
 {"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-15 09:19:31"}
 {"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-15 09:19:31"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-15 09:19:38"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-15 09:19:38"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-15 09:19:38"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-15 09:19:38"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-15 09:19:38"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-15 09:19:38"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-15 09:19:38"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-15 09:19:38"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-15 09:19:38"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-15 09:19:38"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-02.uq7dsr0.mongodb.net","timestamp":"2026-06-15 09:19:39"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-15 09:19:41"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-15 09:33:06"}
+{"level":"info","message":"POST /api/v1/auth/logout - 200 (1394ms)","timestamp":"2026-06-15 09:38:53"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (4ms)","timestamp":"2026-06-15 09:38:53"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-15 09:38:57"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-15 09:43:35"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-15 09:43:35"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-15 09:43:35"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-15 09:43:35"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-15 09:43:35"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-15 09:43:35"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-15 09:43:35"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-15 09:43:35"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-15 09:43:35"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-15 09:43:35"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-15 09:43:37"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-15 09:43:37"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (31ms)","timestamp":"2026-06-15 09:46:08"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (1ms)","timestamp":"2026-06-15 09:46:08"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-15 09:46:08"}
+{"level":"info","message":"GET /api/v1/orders - 401 (34ms)","timestamp":"2026-06-15 09:46:08"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (16ms)","timestamp":"2026-06-15 09:46:09"}
+{"level":"info","message":"GET /api/v1/products - 200 (3146ms)","timestamp":"2026-06-15 09:46:11"}

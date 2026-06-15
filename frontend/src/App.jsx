@@ -28,6 +28,7 @@ import AdminCMS from './pages/admin/AdminCMS';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminMedia from './pages/admin/AdminMedia';
 import AdminAuth from './pages/admin/AdminAuth';
+import AdminLogin from './pages/admin/AdminLogin';
 import Profile from './pages/Profile';
 import CustomDesigner from './pages/CustomDesigner';
 import Contact from './pages/Contact';
@@ -52,7 +53,8 @@ function App() {
   const isHome = location.pathname === '/';
   const isAdmin = location.pathname.startsWith('/admin');
   const isAuth = location.pathname === '/login';
-  const isHideGlobalUI = isAdmin || isAuth || location.pathname.startsWith('/designer');
+  const isAdminLogin = location.pathname === '/admin/login';
+  const isHideGlobalUI = isAdmin || isAuth || isAdminLogin || location.pathname.startsWith('/designer');
 
   return (
     <AdminProvider>
@@ -88,6 +90,7 @@ function App() {
                 <Route path="/product/:id" element={<ProductDetails />} />
                 <Route path="/designer/:productId" element={<CustomDesigner />} />
                 <Route path="/login" element={<AdminAuth />} />
+                <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/shipping" element={<Shipping />} />
                 <Route path="/returns" element={<Returns />} />
