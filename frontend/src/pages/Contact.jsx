@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Clock, Send, Sparkles } from 'lucide-react';
+import { Mail, Phone, Send, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Contact = () => {
@@ -211,7 +211,7 @@ const Contact = () => {
                 <div className="space-y-1 text-left">
                   <h4 className="text-xs font-bold uppercase tracking-widest text-zinc-400">EMAIL ENQUIRIES</h4>
                   <p className="text-sm font-medium hover:text-accent transition-colors">
-                    <a href="mailto:support@bhondu.com">support@bhondu.com</a>
+                    <a href="mailto:bhondufesion@gmail.com">bhondufesion@gmail.com</a>
                   </p>
                   <p className="text-[10px] text-zinc-500 uppercase tracking-widest">General response within 24 hours.</p>
                 </div>
@@ -224,39 +224,12 @@ const Contact = () => {
                 <div className="space-y-1 text-left">
                   <h4 className="text-xs font-bold uppercase tracking-widest text-zinc-400">TELEPHONE SUPPORT</h4>
                   <p className="text-sm font-medium hover:text-accent transition-colors">
-                    <a href="tel:+18005550190">+1 (800) 555-0190</a>
+                    <a href="tel:+919714833771">+91 97148 33771</a>
                   </p>
-                  <p className="text-[10px] text-zinc-500 uppercase tracking-widest">Toll-free, Mon-Fri: 9 AM - 6 PM EST.</p>
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4">
-                <div className="p-3 bg-secondary/50 dark:bg-zinc-900 rounded-full text-accent flex-shrink-0">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div className="space-y-1 text-left">
-                  <h4 className="text-xs font-bold uppercase tracking-widest text-zinc-400">HEADQUARTERS SHOWROOM</h4>
-                  <p className="text-sm font-medium">
-                    740 Broadway, Suite 1101, New York, NY 10003
-                  </p>
-                  <p className="text-[10px] text-zinc-500 uppercase tracking-widest">Visits by appointment only.</p>
-                </div>
-              </div>
 
-              <div className="flex items-start space-x-4">
-                <div className="p-3 bg-secondary/50 dark:bg-zinc-900 rounded-full text-accent flex-shrink-0">
-                  <Clock className="w-5 h-5" />
-                </div>
-                <div className="space-y-1 text-left">
-                  <h4 className="text-xs font-bold uppercase tracking-widest text-zinc-400">WORKING HOURS</h4>
-                  <p className="text-sm font-medium">
-                    Monday - Friday: 09:00 - 18:00
-                  </p>
-                  <p className="text-sm font-medium">
-                    Saturday: 10:00 - 16:00 (EST)
-                  </p>
-                </div>
-              </div>
             </div>
 
             {/* Premium Call-out */}

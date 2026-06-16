@@ -32,8 +32,6 @@ import AdminLogin from './pages/admin/AdminLogin';
 import Profile from './pages/Profile';
 import CustomDesigner from './pages/CustomDesigner';
 import Contact from './pages/Contact';
-import Shipping from './pages/Shipping';
-import Returns from './pages/Returns';
 import SizeGuide from './pages/SizeGuide';
 import Careers from './pages/Careers';
 import Sustainability from './pages/Sustainability';
@@ -92,8 +90,6 @@ function App() {
                 <Route path="/login" element={<AdminAuth />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/shipping" element={<Shipping />} />
-                <Route path="/returns" element={<Returns />} />
                 <Route path="/size-guide" element={<SizeGuide />} />
                 <Route path="/careers" element={<Careers />} />
                 <Route path="/sustainability" element={<Sustainability />} />

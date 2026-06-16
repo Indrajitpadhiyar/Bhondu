@@ -61,8 +61,6 @@ const Footer = () => {
             <h4 className="text-xs font-bold uppercase tracking-[0.2em] mb-6 text-primary dark:text-zinc-100">SUPPORT</h4>
             <ul className="space-y-3 text-xs tracking-widest text-zinc-500 uppercase">
               <li><Link to="/contact" className="hover:text-accent transition-colors">CONTACT US</Link></li>
-              <li><Link to="/shipping" className="hover:text-accent transition-colors">SHIPPING & FEES</Link></li>
-              <li><Link to="/returns" className="hover:text-accent transition-colors">RETURNS & REFUNDS</Link></li>
               <li><Link to="/size-guide" className="hover:text-accent transition-colors">SIZE GUIDE</Link></li>
             </ul>
           </div>

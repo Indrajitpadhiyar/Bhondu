@@ -3675,3 +3675,54 @@
 {"level":"info","message":"GET /api/v1/orders - 401 (34ms)","timestamp":"2026-06-15 09:46:08"}
 {"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (16ms)","timestamp":"2026-06-15 09:46:09"}
 {"level":"info","message":"GET /api/v1/products - 200 (3146ms)","timestamp":"2026-06-15 09:46:11"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-15 09:46:16"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-15 09:46:16"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-15 09:46:17"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-15 09:46:17"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-15 09:46:17"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-01.uq7dsr0.mongodb.net","timestamp":"2026-06-15 09:46:19"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-15 09:49:18"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-15 09:52:09"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (49ms)","timestamp":"2026-06-15 09:54:03"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (11ms)","timestamp":"2026-06-15 09:54:03"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-15 09:54:03"}
+{"level":"info","message":"GET /api/v1/orders - 401 (162ms)","timestamp":"2026-06-15 09:54:03"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (6ms)","timestamp":"2026-06-15 09:54:04"}
+{"level":"info","message":"GET /api/v1/products - 200 (2566ms)","timestamp":"2026-06-15 09:54:06"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-15 09:55:09"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-15 10:01:01"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (1ms)","timestamp":"2026-06-15 10:05:44"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (2ms)","timestamp":"2026-06-15 10:05:44"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-15 10:05:44"}
+{"level":"info","message":"GET /api/v1/orders - 401 (5ms)","timestamp":"2026-06-15 10:05:44"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (1ms)","timestamp":"2026-06-15 10:05:44"}
+{"level":"info","message":"GET /api/v1/products - 200 (1625ms)","timestamp":"2026-06-15 10:05:45"}
+{"level":"info","message":"No REDIS_URL environment variable provided. Falling back to In-Memory cache.","timestamp":"2026-06-16 14:25:04"}
+{"level":"info","message":"💾 Utilizing In-Memory cache fallback.","timestamp":"2026-06-16 14:25:04"}
+{"level":"info","message":"☁️ Cloudinary configured successfully.","timestamp":"2026-06-16 14:25:08"}
+{"level":"info","message":"✅ Supabase client successfully initialized.","timestamp":"2026-06-16 14:25:09"}
+{"level":"info","message":"🚀 Server running on port 4000 in development mode.","timestamp":"2026-06-16 14:25:09"}
+{"level":"info","message":"✅ MongoDB Connected: ac-cyhksvd-shard-00-00.uq7dsr0.mongodb.net","timestamp":"2026-06-16 14:25:10"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (15ms)","timestamp":"2026-06-16 14:25:23"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-16 14:25:23"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (1ms)","timestamp":"2026-06-16 14:25:23"}
+{"level":"info","message":"GET /api/v1/orders - 401 (129ms)","timestamp":"2026-06-16 14:25:23"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (1ms)","timestamp":"2026-06-16 14:25:24"}
+{"level":"info","message":"GET /api/v1/products - 200 (1376ms)","timestamp":"2026-06-16 14:25:24"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 200 (1397ms)","timestamp":"2026-06-16 14:25:46"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-16 14:30:50"}
+{"level":"info","message":"GET /api/v1/products/6a2fccb6cb3587d7828f819d - 200 (772ms)","timestamp":"2026-06-16 14:32:06"}
+{"level":"info","message":"GET /api/v1/products/6a2fccb6cb3587d7828f819d/reviews?page=1&limit=10 - 200 (1210ms)","timestamp":"2026-06-16 14:32:07"}
+{"level":"info","message":"GET /api/v1/products?gender=man&category=Tournament+Wear - 200 (1377ms)","timestamp":"2026-06-16 14:32:08"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (4ms)","timestamp":"2026-06-16 14:32:58"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (0ms)","timestamp":"2026-06-16 14:32:58"}
+{"level":"error","message":"💥 Error: You are not logged in. Please log in to gain access.","stack":"Error: You are not logged in. Please log in to gain access.\n    at file:///D:/MiniProjects/bhondu/backend/src/middlewares/auth.middleware.js:18:17\n    at file:///D:/MiniProjects/bhondu/backend/src/utils/asyncHandler.js:3:5\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:342:13)\n    at D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:582:12)\n    at next (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:186:3)\n    at router (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\MiniProjects\\bhondu\\backend\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2026-06-16 14:32:58"}
+{"level":"info","message":"GET /api/v1/orders - 401 (46ms)","timestamp":"2026-06-16 14:32:58"}
+{"level":"info","message":"POST /api/v1/auth/refresh-token - 200 (5ms)","timestamp":"2026-06-16 14:32:58"}
+{"level":"info","message":"GET /api/v1/products - 304 (889ms)","timestamp":"2026-06-16 14:32:59"}
+{"level":"info","message":"GET /api/v1/products?gender=man - 304 (1083ms)","timestamp":"2026-06-16 14:33:25"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-16 14:36:42"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-16 14:42:33"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-16 14:48:24"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-16 14:54:05"}
+{"level":"warn","message":"⚠️ MongoDB disconnected. Attempting to reconnect...","timestamp":"2026-06-16 14:59:57"}
