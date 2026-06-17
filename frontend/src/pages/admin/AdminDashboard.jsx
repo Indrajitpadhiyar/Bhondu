@@ -271,7 +271,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Revenue Performance AreaChart */}
-        <div className="dashboard-section lg:col-span-2 p-6 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200/60 dark:border-zinc-800 shadow-sm">
+        <div className="dashboard-section lg:col-span-3 p-6 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200/60 dark:border-zinc-800 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="font-semibold text-base font-luxury-serif">Revenue & Sales Trends</h3>
@@ -303,7 +303,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Traffic / Channel Sources Pie Chart */}
+        {/* Traffic / Channel Sources Pie Chart - Commented out as requested
         <div className="dashboard-section p-6 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200/60 dark:border-zinc-800 shadow-sm">
           <div className="mb-6">
             <h3 className="font-semibold text-base font-luxury-serif">Acquisition Channels</h3>
@@ -343,6 +343,7 @@ export default function AdminDashboard() {
             ))}
           </div>
         </div>
+        */}
 
       </div>
 

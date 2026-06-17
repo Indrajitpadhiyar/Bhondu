@@ -181,7 +181,7 @@ export default function AdminAnalytics() {
       </div>
 
       {/* Traffic channel & Category split pie charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         
         {/* Category Share Distribution */}
         <div className="p-6 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200/60 dark:border-zinc-800 shadow-sm">
@@ -223,7 +223,7 @@ export default function AdminAnalytics() {
           </div>
         </div>
 
-        {/* Traffic acquisition channels */}
+        {/* Traffic acquisition channels - Commented out as requested
         <div className="p-6 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200/60 dark:border-zinc-800 shadow-sm">
           <div className="mb-6">
             <h3 className="font-semibold text-sm font-luxury-serif">Acquisition Breakdown</h3>
@@ -257,6 +257,7 @@ export default function AdminAnalytics() {
             ))}
           </div>
         </div>
+        */}
 
       </div>
 
