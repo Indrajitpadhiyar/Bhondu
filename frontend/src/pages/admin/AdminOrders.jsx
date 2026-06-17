@@ -14,11 +14,523 @@ import {
   IndianRupee,
   ShoppingBag,
   Check,
-  Download
+  Download,
+  Barcode
 } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+
+// CODE 39 BARCODE DICTIONARY
+const CODE39_ALPHABET = {
+  '0': 'n n n w w n w n n',
+  '1': 'w n n w n n n n w',
+  '2': 'n n w w n n n n w',
+  '3': 'w n w w n n n n n',
+  '4': 'n n n w w n n n w',
+  '5': 'w n n w w n n n n',
+  '6': 'n n w w w n n n n',
+  '7': 'n n n w n n w n w',
+  '8': 'w n n w n n w n n',
+  '9': 'n n w w n n w n n',
+  'A': 'w n n n n w n n w',
+  'B': 'n n w n n w n n w',
+  'C': 'w n w n n w n n n',
+  'D': 'n n n n w w n n w',
+  'E': 'w n n n w w n n n',
+  'F': 'n n w n w w n n n',
+  'G': 'n n n n n w w n w',
+  'H': 'w n n n n w w n n',
+  'I': 'n n w n n w w n n',
+  'J': 'n n n n w w w n n',
+  'K': 'w n n n n n n w w',
+  'L': 'n n w n n n n w w',
+  'M': 'w n w n n n n w n',
+  'N': 'n n n n w n n w w',
+  'O': 'w n n n w n n w n',
+  'P': 'n n w n w n n w n',
+  'Q': 'n n n n n n w w w',
+  'R': 'w n n n n n w w n',
+  'S': 'n n w n n n w w n',
+  'T': 'n n n n w n w w n',
+  'U': 'w w n n n n n n w',
+  'V': 'n w w n n n n n w',
+  'W': 'w w w n n n n n n',
+  'X': 'n w n n w n n n w',
+  'Y': 'w w n n w n n n n',
+  'Z': 'n w w n w n n n n',
+  '-': 'n w n n n n w n w',
+  '.': 'w w n n n n w n n',
+  ' ': 'n w w n n n w n n',
+  '*': 'n w n n w n w n n',
+  '$': 'n w n w n w n n n',
+  '/': 'n w n w n n n w n',
+  '+': 'n w n n n w n w n',
+  '%': 'n n n w n w n w n'
+};
+
+function generateCode39(value) {
+  const cleaned = String(value || '')
+    .toUpperCase()
+    .split('')
+    .map(char => (CODE39_ALPHABET[char] ? char : ' '))
+    .join('');
+    
+  const upperVal = `*${cleaned}*`;
+  const bars = [];
+  let currentX = 0;
+  
+  const NARROW_WIDTH = 1.5;
+  const WIDE_WIDTH = 4.5;
+  const GAP_WIDTH = 1.5;
+  
+  for (let i = 0; i < upperVal.length; i++) {
+    const char = upperVal[i];
+    const pattern = CODE39_ALPHABET[char];
+    if (!pattern) continue;
+    
+    const elements = pattern.split(' ');
+    for (let j = 0; j < elements.length; j++) {
+      const type = elements[j];
+      const width = type === 'w' ? WIDE_WIDTH : NARROW_WIDTH;
+      const isBar = j % 2 === 0;
+      
+      if (isBar) {
+        bars.push({ x: currentX, width });
+      }
+      currentX += width;
+    }
+    if (i < upperVal.length - 1) {
+      currentX += GAP_WIDTH;
+    }
+  }
+  
+  return { bars, totalWidth: currentX };
+}
+
+const BarcodeComponent = ({ value, height = 45 }) => {
+  const { bars, totalWidth } = generateCode39(value);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff', padding: '4px', borderRadius: '4px' }}>
+      <svg
+        width="100%"
+        height={height}
+        viewBox={`0 0 ${totalWidth} ${height}`}
+        preserveAspectRatio="none"
+        style={{ height: `${height}px`, width: '100%' }}
+      >
+        {bars.map((bar, idx) => (
+          <rect
+            key={idx}
+            x={bar.x}
+            y={0}
+            width={bar.width}
+            height={height}
+            fill="black"
+          />
+        ))}
+      </svg>
+      <span style={{ fontSize: '9px', fontFamily: 'monospace', letterSpacing: '0.2em', fontWeight: 'bold', color: '#1f2937', marginTop: '4px', textTransform: 'uppercase' }}>
+        {value}
+      </span>
+    </div>
+  );
+};
+
+const stickerStyles = {
+  container: {
+    width: '380px',
+    backgroundColor: '#ffffff',
+    color: '#000000',
+    fontFamily: '"Outfit", "Helvetica Neue", Arial, sans-serif',
+    border: '3px solid #000000',
+    padding: '16px',
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  },
+  header: {
+    borderBottom: '2px solid #000000',
+    paddingBottom: '8px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: '22px',
+    fontWeight: '950',
+    letterSpacing: '3px',
+    margin: 0,
+    fontFamily: 'system-ui, -apple-system, sans-serif',
+  },
+  subtitle: {
+    fontSize: '9px',
+    letterSpacing: '1.5px',
+    textTransform: 'uppercase',
+    color: '#374151',
+    fontWeight: '700',
+    margin: 0,
+  },
+  billingBannerCod: {
+    backgroundColor: '#000000',
+    color: '#ffffff',
+    padding: '10px',
+    textAlign: 'center',
+    fontWeight: '900',
+    fontSize: '14px',
+    letterSpacing: '1.5px',
+    borderRadius: '4px',
+  },
+  billingBannerPrepaid: {
+    border: '3px solid #000000',
+    color: '#000000',
+    padding: '8px',
+    textAlign: 'center',
+    fontWeight: '900',
+    fontSize: '14px',
+    letterSpacing: '1.5px',
+    borderRadius: '4px',
+  },
+  sectionHeading: {
+    fontSize: '10px',
+    fontWeight: '800',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    borderBottom: '1.5px solid #000000',
+    paddingBottom: '4px',
+    marginBottom: '6px',
+    color: '#000000',
+  },
+  addressBox: {
+    border: '1.5px solid #000000',
+    padding: '10px',
+    fontSize: '11px',
+    lineHeight: '1.5',
+    backgroundColor: '#fafafa',
+  },
+  itemTable: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    fontSize: '10px',
+    marginTop: '4px',
+  },
+  tableHeaderCell: {
+    borderBottom: '1.5px solid #000000',
+    textAlign: 'left',
+    fontWeight: '800',
+    paddingBottom: '4px',
+    textTransform: 'uppercase',
+    fontSize: '9px',
+  },
+  tableCell: {
+    padding: '6px 0',
+    borderBottom: '1px solid #e5e7eb',
+    verticalAlign: 'top',
+  },
+  returnBox: {
+    fontSize: '9px',
+    color: '#374151',
+    lineHeight: '1.4',
+    borderTop: '1px dashed #000000',
+    paddingTop: '8px',
+  }
+};
+
+const handleDownloadSticker = (order) => {
+  const element = document.getElementById(`sticker-container-${order.id}`);
+  if (!element) return;
+  
+  const width = 380;
+  const height = element.offsetHeight || 580;
+  
+  const htmlContent = element.outerHTML;
+  
+  const svgString = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+      <defs>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&amp;display=swap');
+          * {
+            font-family: 'Outfit', sans-serif !important;
+          }
+        </style>
+      </defs>
+      <foreignObject width="100%" height="100%">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="background: white; width: ${width}px; height: ${height}px; padding: 0; margin: 0;">
+          ${htmlContent}
+        </div>
+      </foreignObject>
+    </svg>
+  `;
+  
+  const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+  const URL = window.URL || window.webkitURL || window;
+  const blobURL = URL.createObjectURL(svgBlob);
+  
+  const image = new Image();
+  image.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = width * 2;
+    canvas.height = height * 2;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(2, 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, width, height);
+    ctx.drawImage(image, 0, 0);
+    
+    try {
+      const pngURL = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.href = pngURL;
+      downloadLink.download = `bhondu_shipping_label_${order.id.substring(order.id.length - 8).toUpperCase()}.png`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    } catch (err) {
+      const downloadLink = document.createElement('a');
+      downloadLink.href = blobURL;
+      downloadLink.download = `bhondu_shipping_label_${order.id.substring(order.id.length - 8).toUpperCase()}.svg`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
+    URL.revokeObjectURL(blobURL);
+  };
+  image.src = blobURL;
+};
+
+const handlePrintSticker = (order) => {
+  const element = document.getElementById(`sticker-container-${order.id}`);
+  if (!element) return;
+  
+  const printWindow = window.open('', '_blank', 'width=600,height=800');
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Shipping Label - ${order.id}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+        <style>
+          body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+          }
+          @media print {
+            body {
+              padding: 0;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div>
+          ${element.outerHTML}
+        </div>
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() { window.close(); }, 500);
+          };
+        </script>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+};
+
+const handlePrintInvoice = (order) => {
+  const printWindow = window.open('', '_blank', 'width=800,height=900');
+  
+  const itemsHtml = order.items.map(item => `
+    <tr>
+      <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: 600;">
+        ${item.name}
+        ${item.teamName ? `<div style="font-size: 10px; color: #4b5563; text-transform: uppercase;">Team: ${item.teamName}</div>` : ''}
+        ${item.backsidePlayerName ? `<div style="font-size: 10px; color: #4b5563; text-transform: uppercase;">Player: ${item.backsidePlayerName} ${item.playerNumber ? `#${item.playerNumber}` : ''}</div>` : ''}
+        ${!item.backsidePlayerName && item.playerNumber ? `<div style="font-size: 10px; color: #4b5563; text-transform: uppercase;">Number: #${item.playerNumber}</div>` : ''}
+      </td>
+      <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center;">${item.size || '-'}</td>
+      <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center;">
+        <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 1px solid #cccccc; background-color: ${item.color || 'transparent'}; vertical-align: middle;"></span>
+      </td>
+      <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center;">${item.quantity}</td>
+      <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: 600;">₹${(item.price * item.quantity).toFixed(2)}</td>
+    </tr>
+  `).join('');
+  
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Invoice - ${order.id}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <style>
+          body {
+            margin: 40px;
+            font-family: 'Outfit', sans-serif;
+            color: #1f2937;
+            background-color: #ffffff;
+            font-size: 13px;
+          }
+          .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #e5e7eb;
+            padding: 30px;
+            border-radius: 8px;
+          }
+          .header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #1f2937;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+          }
+          .title {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #111111;
+          }
+          .details-grid {
+            display: grid;
+            grid-template-cols: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+          }
+          .section-title {
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: #6b7280;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+          }
+          th {
+            background-color: #f9fafb;
+            padding: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 10px;
+            color: #4b5563;
+            border-bottom: 1px solid #d1d5db;
+          }
+          .totals {
+            margin-left: auto;
+            width: 300px;
+            display: grid;
+            grid-template-cols: 1fr 1fr;
+            gap: 8px;
+            font-size: 12px;
+            border-top: 1px dashed #d1d5db;
+            padding-top: 12px;
+          }
+          @media print {
+            body {
+              margin: 0;
+            }
+            .invoice-container {
+              border: none;
+              padding: 0;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="invoice-container">
+          <div class="header">
+            <div>
+              <div class="title">BHONDU</div>
+              <div style="font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 1.5px;">Premium Luxury Wear</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 16px; font-weight: 700; color: #111111;">TAX INVOICE</div>
+              <div style="color: #4b5563; margin-top: 4px;">Order ID: ${order.id}</div>
+              <div style="color: #6b7280; font-size: 11px;">Date: ${order.date}</div>
+            </div>
+          </div>
+          
+          <div class="details-grid">
+            <div>
+              <div class="section-title">Billing & Shipping Details</div>
+              <div style="font-weight: 700; font-size: 14px; margin-bottom: 4px;">${order.customerName}</div>
+              <div style="color: #4b5563; line-height: 1.5;">
+                ${order.shippingAddress ? `
+                  ${order.shippingAddress.street || ''}<br/>
+                  ${order.shippingAddress.city || ''}, ${order.shippingAddress.state || ''} - ${order.shippingAddress.postalCode || ''}<br/>
+                  ${order.shippingAddress.country || ''}
+                ` : order.address}
+              </div>
+              <div style="margin-top: 8px; font-weight: 600;">Phone: ${order.shippingAddress?.phone || 'N/A'}</div>
+              <div style="color: #6b7280; font-size: 11px;">Email: ${order.email}</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="section-title" style="text-align: right;">Payment Operations</div>
+              <div style="font-size: 13px; font-weight: 700; margin-bottom: 4px;">Method: ${order.paymentMethod === 'COD' ? 'Cash on Delivery (COD)' : 'Prepaid (Online)'}</div>
+              <div>Status: <span style="font-weight: 700; color: ${order.paymentStatus === 'Paid' ? '#10b981' : '#f59e0b'}">${order.paymentStatus}</span></div>
+              <div style="margin-top: 15px;">
+                <div style="font-size: 10px; color: #6b7280; text-transform: uppercase;">Sold By</div>
+                <div style="font-weight: 700;">BHONDU Store</div>
+                <div style="font-size: 11px; color: #6b7280;">GSTIN: 07AAAAA1111A1Z1</div>
+              </div>
+            </div>
+          </div>
+          
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+            <thead>
+              <tr>
+                <th style="text-align: left; padding: 10px; border-bottom: 1px solid #d1d5db;">Item & Description</th>
+                <th style="padding: 10px; border-bottom: 1px solid #d1d5db;">Size</th>
+                <th style="padding: 10px; border-bottom: 1px solid #d1d5db;">Color</th>
+                <th style="padding: 10px; border-bottom: 1px solid #d1d5db;">Qty</th>
+                <th style="text-align: right; padding: 10px; border-bottom: 1px solid #d1d5db;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+          </table>
+          
+          <div class="totals">
+            <div style="color: #6b7280;">Subtotal:</div>
+            <div style="text-align: right; font-weight: 600;">₹${(order.amount * 0.82).toFixed(2)}</div>
+            
+            <div style="color: #6b7280;">GST (18%):</div>
+            <div style="text-align: right; font-weight: 600;">₹${(order.amount * 0.18).toFixed(2)}</div>
+            
+            <div style="color: #6b7280;">Shipping:</div>
+            <div style="text-align: right; font-weight: 700; color: #10b981;">FREE</div>
+            
+            <div style="color: #111111; font-weight: 700; font-size: 14px; border-top: 1px solid #111111; padding-top: 8px;">Total:</div>
+            <div style="text-align: right; font-weight: 800; font-size: 15px; border-top: 1px solid #111111; padding-top: 8px; color: #111111;">₹${order.amount.toFixed(2)}</div>
+          </div>
+          
+          <div style="margin-top: 60px; border-top: 1px solid #e5e7eb; padding-top: 15px; text-align: center; color: #9ca3af; font-size: 11px;">
+            This is a computer-generated invoice. No signature required.
+          </div>
+        </div>
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() { window.close(); }, 500);
+          };
+        </script>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+};
 
 export default function AdminOrders() {
   const { orders, updateOrderStatus } = useAdmin();
@@ -28,6 +540,9 @@ export default function AdminOrders() {
   // Selected order details drawer state
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState('');
+  
+  // Shipping sticker modal state
+  const [stickerOrder, setStickerOrder] = useState(null);
 
   useEffect(() => {
     if (selectedOrder) {
@@ -475,13 +990,20 @@ export default function AdminOrders() {
               </div>
 
               {/* Actions Footer */}
-              <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 flex gap-2">
+              <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row gap-2">
                 <button
-                  onClick={() => alert(`Printing packing slip for order: ${selectedOrder.id}`)}
+                  onClick={() => handlePrintInvoice(selectedOrder)}
                   className="flex-1 flex items-center justify-center gap-1.5 py-2.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg text-xs font-semibold text-zinc-700 dark:text-zinc-300"
                 >
                   <Printer className="w-3.5 h-3.5" />
                   Print Invoice
+                </button>
+                <button
+                  onClick={() => setStickerOrder(selectedOrder)}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 border border-[#C9A87C]/30 bg-[#C9A87C]/5 hover:bg-[#C9A87C]/10 dark:border-[#C9A87C]/20 dark:bg-[#C9A87C]/5 rounded-lg text-xs font-semibold text-[#C9A87C]"
+                >
+                  <Barcode className="w-3.5 h-3.5" />
+                  Generate Sticker
                 </button>
                 {selectedStatus !== selectedOrder.status ? (
                   <button
@@ -544,6 +1066,169 @@ export default function AdminOrders() {
                 )}
               </div>
 
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Shipping Sticker Modal */}
+      <AnimatePresence>
+        {stickerOrder && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setStickerOrder(null)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="fixed inset-0 m-auto w-full max-w-lg h-[90vh] bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl z-[61] shadow-2xl flex flex-col overflow-hidden"
+            >
+              {/* Modal Header */}
+              <div className="flex justify-between items-center p-5 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
+                <div>
+                  <h3 className="font-bold text-lg text-zinc-950 dark:text-white flex items-center gap-2">
+                    <Barcode className="w-5 h-5 text-[#C9A87C]" />
+                    Shipping Sticker Preview
+                  </h3>
+                  <p className="text-xs text-zinc-400 mt-0.5">Preview, print, or download order shipping label.</p>
+                </div>
+                <button
+                  onClick={() => setStickerOrder(null)}
+                  className="p-1 rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-400"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Scrollable Preview Area */}
+              <div className="flex-1 overflow-y-auto p-8 flex justify-center bg-zinc-200/50 dark:bg-zinc-950/20">
+                {/* The Actual Sticker DOM element */}
+                <div
+                  id={`sticker-container-${stickerOrder.id}`}
+                  style={stickerStyles.container}
+                >
+                  {/* Sticker Header */}
+                  <div style={stickerStyles.header}>
+                    <div>
+                      <h2 style={stickerStyles.title}>BHONDU</h2>
+                      <p style={stickerStyles.subtitle}>Premium Esports &amp; Fashion</p>
+                    </div>
+                    <div style={{ textAlign: 'right', fontSize: '9px', fontWeight: 'bold' }}>
+                      <div>DATE: {stickerOrder.date}</div>
+                      <div>LABEL ID: BH-${stickerOrder.id.substring(stickerOrder.id.length - 6).toUpperCase()}</div>
+                    </div>
+                  </div>
+
+                  {/* Billing Banner */}
+                  {stickerOrder.paymentMethod === 'COD' ? (
+                    <div style={stickerStyles.billingBannerCod}>
+                      CASH ON DELIVERY (COD) - COLLECT ₹{stickerOrder.amount.toFixed(2)}
+                    </div>
+                  ) : (
+                    <div style={stickerStyles.billingBannerPrepaid}>
+                      PREPAID (ONLINE) - ₹0.00 TO COLLECT
+                    </div>
+                  )}
+
+                  {/* Address Section */}
+                  <div>
+                    <div style={stickerStyles.sectionHeading}>SHIP TO:</div>
+                    <div style={stickerStyles.addressBox}>
+                      <div style={{ fontWeight: 'bold', fontSize: '13px', marginBottom: '2px' }}>
+                        {stickerOrder.customerName}
+                      </div>
+                      <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+                        Tel: {stickerOrder.shippingAddress?.phone || 'N/A'}
+                      </div>
+                      <div>
+                        {stickerOrder.shippingAddress ? (
+                          <>
+                            {stickerOrder.shippingAddress.street},<br />
+                            {stickerOrder.shippingAddress.city}, {stickerOrder.shippingAddress.state} - <strong>{stickerOrder.shippingAddress.postalCode}</strong>,<br />
+                            {stickerOrder.shippingAddress.country}
+                          </>
+                        ) : (
+                          stickerOrder.address
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Barcode Section */}
+                  <div style={{ padding: '4px 0', borderBottom: '1.5px solid #000000', borderTop: '1.5px solid #000000' }}>
+                    <BarcodeComponent value={stickerOrder.id} />
+                  </div>
+
+                  {/* Product items table */}
+                  <div>
+                    <div style={stickerStyles.sectionHeading}>PACKAGE CONTENT DETAILS:</div>
+                    <table style={stickerStyles.itemTable}>
+                      <thead>
+                        <tr>
+                          <th style={stickerStyles.tableHeaderCell}>Item Description</th>
+                          <th style={stickerStyles.tableHeaderCell}>Size/Color</th>
+                          <th style={{ ...stickerStyles.tableHeaderCell, textAlign: 'right' }}>Qty</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {stickerOrder.items.map((item, idx) => (
+                          <tr key={idx}>
+                            <td style={stickerStyles.tableCell}>
+                              <div style={{ fontWeight: 'bold' }}>{item.name}</div>
+                              {item.teamName && <div style={{ fontSize: '8px', color: '#374151' }}>TEAM: {item.teamName}</div>}
+                              {item.backsidePlayerName && <div style={{ fontSize: '8px', color: '#374151' }}>PLAYER: {item.backsidePlayerName} #{item.playerNumber}</div>}
+                              {!item.backsidePlayerName && item.playerNumber && <div style={{ fontSize: '8px', color: '#374151' }}>NUMBER: #{item.playerNumber}</div>}
+                            </td>
+                            <td style={stickerStyles.tableCell}>
+                              <div>SIZE: {item.size || 'N/A'}</div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                                COLOR: <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', border: '0.5px solid #000000', backgroundColor: item.color }} />
+                              </div>
+                            </td>
+                            <td style={{ ...stickerStyles.tableCell, textAlign: 'right', fontWeight: 'bold' }}>
+                              {item.quantity}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Return Address & Instructions */}
+                  <div style={stickerStyles.returnBox}>
+                    <div style={{ fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '2px' }}>Return Address (Sender):</div>
+                    <div>BHONDU Logistics &amp; Fulfillment Center, Block A, Okhla Industrial Area Phase II, New Delhi - 110020, Delhi, India</div>
+                    <div style={{ fontWeight: 'bold', marginTop: '4px' }}>If undelivered, please return to sender.</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Footer Actions */}
+              <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex gap-3">
+                <button
+                  onClick={() => setStickerOrder(null)}
+                  className="px-4 py-2 border border-zinc-250 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-xl text-xs font-bold text-zinc-700 dark:text-zinc-300"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => handleDownloadSticker(stickerOrder)}
+                  className="flex-1 px-4 py-2 border border-[#C9A87C]/30 bg-[#C9A87C]/5 hover:bg-[#C9A87C]/15 text-[#C9A87C] rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                >
+                  <Download className="w-4 h-4" /> Download PNG
+                </button>
+                <button
+                  onClick={() => handlePrintSticker(stickerOrder)}
+                  className="flex-1 px-4 py-2 bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 rounded-xl text-xs font-bold hover:opacity-90 flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                >
+                  <Printer className="w-4 h-4" /> Print Sticker
+                </button>
+              </div>
             </motion.div>
           </>
         )}

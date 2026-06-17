@@ -72,6 +72,20 @@ const userSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+// Pre-validate hook: normalize and capitalize roles to match ROLE_LIST enum
+userSchema.pre('validate', function () {
+  if (this.role) {
+    const roleLower = this.role.toLowerCase().trim();
+    if (roleLower === 'admin') {
+      this.role = 'Admin';
+    } else if (roleLower === 'customer') {
+      this.role = 'Customer';
+    } else if (roleLower === 'super admin' || roleLower === 'superadmin') {
+      this.role = 'Super Admin';
+    }
+  }
+});
+
 // Pre-save hook: hash password
 userSchema.pre('save', async function () {
   if (!this.isModified('password')) return;

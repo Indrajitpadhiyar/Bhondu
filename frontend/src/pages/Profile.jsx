@@ -23,7 +23,8 @@ import {
   Package,
   Clock,
   CreditCard,
-  Truck
+  Truck,
+  Copy
 } from 'lucide-react';
 import {
   useGetProfileQuery,
@@ -35,6 +36,75 @@ import {
 } from '../services/userApi';
 import { useChangePasswordMutation } from '../services/authApi';
 import { useGetOrdersQuery } from '../services/orderApi';
+
+const trackingStages = [
+  { label: 'Order Placed', desc: 'Order received & confirmed', icon: ShoppingBag },
+  { label: 'Processing', desc: 'Quality checking & packaging custom items', icon: RotateCw },
+  { label: 'Shipped', desc: 'Handed over to courier partner', icon: Truck },
+  { label: 'Out for Delivery', desc: 'In route with local agent', icon: Compass },
+  { label: 'Delivered', desc: 'Fulfillment completed successfully', icon: CheckCircle }
+];
+
+const getTrackingStepIndex = (status) => {
+  switch (status) {
+    case 'Pending': return 0;
+    case 'Processing': return 1;
+    case 'Shipped':
+    case 'Shipping': return 2;
+    case 'Delivered': return 4;
+    case 'Cancelled': return -1;
+    default: return 0;
+  }
+};
+
+const generateTrackingLogs = (order, activeIndex) => {
+  const logs = [];
+  const baseDate = new Date(order.createdAt);
+  const userCity = order.shippingAddress?.city || 'your destination';
+
+  const addDays = (date, days) => {
+    const d = new Date(date);
+    d.setDate(d.getDate() + days);
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  };
+
+  if (activeIndex >= 0) {
+    logs.push({
+      title: 'Order Verified',
+      desc: 'Fulfillment order verified and sent to warehouse pipeline.',
+      time: addDays(baseDate, 0)
+    });
+  }
+  if (activeIndex >= 1) {
+    logs.push({
+      title: 'Custom Designing & Quality Check',
+      desc: 'Custom jersey player name/numbers tailored, printing verified, and package prepared.',
+      time: addDays(baseDate, 0.5)
+    });
+  }
+  if (activeIndex >= 2) {
+    logs.push({
+      title: 'Dispatched from Hub',
+      desc: `Consignment shipped via BHONDU Express. Handed over to logistics carrier at Okhla Sorting Facility, New Delhi.`,
+      time: addDays(baseDate, 1.5)
+    });
+  }
+  if (activeIndex >= 2 && (order.status === 'Shipped' || order.status === 'Shipping' || order.status === 'Delivered')) {
+    logs.push({
+      title: 'Arrived at local facility',
+      desc: `Consignment received at sorting hub in ${userCity}.`,
+      time: addDays(baseDate, 3)
+    });
+  }
+  if (activeIndex >= 4) {
+    logs.push({
+      title: 'Delivered',
+      desc: `Consignment successfully hand-delivered to recipient at destination: ${userCity}.`,
+      time: addDays(baseDate, 4)
+    });
+  }
+  return logs.reverse();
+};
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -74,6 +144,24 @@ export default function Profile() {
   // Password change states
   const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [showPass, setShowPass] = useState(false);
+
+  // Order tracking states
+  const [expandedTrackings, setExpandedTrackings] = useState({});
+  const [copiedTrackingId, setCopiedTrackingId] = useState(null);
+
+  const toggleTracking = (orderId) => {
+    setExpandedTrackings(prev => ({
+      ...prev,
+      [orderId]: !prev[orderId]
+    }));
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    setCopiedTrackingId(text);
+    setTimeout(() => setCopiedTrackingId(null), 2000);
+    toast.success("Tracking ID copied successfully!");
+  };
 
   // Address edit/add modal/inline form states
   const [showAddressForm, setShowAddressForm] = useState(false);
@@ -966,14 +1054,188 @@ export default function Profile() {
                                     {order.paymentStatus}
                                   </span>
                                 </div>
-                                {order.shippingPrice > 0 && (
-                                  <div>
-                                    <span className="uppercase tracking-wider text-zinc-400 font-bold">Shipping Premium:</span>{' '}
-                                    <span className="text-zinc-650 dark:text-zinc-350 font-mono">₹{order.shippingPrice.toFixed(2)}</span>
-                                  </div>
-                                )}
+                                </div>
+                            </div>
+
+                            {/* Tracking Toggle and Est Delivery Row */}
+                            <div className="flex flex-col sm:flex-row justify-between sm:items-center pt-4 border-t border-secondary/20 dark:border-zinc-850/20 mt-4 text-[10px] font-bold uppercase tracking-widest gap-2">
+                              <div>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleTracking(order._id)}
+                                  className="text-accent hover:opacity-80 flex items-center gap-1.5 cursor-pointer font-bold uppercase tracking-wider transition-opacity py-1.5 font-sans"
+                                >
+                                  <Truck className="w-3.5 h-3.5" />
+                                  {expandedTrackings[order._id] ? 'Hide Tracking Details' : 'Track Consignment'}
+                                </button>
+                              </div>
+                              <div className="text-zinc-455 font-mono text-[9px] select-all sm:text-right py-1">
+                                EST. ARRIVAL: {new Date(new Date(order.createdAt).getTime() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                               </div>
                             </div>
+
+                            {/* Dynamic Order Tracking Stepper Timeline */}
+                            <AnimatePresence>
+                              {expandedTrackings[order._id] && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: 'auto', opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.3 }}
+                                  className="overflow-hidden border-t border-secondary/30 dark:border-zinc-850/30 pt-5 mt-4 text-xs space-y-6"
+                                >
+                                  {/* Waybill & Courier Partner Metadata */}
+                                  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 p-4 bg-zinc-50/50 dark:bg-zinc-950/20 border border-secondary/35 dark:border-zinc-850 rounded-sm">
+                                    <div className="space-y-1">
+                                      <p className="text-[9px] uppercase tracking-wider font-bold text-zinc-450 dark:text-zinc-500">Logistical Dispatcher</p>
+                                      <p className="text-zinc-850 dark:text-zinc-200 font-bold flex items-center gap-1.5">
+                                        <Truck className="w-4 h-4 text-accent" /> BHONDU EXPRESS FULFILLMENT
+                                      </p>
+                                    </div>
+                                    <div className="space-y-1 text-left sm:text-right">
+                                      <p className="text-[9px] uppercase tracking-wider font-bold text-zinc-450 dark:text-zinc-500">Waybill Tracking Number</p>
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="font-mono text-zinc-750 dark:text-zinc-305 font-bold select-all">
+                                          BHDEX-{order._id.substring(order._id.length - 12).toUpperCase()}
+                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={() => copyToClipboard(`BHDEX-${order._id.substring(order._id.length - 12).toUpperCase()}`)}
+                                          className="p-1 hover:bg-secondary/25 dark:hover:bg-zinc-850 text-zinc-400 hover:text-accent rounded transition-colors cursor-pointer"
+                                          title="Copy Waybill ID"
+                                        >
+                                          {copiedTrackingId === `BHDEX-${order._id.substring(order._id.length - 12).toUpperCase()}` ? (
+                                            <Check className="w-3.5 h-3.5 text-emerald-500" />
+                                          ) : (
+                                            <Copy className="w-3.5 h-3.5" />
+                                          )}
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Terminal Cancellation Banner */}
+                                  {order.status === 'Cancelled' ? (
+                                    <div className="flex flex-col items-center justify-center text-center p-6 border border-dashed border-red-500/25 bg-red-500/5 rounded-sm space-y-2">
+                                      <X className="w-8 h-8 text-red-500 bg-red-500/10 rounded-full p-1.5 border border-red-500/20" />
+                                      <h4 className="font-bold text-red-500 uppercase tracking-widest text-[10px]">Logistical Journey Terminated</h4>
+                                      <p className="text-[10px] text-zinc-450 max-w-sm">This package dispatcher sequence was cancelled. Tracking history is archived.</p>
+                                    </div>
+                                  ) : (
+                                    <>
+                                      {/* Visual Stepper Progress Bar */}
+                                      <div className="py-4 select-none">
+                                        {/* Desktop Timeline */}
+                                        <div className="hidden md:flex justify-between items-start relative mb-10 pl-4 pr-4">
+                                          {/* BG Stepper Connector Line */}
+                                          <div className="absolute top-[18px] left-[55px] right-[55px] h-0.5 bg-zinc-200 dark:bg-zinc-800 z-0" />
+                                          {/* Active Connector Progress Line */}
+                                          <div 
+                                            className="absolute top-[18px] left-[55px] h-0.5 bg-accent z-0 transition-all duration-700" 
+                                            style={{ 
+                                              width: `calc(${Math.min(getTrackingStepIndex(order.status), 4) / 4 * 100}% - ${Math.min(getTrackingStepIndex(order.status), 4) === 0 ? '0px' : Math.min(getTrackingStepIndex(order.status), 4) === 4 ? '1px' : '0px'})` 
+                                            }}
+                                          />
+
+                                          {trackingStages.map((stage, idx) => {
+                                            const activeIndex = getTrackingStepIndex(order.status);
+                                            const isCompleted = idx < activeIndex;
+                                            const isActive = idx === activeIndex;
+                                            const StageIcon = stage.icon;
+
+                                            return (
+                                              <div key={idx} className="flex flex-col items-center text-center z-10 w-32 relative">
+                                                <div 
+                                                  className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-300 ${
+                                                    isCompleted 
+                                                      ? 'bg-accent border-accent text-zinc-950 font-bold'
+                                                      : isActive
+                                                      ? 'bg-white dark:bg-zinc-900 border-accent text-accent shadow-lg shadow-accent/25 ring-4 ring-accent/20 animate-pulse font-bold'
+                                                      : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-400'
+                                                  }`}
+                                                >
+                                                  {isCompleted ? <Check className="w-4 h-4 stroke-[3]" /> : <StageIcon className={`w-4 h-4 ${isActive ? 'stroke-[2.5]' : ''}`} />}
+                                                </div>
+                                                <div className="mt-3 space-y-0.5">
+                                                  <p className={`font-bold text-[9px] uppercase tracking-wider ${isActive ? 'text-accent' : isCompleted ? 'text-zinc-850 dark:text-zinc-200' : 'text-zinc-400'}`}>
+                                                    {stage.label}
+                                                  </p>
+                                                  <p className="text-[8px] text-zinc-455 font-medium leading-tight max-w-[100px] mx-auto">
+                                                    {stage.desc}
+                                                  </p>
+                                                </div>
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+
+                                        {/* Mobile Timeline */}
+                                        <div className="flex flex-col gap-6 md:hidden relative pl-6 border-l border-zinc-200 dark:border-zinc-850 ml-3 py-1">
+                                          <div 
+                                            className="absolute left-[-1px] top-0 w-[2px] bg-accent transition-all duration-700"
+                                            style={{ 
+                                              height: `${Math.min(getTrackingStepIndex(order.status), 4) / 4 * 100}%`
+                                            }}
+                                          />
+
+                                          {trackingStages.map((stage, idx) => {
+                                            const activeIndex = getTrackingStepIndex(order.status);
+                                            const isCompleted = idx < activeIndex;
+                                            const isActive = idx === activeIndex;
+                                            const StageIcon = stage.icon;
+
+                                            return (
+                                              <div key={idx} className="flex gap-4 relative">
+                                                <div 
+                                                  className={`w-7 h-7 rounded-full flex items-center justify-center border absolute left-[-31px] top-0.5 z-10 transition-all duration-300 ${
+                                                    isCompleted 
+                                                      ? 'bg-accent border-accent text-zinc-950 font-bold'
+                                                      : isActive
+                                                      ? 'bg-white dark:bg-zinc-900 border-accent text-accent shadow-lg shadow-accent/25 ring-4 ring-accent/20 animate-pulse font-bold'
+                                                      : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-400'
+                                                  }`}
+                                                >
+                                                  {isCompleted ? <Check className="w-3 h-3 stroke-[3]" /> : <StageIcon className={`w-3.5 h-3.5 ${isActive ? 'stroke-[2.5]' : ''}`} />}
+                                                </div>
+                                                <div className="space-y-0.5 text-left pl-1">
+                                                  <p className={`font-bold text-[9px] uppercase tracking-wider ${isActive ? 'text-accent' : isCompleted ? 'text-zinc-850 dark:text-zinc-200' : 'text-zinc-400'}`}>
+                                                    {stage.label}
+                                                  </p>
+                                                  <p className="text-[10px] text-zinc-450 leading-normal">
+                                                    {stage.desc}
+                                                  </p>
+                                                </div>
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
+
+                                      {/* Logistical Update List */}
+                                      <div className="space-y-3 bg-secondary/5 dark:bg-zinc-950/10 border border-secondary/25 dark:border-zinc-850 p-4 rounded-sm">
+                                        <h5 className="text-[9px] uppercase tracking-wider font-bold text-zinc-400 flex items-center gap-1.5 border-b border-secondary/20 dark:border-zinc-850/20 pb-2">
+                                          <Compass className="w-3.5 h-3.5 text-accent" /> Shipment Progress History
+                                        </h5>
+                                        <div className="space-y-3">
+                                          {generateTrackingLogs(order, getTrackingStepIndex(order.status)).map((log, lIdx) => (
+                                            <div key={lIdx} className="flex items-start gap-3 text-[10px] leading-relaxed font-sans">
+                                              <span className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${lIdx === 0 ? 'bg-accent shadow-sm shadow-accent' : 'bg-zinc-300 dark:bg-zinc-700'}`} />
+                                              <div className="flex-1 text-left">
+                                                <div className="flex justify-between items-baseline gap-2">
+                                                  <span className={`font-bold ${lIdx === 0 ? 'text-zinc-850 dark:text-zinc-200' : 'text-zinc-450 dark:text-zinc-500'}`}>{log.title}</span>
+                                                  <span className="text-[8px] font-mono text-zinc-450 shrink-0">{log.time}</span>
+                                                </div>
+                                                <p className="text-zinc-550 dark:text-zinc-400 mt-0.5 font-medium">{log.desc}</p>
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    </>
+                                  )}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </div>
                         ))}
                       </div>
